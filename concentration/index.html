@@ -1,0 +1,609 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tradeweave 쏠림 계산기</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600&family=Noto+Serif+KR:wght@600;700&display=swap">
+<style>
+/* 레이아웃: 지도책 판형 두 칸. 왼쪽 입력 대장(臺帳), 오른쪽 결과 도판. 좁은 화면에서는 한 열로 쌓는다.
+   Tradeweave 디자인 시스템(밝은 테마 하나만 확정)을 그대로 따르므로 일부러 밝은 화면 하나로 고정한다. */
+:root {
+  --paper: #f6f1e7; --ink: #1c2b3a; --atlas-blue: #234d86; --ochre: #9a6a10; --stone: #5b6573;
+  --card: #fffdf8; --land: #e5dccb; --rule: #d9d0bf; --on-accent: #ffffff; --alert: #b42318;
+  --map-1: #8aaad0; --map-2: #6189be; --map-3: #3d69a5; --map-4: #234d86; --map-5: #122f57;
+  --blue-hover: #1b3d6c; --blue-tint: #eef2f8;
+  --serif: "Noto Serif KR", "Nanum Myeongjo", serif;
+  --sans: "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --s1: 4px; --s2: 8px; --s3: 16px; --s4: 24px; --s5: 40px;
+  --r-sm: 4px; --r-md: 6px;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { background: var(--paper); color: var(--ink); }
+body {
+  font-family: var(--sans); font-size: 16px; line-height: 26px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 1120px; margin: 0 auto; padding-block: 0 var(--s5); }
+h1, h2, h3 { font-family: var(--serif); margin: 0; text-wrap: balance; color: var(--ink); }
+p { margin: 0; }
+.num { font-variant-numeric: tabular-nums; }
+:focus-visible { outline: 3px solid var(--ochre); outline-offset: 2px; }
+
+.top { display: flex; align-items: center; justify-content: space-between; gap: var(--s3); flex-wrap: wrap; padding-block: var(--s3); border-bottom: 1px solid var(--rule); }
+.brand { font-family: var(--serif); font-weight: 700; font-size: 20px; letter-spacing: .01em; }
+.tag { font-size: 12px; line-height: 18px; color: var(--stone); border: 1px solid var(--rule); border-radius: var(--r-sm); padding: 2px var(--s2); background: var(--card); }
+.save-state { font-size: 12px; line-height: 18px; color: var(--stone); }
+
+.intro { padding-block: var(--s4) var(--s3); display: grid; gap: var(--s2); }
+.intro h1 { font-size: 32px; line-height: 42px; }
+.intro p { color: var(--stone); max-width: 44em; }
+
+.grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: var(--s4); align-items: start; }
+@media (max-width: 860px) { .grid { grid-template-columns: minmax(0, 1fr); } }
+
+.panel { background: var(--card); border: 1px solid var(--rule); border-radius: var(--r-md); padding: var(--s4); display: grid; gap: var(--s4); min-width: 0; }
+.panel h2 { font-size: 20px; line-height: 28px; }
+.panel-head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--s2); flex-wrap: wrap; }
+
+fieldset { border: 0; padding: 0; margin: 0; display: grid; gap: var(--s3); min-width: 0; }
+legend { font-size: 13px; line-height: 18px; font-weight: 600; color: var(--stone); letter-spacing: .04em; padding: 0; margin-bottom: var(--s2); }
+.field { display: grid; gap: var(--s1); min-width: 0; }
+.field label, .lbl { font-size: 14px; line-height: 20px; font-weight: 500; }
+.hint { font-size: 12px; line-height: 18px; color: var(--stone); }
+.row2 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--s3); }
+@media (max-width: 420px) { .row2 { grid-template-columns: minmax(0, 1fr); } }
+input[type="text"], select {
+  font: inherit; font-size: 15px; color: var(--ink); background: #fff; border: 1px solid var(--rule);
+  border-radius: var(--r-sm); padding: 7px 10px; min-height: 40px; width: 100%; min-width: 0;
+}
+input[type="text"]:focus { border-color: var(--atlas-blue); outline: none; box-shadow: 0 0 0 3px rgba(35,77,134,.18); }
+input.bad { border-color: var(--alert); }
+input.numin { text-align: right; font-variant-numeric: tabular-nums; }
+
+.seg { display: inline-flex; border: 1px solid var(--atlas-blue); border-radius: var(--r-sm); overflow: hidden; width: max-content; }
+.seg button { font: inherit; font-size: 14px; font-weight: 500; border: 0; background: var(--card); color: var(--atlas-blue); padding: 6px var(--s3); min-height: 38px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--atlas-blue); color: var(--on-accent); }
+
+.btn { font-family: var(--sans); font-weight: 500; font-size: 14px; line-height: 20px; border-radius: var(--r-sm); border: 1px solid var(--atlas-blue); cursor: pointer; padding: var(--s2) var(--s3); display: inline-flex; align-items: center; justify-content: center; gap: var(--s2); min-height: 40px; }
+.btn-primary { background: var(--atlas-blue); color: var(--on-accent); }
+.btn-primary:hover { background: var(--blue-hover); border-color: var(--blue-hover); }
+.btn-secondary { background: var(--card); color: var(--atlas-blue); }
+.btn-secondary:hover { background: var(--blue-tint); }
+.btn-text { background: none; border-color: transparent; color: var(--atlas-blue); padding-inline: var(--s1); min-height: 32px; }
+.btn-text:hover { text-decoration: underline; }
+.btn[disabled] { opacity: .5; cursor: default; }
+.btn-row { display: flex; gap: var(--s2); flex-wrap: wrap; }
+
+.partners { display: grid; gap: var(--s2); }
+.p-head, .p-row { display: grid; grid-template-columns: 28px minmax(0, 1.3fr) minmax(0, 1fr) 36px; gap: var(--s2); align-items: center; }
+.p-head { font-size: 12px; line-height: 18px; color: var(--stone); font-weight: 500; }
+.p-idx { font-size: 13px; color: var(--stone); text-align: right; font-variant-numeric: tabular-nums; }
+.p-del { font: inherit; font-size: 18px; line-height: 1; border: 1px solid transparent; background: none; color: var(--stone); border-radius: var(--r-sm); min-height: 36px; cursor: pointer; }
+.p-del:hover { border-color: var(--rule); color: var(--alert); }
+
+.badge { display: inline-block; font-size: 12px; line-height: 18px; font-weight: 500; color: var(--ochre); border: 1px solid var(--ochre); border-radius: var(--r-sm); padding: 0 6px; background: var(--paper); }
+.msgs { display: grid; gap: var(--s1); }
+.msg { font-size: 13px; line-height: 20px; padding: var(--s2) 10px; border-radius: var(--r-sm); border-left: 3px solid var(--stone); background: var(--paper); }
+.msg.err { border-left-color: var(--alert); color: var(--alert); }
+.msg.warn { border-left-color: var(--ochre); }
+
+/* 결과 */
+.subject { display: grid; gap: var(--s1); }
+.subject h2 { font-size: 24px; line-height: 32px; }
+.subject h2 .sel { color: var(--ochre); }
+.cite { font-size: 12px; line-height: 18px; color: var(--stone); }
+.cite b { font-weight: 500; color: var(--ink); }
+.cite .blank { display: inline-block; min-width: 64px; border-bottom: 1px dashed var(--stone); color: var(--stone); }
+
+.figs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; border-top: 2px solid var(--ink); border-bottom: 1px solid var(--rule); }
+@media (max-width: 520px) { .figs { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.fig { padding: var(--s3) var(--s2) var(--s3) 0; display: grid; gap: 2px; align-content: start; min-width: 0; }
+.fig + .fig { padding-left: var(--s3); border-left: 1px solid var(--rule); }
+@media (max-width: 520px) { .fig:nth-child(3) { padding-left: 0; border-left: 0; } .fig:nth-child(n+3) { border-top: 1px solid var(--rule); } }
+.fig .k { font-size: 12px; line-height: 18px; color: var(--stone); font-weight: 500; }
+.fig .v { font-family: var(--sans); font-size: 28px; line-height: 36px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.fig .v small { font-size: 15px; font-weight: 500; color: var(--stone); margin-left: 2px; }
+.fig .n { font-size: 12px; line-height: 18px; color: var(--stone); }
+
+.plain { font-size: 16px; line-height: 28px; display: grid; gap: var(--s2); }
+.plain p::before { content: "· "; color: var(--stone); }
+
+.bars { display: grid; gap: 6px; }
+.bar { display: grid; grid-template-columns: minmax(0, 7.5em) minmax(0, 1fr) 4.2em; gap: var(--s2); align-items: center; font-size: 14px; line-height: 20px; }
+.bar .nm { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bar .track { height: 14px; background: var(--paper); border: 1px solid var(--rule); border-radius: 2px; overflow: hidden; }
+.bar .fill { height: 100%; }
+.bar .pc { text-align: right; font-variant-numeric: tabular-nums; font-weight: 500; }
+.bar.rest .nm, .bar.rest .pc { color: var(--stone); font-weight: 400; }
+.bar.rest .fill { background: var(--land); background-image: repeating-linear-gradient(135deg, transparent 0 4px, rgba(91,101,115,.18) 4px 5px); }
+
+details.formula { border-top: 1px solid var(--rule); padding-top: var(--s3); }
+details.formula summary { cursor: pointer; font-weight: 600; font-family: var(--serif); font-size: 17px; }
+.flist { display: grid; gap: var(--s3); margin-top: var(--s3); }
+.f { display: grid; gap: 2px; }
+.f .name { font-size: 13px; font-weight: 600; }
+.f code { font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace; font-size: 13px; line-height: 20px; background: var(--paper); border: 1px solid var(--rule); border-radius: var(--r-sm); padding: 6px 10px; overflow-x: auto; white-space: pre-wrap; word-break: break-word; }
+.f .hint { margin-top: 2px; }
+
+.ask { border-top: 1px solid var(--rule); padding-top: var(--s3); display: grid; gap: var(--s2); }
+.ask h3 { font-size: 17px; line-height: 24px; }
+.answer { background: var(--paper); border: 1px solid var(--rule); border-radius: var(--r-sm); padding: var(--s3); white-space: pre-wrap; font-size: 15px; line-height: 26px; }
+.answer-note { font-size: 12px; line-height: 18px; color: var(--stone); }
+
+.empty { padding: var(--s5) var(--s3); text-align: center; color: var(--stone); border: 1px dashed var(--rule); border-radius: var(--r-md); background: var(--paper); }
+
+.foot { margin-top: var(--s5); padding-top: var(--s3); border-top: 1px solid var(--rule); font-size: 12px; line-height: 18px; color: var(--stone); display: grid; gap: var(--s1); }
+@media (prefers-reduced-motion: no-preference) { .bar .fill { transition: width .25s ease; } }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+      <span class="brand">Tradeweave</span>
+      <span class="tag">쏠림 정도 보기 · 시제품</span>
+    </div>
+    <span class="save-state" id="saveState" aria-live="polite">저장 준비 중</span>
+  </header>
+
+  <section class="intro">
+    <h1>한 나라의 교역이 몇 나라에 몰려 있나</h1>
+    <p>나라 하나와 상대국별 교역액을 넣으면 1위 상대국 비중, 상위 3·5개국 비중, HHI(허핀달-허시만 지수)를 바로 계산합니다. 숫자는 직접 넣습니다. 이 앱은 값을 지어내거나 불러오지 않습니다.</p>
+  </section>
+
+  <div class="grid">
+    <!-- 입력 -->
+    <form class="panel" id="form" autocomplete="off" novalidate>
+      <div class="panel-head">
+        <h2>입력</h2>
+        <span class="badge" id="exampleBadge" hidden>예시 · 가상 숫자</span>
+      </div>
+
+      <fieldset>
+        <legend>무엇을 보나</legend>
+        <div class="field">
+          <label for="country">기준 나라</label>
+          <input type="text" id="country" placeholder="예: 베트남">
+        </div>
+        <div class="field">
+          <span class="lbl" id="flowLbl">방향</span>
+          <div class="seg" role="group" aria-labelledby="flowLbl">
+            <button type="button" id="flowExport" aria-pressed="true">수출</button>
+            <button type="button" id="flowImport" aria-pressed="false">수입</button>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>출처와 기준</legend>
+        <div class="field">
+          <label for="source">출처</label>
+          <input type="text" id="source" placeholder="모르면 비워 두세요">
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label for="year">기준연도</label>
+            <input type="text" id="year" inputmode="numeric" placeholder="예: 2024">
+          </div>
+          <div class="field">
+            <label for="unit">단위</label>
+            <input type="text" id="unit" placeholder="예: 천 미국 달러">
+          </div>
+        </div>
+        <div><button type="button" class="btn btn-text" id="fillBaci">CEPII BACI 202601 · 2024 · 천 달러로 채우기</button></div>
+        <p class="hint">BACI에서 뽑은 숫자일 때만 누르세요. 다른 자료라면 그 자료의 이름과 연도를 적으세요.</p>
+      </fieldset>
+
+      <fieldset>
+        <legend>교역액</legend>
+        <div class="field">
+          <label for="total">전체 교역액 (모든 상대국 합계, 선택)</label>
+          <input type="text" id="total" class="numin" inputmode="decimal" placeholder="모르면 비워 두세요">
+          <p class="hint">넣으면 비중을 전체 대비로 계산합니다. 비우면 아래에 입력한 나라들의 합을 100%로 봅니다.</p>
+        </div>
+        <div class="partners" id="partners">
+          <div class="p-head"><span></span><span>상대국</span><span style="text-align:right">교역액</span><span></span></div>
+        </div>
+        <div class="btn-row">
+          <button type="button" class="btn btn-secondary" id="addRow">+ 상대국 추가</button>
+        </div>
+      </fieldset>
+
+      <div class="msgs" id="msgs" aria-live="polite"></div>
+
+      <div class="btn-row" style="border-top:1px solid var(--rule);padding-top:16px">
+        <button type="button" class="btn btn-secondary" id="loadExample">예시 불러오기</button>
+        <button type="button" class="btn btn-text" id="clearAll">모두 비우기</button>
+      </div>
+    </form>
+
+    <!-- 결과 -->
+    <section class="panel" id="result" aria-live="polite">
+      <div id="resultBody"></div>
+
+      <div class="ask" id="askBox" hidden>
+        <h3>Claude에게 결과 풀이 듣기</h3>
+        <p class="hint">계산된 숫자만 보내서 쉬운 말로 풀어 달라고 합니다. 교역 변화의 원인은 단정하지 말라고 지시합니다. 처음 누르면 사용 허락을 묻습니다.</p>
+        <div class="btn-row"><button type="button" class="btn btn-primary" id="askBtn">이 결과 쉬운 말로 풀어 줘</button></div>
+        <div class="answer" id="answer" hidden></div>
+        <p class="answer-note" id="answerNote" hidden>Claude의 풀이는 해석입니다. 숫자 자체는 위 계산이 기준입니다.</p>
+      </div>
+    </section>
+  </div>
+
+  <footer class="foot">
+    <p>계산식은 결과 아래 "계산식 보기"에 그대로 적혀 있습니다. 비중은 소수 첫째 자리에서 반올림해 보여 주고, HHI는 반올림 전 값으로 계산합니다.</p>
+    <p>개인정보는 받지 않습니다. 입력한 내용은 지금 쓰는 브라우저에만 저장됩니다(claude.ai에서 열면 본인 계정에도 저장). Claude 풀이 버튼은 claude.ai에서 열었을 때만 보이며, 누를 때에만 계산 결과가 Claude로 전달됩니다.</p>
+  </footer>
+</div>
+
+<script>
+(function () {
+  "use strict";
+  var $ = function (id) { return document.getElementById(id); };
+  var LS_KEY = "tradeweave-concentration-v1";
+  var RAMP = ["var(--map-5)", "var(--map-4)", "var(--map-3)", "var(--map-2)", "var(--map-1)"];
+
+  // 예시는 일부러 '가상국'과 가나다 이름만 쓴다. 실제 나라·실제 숫자가 아니다.
+  var EXAMPLE = {
+    country: "가상국", flow: "export", source: "", year: "", unit: "",
+    total: "1000",
+    partners: [
+      { name: "가국", value: "350" }, { name: "나국", value: "150" }, { name: "다국", value: "120" },
+      { name: "라국", value: "80" }, { name: "마국", value: "50" }
+    ],
+    isExample: true
+  };
+
+  var state = clone(EXAMPLE);
+  function clone(o) { return JSON.parse(JSON.stringify(o)); }
+
+  // ---------- 숫자 ----------
+  function parseNum(s) {
+    if (s == null) return null;
+    var t = String(s).replace(/[,\s]/g, "");
+    if (t === "") return null;
+    if (!/^-?\d*\.?\d+$/.test(t)) return NaN;
+    return Number(t);
+  }
+  function fmt(n, d) {
+    if (n == null || !isFinite(n)) return "";
+    return n.toLocaleString("ko-KR", { minimumFractionDigits: d || 0, maximumFractionDigits: d || 0 });
+  }
+  function fmtAuto(n) { return n.toLocaleString("ko-KR", { maximumFractionDigits: 2 }); }
+
+  // ---------- 계산 ----------
+  function compute(s) {
+    var errs = [], warns = [];
+    var rows = [];
+    var seen = {};
+    s.partners.forEach(function (p, i) {
+      var name = (p.name || "").trim();
+      var v = parseNum(p.value);
+      if (!name && v == null) return; // 빈 줄은 무시
+      if (v === null) { warns.push((name || (i + 1) + "번째 줄") + "의 교역액이 비어 있어 계산에서 뺐습니다."); return; }
+      if (isNaN(v)) { errs.push((name || (i + 1) + "번째 줄") + "의 교역액이 숫자가 아닙니다."); return; }
+      if (v < 0) { errs.push((name || (i + 1) + "번째 줄") + "의 교역액이 음수입니다. 0 이상으로 넣어 주세요."); return; }
+      var nm = name || "(이름 없음 " + (i + 1) + ")";
+      if (seen[nm]) warns.push("'" + nm + "'이(가) 두 번 들어 있습니다. 한 줄로 합쳐야 계산이 맞습니다.");
+      seen[nm] = true;
+      rows.push({ name: nm, value: v });
+    });
+    var total = parseNum(s.total);
+    if (total !== null && isNaN(total)) { errs.push("전체 교역액이 숫자가 아닙니다."); total = null; }
+    if (total !== null && total <= 0) { errs.push("전체 교역액은 0보다 커야 합니다."); total = null; }
+    var sum = rows.reduce(function (a, r) { return a + r.value; }, 0);
+    if (errs.length) return { errs: errs, warns: warns };
+    if (!rows.length) return { empty: true, errs: errs, warns: warns };
+    if (total !== null && sum > total * (1 + 1e-9)) {
+      errs.push("입력한 상대국 합계(" + fmtAuto(sum) + ")가 전체 교역액(" + fmtAuto(total) + ")보다 큽니다. 둘 중 하나를 고쳐 주세요.");
+      return { errs: errs, warns: warns };
+    }
+    if (sum === 0) { errs.push("상대국 교역액이 모두 0입니다."); return { errs: errs, warns: warns }; }
+
+    var base = total !== null ? total : sum;
+    var hasTotal = total !== null;
+    rows.sort(function (a, b) { return b.value - a.value; });
+    rows.forEach(function (r) { r.share = r.value / base * 100; });
+    var rest = hasTotal ? Math.max(0, total - sum) : 0;
+    var restShare = hasTotal ? rest / base * 100 : 0;
+    function cr(k) { var t = 0; for (var i = 0; i < Math.min(k, rows.length); i++) t += rows[i].share; return t; }
+    var hhi = rows.reduce(function (a, r) { return a + r.share * r.share; }, 0);
+    // 동률 1위 확인
+    var ties = rows.filter(function (r) { return r.value === rows[0].value; }).length;
+    return {
+      errs: errs, warns: warns, rows: rows, n: rows.length, sum: sum, total: total, hasTotal: hasTotal, base: base,
+      rest: rest, restShare: restShare, cr1: cr(1), cr3: cr(3), cr5: cr(5), hhi: hhi,
+      equiv: hhi > 0 ? 10000 / hhi : null, ties: ties
+    };
+  }
+
+  // ---------- 그리기: 입력 ----------
+  function renderPartners() {
+    var box = $("partners");
+    box.querySelectorAll(".p-row").forEach(function (el) { el.remove(); });
+    state.partners.forEach(function (p, i) {
+      var row = document.createElement("div");
+      row.className = "p-row";
+      row.innerHTML =
+        '<span class="p-idx">' + (i + 1) + '</span>' +
+        '<input type="text" id="pn' + i + '" aria-label="' + (i + 1) + '번째 상대국 이름" placeholder="나라 이름">' +
+        '<input type="text" id="pv' + i + '" class="numin" inputmode="decimal" aria-label="' + (i + 1) + '번째 상대국 교역액" placeholder="교역액">' +
+        '<button type="button" class="p-del" aria-label="' + (i + 1) + '번째 줄 지우기" title="이 줄 지우기">×</button>';
+      var n = row.children[1], v = row.children[2];
+      n.value = p.name; v.value = p.value;
+      n.addEventListener("input", function () { state.partners[i].name = n.value; changed(); });
+      v.addEventListener("input", function () { state.partners[i].value = v.value; changed(); });
+      row.children[3].addEventListener("click", function () {
+        state.partners.splice(i, 1);
+        if (!state.partners.length) state.partners.push({ name: "", value: "" });
+        renderPartners(); changed();
+      });
+      box.appendChild(row);
+    });
+  }
+  function renderForm() {
+    $("country").value = state.country; $("source").value = state.source;
+    $("year").value = state.year; $("unit").value = state.unit; $("total").value = state.total;
+    setFlow(state.flow, true);
+    renderPartners();
+  }
+  function setFlow(f, silent) {
+    state.flow = f;
+    $("flowExport").setAttribute("aria-pressed", f === "export");
+    $("flowImport").setAttribute("aria-pressed", f === "import");
+    if (!silent) changed();
+  }
+
+  // ---------- 그리기: 결과 ----------
+  function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+  function blankOr(v) { return v && v.trim() ? "<b>" + esc(v.trim()) + "</b>" : '<span class="blank">비어 있음</span>'; }
+  var lastResult = null;
+
+  function renderResult() {
+    var r = compute(state);
+    lastResult = r;
+    $("exampleBadge").hidden = !state.isExample;
+    var m = $("msgs"); m.innerHTML = "";
+    (r.errs || []).forEach(function (t) { m.insertAdjacentHTML("beforeend", '<p class="msg err">' + esc(t) + "</p>"); });
+    (r.warns || []).forEach(function (t) { m.insertAdjacentHTML("beforeend", '<p class="msg warn">' + esc(t) + "</p>"); });
+    var flowWord = state.flow === "export" ? "수출" : "수입";
+    var countryName = state.country.trim();
+    var body = $("resultBody");
+    $("askBox").hidden = true;
+
+    var head =
+      '<div class="subject">' +
+        '<h2>' + (countryName ? '<span class="sel">' + esc(countryName) + '</span>의 ' : "") + flowWord + ' 상대국 쏠림</h2>' +
+        '<p class="cite">출처: ' + blankOr(state.source) + ' · 기준연도: ' + blankOr(state.year) + ' · 단위: ' + blankOr(state.unit) + '</p>' +
+      '</div>';
+
+    if (r.errs && r.errs.length) {
+      body.innerHTML = head + '<div class="empty" style="margin-top:16px">왼쪽 빨간 안내를 고치면 결과가 나옵니다.</div>';
+      return;
+    }
+    if (r.empty) {
+      body.innerHTML = head + '<div class="empty" style="margin-top:16px">상대국 이름과 교역액을 한 줄 이상 넣으면 여기에 1위 비중, 상위 3·5개국 비중, HHI가 나옵니다.</div>';
+      return;
+    }
+
+    var basisNote = r.hasTotal ? "전체 교역액 대비" : "입력한 " + r.n + "개국 합계 대비";
+    var figs =
+      '<div class="figs">' +
+        fig("1위 상대국 비중", r.cr1, "%", r.rows[0].name + (r.ties > 1 ? " 외 동률 " + (r.ties - 1) + "곳" : "")) +
+        fig("상위 3개국 비중", r.cr3, "%", r.n < 3 ? "입력 " + r.n + "개국뿐" : "") +
+        fig("상위 5개국 비중", r.cr5, "%", r.n < 5 ? "입력 " + r.n + "개국뿐" : "") +
+        '<div class="fig"><span class="k">HHI</span><span class="v num">' + (r.hasTotal && r.restShare > 0.05 ? '<small style="margin:0 4px 0 0">최소</small>' : "") + fmt(r.hhi, 0) + '</span><span class="n">0~10,000</span></div>' +
+      '</div>' +
+      '<p class="cite" style="margin-top:6px">비중 기준: ' + basisNote + "</p>";
+
+    // 쉬운 말 설명: 계산값만 말하고 판단 기준선이나 원인은 말하지 않는다.
+    var who = countryName ? countryName + "의 " : "";
+    var lines = [];
+    lines.push(who + flowWord + "에서 1위 상대국 " + r.rows[0].name + "이(가) " + basisNote.replace(" 대비", "") + "의 " + fmt(r.cr1, 1) + "%를 차지합니다." + (r.cr1 >= 50 ? " 절반이 넘는 몫이 한 나라와의 거래입니다." : ""));
+    if (r.n >= 3) lines.push("상위 3개국을 합치면 " + fmt(r.cr3, 1) + "%입니다. 100원어치 중 약 " + fmt(r.cr3, 0) + "원이 세 나라와의 거래라는 뜻입니다.");
+    if (r.equiv) {
+      if (r.hasTotal && r.restShare > 0.05) {
+        lines.push("HHI는 최소 " + fmt(r.hhi, 0) + "입니다. 입력하지 않은 나머지 " + fmt(r.restShare, 1) + "%가 어떻게 나뉘었는지 몰라 정확한 값은 이보다 클 수 있습니다. 이 쏠림은 크기가 같은 나라 많아야 약 " + fmt(r.equiv, 1) + "곳과 고르게 거래하는 것과 같습니다.");
+      } else {
+        lines.push("HHI " + fmt(r.hhi, 0) + "은(는) 크기가 같은 나라 약 " + fmt(r.equiv, 1) + "곳과 고르게 거래하는 것과 같은 쏠림입니다. 숫자가 작을수록 몇 나라에 몰려 있다는 뜻입니다.");
+      }
+    }
+    if (!r.hasTotal) lines.push("전체 교역액을 넣지 않아 입력한 " + r.n + "개국만 100%로 보고 계산했습니다. 다른 상대국이 더 있다면 실제 전체 대비 비중은 이보다 작습니다.");
+
+    var bars = '<div class="bars">' + r.rows.map(function (row, i) {
+      return '<div class="bar"><span class="nm" title="' + esc(row.name) + '">' + esc(row.name) + '</span><span class="track"><span class="fill" style="display:block;width:' + row.share.toFixed(3) + '%;background:' + RAMP[Math.min(i, 4)] + '"></span></span><span class="pc">' + fmt(row.share, 1) + '%</span></div>';
+    }).join("") + (r.hasTotal && r.rest > 0 ? '<div class="bar rest"><span class="nm">입력 안 한 나라</span><span class="track"><span class="fill" style="display:block;width:' + r.restShare.toFixed(3) + '%"></span></span><span class="pc">' + fmt(r.restShare, 1) + '%</span></div>' : "") + "</div>";
+
+    body.innerHTML = head +
+      '<div style="display:grid;gap:24px;margin-top:16px">' + figs +
+      '<div class="plain">' + lines.map(function (l) { return "<p>" + esc(l) + "</p>"; }).join("") + "</div>" +
+      bars + formulas(r) + "</div>";
+    if (sampleFn) $("askBox").hidden = false;
+  }
+  function fig(k, v, unit, note) {
+    return '<div class="fig"><span class="k">' + k + '</span><span class="v num">' + fmt(v, 1) + "<small>" + unit + '</small></span><span class="n">' + esc(note || " ") + "</span></div>";
+  }
+  function formulas(r) {
+    var B = r.hasTotal ? "전체 교역액" : "입력한 나라 합계";
+    var top = r.rows.slice(0, 5);
+    var crLine = function (k) {
+      var t = r.rows.slice(0, Math.min(k, r.n));
+      return t.map(function (x) { return fmt(x.share, 1); }).join(" + ") + " = " + fmt(r["cr" + k], 1) + "%";
+    };
+    var hhiTerms = r.rows.map(function (x) { return fmt(x.share, 1) + "²"; });
+    var hhiShown = hhiTerms.length > 8 ? hhiTerms.slice(0, 8).join(" + ") + " + … (" + (hhiTerms.length - 8) + "개 더)" : hhiTerms.join(" + ");
+    return '<details class="formula"><summary>계산식 보기</summary><div class="flist">' +
+      f("비중 sᵢ", "sᵢ = 상대국 i 교역액 ÷ " + B + " × 100\n예) " + top[0].name + ": " + fmtAuto(top[0].value) + " ÷ " + fmtAuto(r.base) + " × 100 = " + fmt(top[0].share, 1) + "%") +
+      f("1위 상대국 비중 (CR1)", "CR1 = s₁ = " + fmt(r.cr1, 1) + "%") +
+      f("상위 3개국 비중 (CR3)", "CR3 = s₁ + s₂ + s₃ = " + crLine(3), r.n < 3 ? "입력한 나라가 " + r.n + "곳이라 있는 만큼만 더했습니다." : "") +
+      f("상위 5개국 비중 (CR5)", "CR5 = s₁ + … + s₅ = " + crLine(5), r.n < 5 ? "입력한 나라가 " + r.n + "곳이라 있는 만큼만 더했습니다." : "") +
+      f("HHI (허핀달-허시만 지수)", "HHI = Σ sᵢ²  (sᵢ는 % 단위)\n= " + hhiShown + "\n= " + fmt(r.hhi, 0),
+        "모든 교역이 한 나라에 몰리면 100² = 10,000이고, 여러 나라에 고르게 나뉠수록 0에 가까워집니다." +
+        (r.hasTotal && r.restShare > 0.05 ? " 입력 안 한 나라 몫(" + fmt(r.restShare, 1) + "%)은 나뉜 모양을 몰라 넣지 않았으므로, 실제 HHI는 이 값 이상입니다." : "") +
+        (!r.hasTotal ? " 전체 교역액 없이 입력한 나라만 100%로 보았으므로, 전체 상대국 기준 HHI와 다릅니다." : "")) +
+      f("같은 크기 나라 수", "10,000 ÷ HHI = 10,000 ÷ " + fmt(r.hhi, 0) + " ≈ " + fmt(r.equiv, 1) + "곳", "쏠림을 '똑같은 크기의 나라 몇 곳과 거래하는 셈인가'로 바꾼 값입니다.") +
+      "</div></details>";
+  }
+  function f(name, code, hint) {
+    return '<div class="f"><span class="name">' + esc(name) + '</span><code>' + esc(code) + "</code>" + (hint ? '<span class="hint">' + esc(hint) + "</span>" : "") + "</div>";
+  }
+
+  // ---------- 저장 ----------
+  var dbRef = null, saveTimer = null, saving = false, pending = false;
+  function setSave(t) { $("saveState").textContent = t; }
+  function snapshot() {
+    return { country: state.country, flow: state.flow, source: state.source, year: state.year, unit: state.unit,
+      total: state.total, partners: state.partners.map(function (p) { return { name: p.name, value: p.value }; }),
+      isExample: !!state.isExample, savedAt: Date.now() };
+  }
+  function saveLocal(s) { try { localStorage.setItem(LS_KEY, JSON.stringify(s)); return true; } catch (e) { return false; } }
+  function loadLocal() { try { var t = localStorage.getItem(LS_KEY); return t ? JSON.parse(t) : null; } catch (e) { return null; } }
+  function scheduleSave() {
+    clearTimeout(saveTimer);
+    setSave("저장 중…");
+    saveTimer = setTimeout(doSave, 700);
+  }
+  function doSave() {
+    var s = snapshot();
+    var okLocal = saveLocal(s);
+    if (!dbRef) { setSave(okLocal ? "이 브라우저에 저장됨" : "저장 안 됨 (브라우저 저장소를 쓸 수 없음)"); return; }
+    if (saving) { pending = true; return; }
+    saving = true;
+    dbRef.set(s).then(function () { setSave("계정에 저장됨 · 닫았다 열어도 남습니다"); })
+      .catch(function () { setSave(okLocal ? "이 브라우저에만 저장됨" : "저장 실패"); })
+      .then(function () { saving = false; if (pending) { pending = false; doSave(); } });
+  }
+  function valid(s) { return s && typeof s === "object" && Array.isArray(s.partners); }
+  function apply(s) {
+    state = {
+      country: s.country || "", flow: s.flow === "import" ? "import" : "export", source: s.source || "",
+      year: s.year || "", unit: s.unit || "", total: s.total || "",
+      partners: s.partners.length ? s.partners.map(function (p) { return { name: String(p.name || ""), value: String(p.value || "") }; }) : [{ name: "", value: "" }],
+      isExample: !!s.isExample
+    };
+    renderForm(); renderResult();
+  }
+  function changed() {
+    if (state.isExample) { state.isExample = false; }
+    renderResult(); scheduleSave();
+  }
+
+  // ---------- 이벤트 ----------
+  ["country", "source", "year", "unit", "total"].forEach(function (k) {
+    $(k).addEventListener("input", function () { state[k] = $(k).value; changed(); });
+  });
+  $("flowExport").addEventListener("click", function () { setFlow("export"); });
+  $("flowImport").addEventListener("click", function () { setFlow("import"); });
+  $("addRow").addEventListener("click", function () {
+    state.partners.push({ name: "", value: "" }); renderPartners();
+    var i = state.partners.length - 1; var el = $("pn" + i); if (el) el.focus();
+  });
+  $("fillBaci").addEventListener("click", function () {
+    state.source = "CEPII BACI 202601 (Gaulier & Zignago, 2010), UN Comtrade 기반";
+    state.year = "2024"; state.unit = "천 미국 달러(경상)";
+    $("source").value = state.source; $("year").value = state.year; $("unit").value = state.unit;
+    changed();
+  });
+  $("loadExample").addEventListener("click", function () { apply(clone(EXAMPLE)); scheduleSave(); });
+  $("clearAll").addEventListener("click", function () {
+    apply({ country: "", flow: "export", source: "", year: "", unit: "", total: "", partners: [{ name: "", value: "" }, { name: "", value: "" }, { name: "", value: "" }] });
+    scheduleSave();
+    $("country").focus();
+  });
+  $("form").addEventListener("submit", function (e) { e.preventDefault(); });
+
+  // ---------- Claude 버튼 ----------
+  var sampleFn = null, asking = null;
+  function buildPrompt(r) {
+    var flowWord = state.flow === "export" ? "수출" : "수입";
+    var rows = r.rows.map(function (x, i) { return (i + 1) + ". " + x.name + ": " + fmtAuto(x.value) + " (" + fmt(x.share, 1) + "%)"; }).join("\n");
+    return [
+      "당신은 무역 통계를 처음 보는 사람에게 숫자를 쉬운 한국어로 풀어 주는 도우미입니다.",
+      "아래는 사용자가 직접 입력한 한 나라의 상대국별 교역액과, 그것으로 계산한 쏠림 지표입니다.",
+      "",
+      "규칙:",
+      "- 아래 숫자만 근거로 쓰세요. 새로운 통계, 다른 연도 값, 실제 나라에 대한 배경지식으로 숫자를 보태지 마세요.",
+      "- 교역이 왜 이렇게 쏠렸는지, 왜 변했는지 원인을 단정하지 마세요. 가능성을 말할 때는 '확인되지 않은 추측'이라고 밝히세요.",
+      "- 출처나 기준연도가 '비어 있음'이면 그 사실을 한 줄로 짚고, 이 숫자를 인용하기 전에 출처를 채워야 한다고 말하세요.",
+      "- HHI에 공식 판정 기준선(예: 몇 이상이면 위험)을 붙이지 마세요. 시장 집중도용 기준을 교역 상대국에 그대로 쓰는 공식 기준은 없습니다.",
+      "- 형식: 제목 없이 '숫자가 말하는 것' 2~3문장, '읽을 때 주의할 점' 1~2문장, '다음에 확인해 볼 것' 1~2문장. 각 묶음 앞에 그 이름을 적고, 마크다운 기호(#, **, 표)는 쓰지 마세요. 전체 200자~400자.",
+      "",
+      "기준 나라: " + (state.country.trim() || "비어 있음"),
+      "방향: " + flowWord,
+      "출처: " + (state.source.trim() || "비어 있음"),
+      "기준연도: " + (state.year.trim() || "비어 있음"),
+      "단위: " + (state.unit.trim() || "비어 있음"),
+      "비중 기준: " + (r.hasTotal ? "전체 교역액 " + fmtAuto(r.total) + " 대비" : "전체 교역액 없음. 입력한 " + r.n + "개국 합계 " + fmtAuto(r.sum) + "를 100%로 봄"),
+      "상대국 (큰 순서):",
+      rows,
+      r.hasTotal && r.rest > 0 ? "입력 안 한 나라 합계: " + fmtAuto(r.rest) + " (" + fmt(r.restShare, 1) + "%), 나뉜 모양은 모름" : "",
+      "1위 비중 CR1: " + fmt(r.cr1, 1) + "%",
+      "상위 3개국 CR3: " + fmt(r.cr3, 1) + "%" + (r.n < 3 ? " (입력 " + r.n + "개국뿐)" : ""),
+      "상위 5개국 CR5: " + fmt(r.cr5, 1) + "%" + (r.n < 5 ? " (입력 " + r.n + "개국뿐)" : ""),
+      "HHI (% 제곱합, 0~10,000): " + fmt(r.hhi, 0) + (r.hasTotal && r.restShare > 0.05 ? " (입력 안 한 몫을 빼고 계산한 최솟값)" : ""),
+      "같은 크기 나라 수 (10,000 ÷ HHI): " + fmt(r.equiv, 1)
+    ].filter(function (l) { return l !== ""; }).join("\n");
+  }
+  $("askBtn").addEventListener("click", function () {
+    var r = lastResult;
+    if (!sampleFn || !r || !r.rows) return;
+    if (asking) asking.abort();
+    asking = new AbortController();
+    var btn = $("askBtn"), out = $("answer");
+    btn.disabled = true; btn.textContent = "Claude가 풀이를 쓰는 중…";
+    out.hidden = false; out.textContent = "생각하는 중…"; $("answerNote").hidden = true;
+    sampleFn(buildPrompt(r), { signal: asking.signal, modelTier: "quick", onText: function (e) { out.textContent = e.text; } })
+      .then(function (res) { out.textContent = res.text; $("answerNote").hidden = false; })
+      .catch(function (err) {
+        var code = err && err.code;
+        if (code === "not_granted") { out.textContent = "Claude 사용을 허락하지 않아 풀이를 받지 못했습니다. 위 계산 결과와 설명은 그대로 쓸 수 있습니다."; $("askBox").hidden = true; sampleFn = null; }
+        else if (code === "rate_limited") out.textContent = "요청이 잠시 많습니다. 1분쯤 뒤에 다시 눌러 주세요.";
+        else if (code === "aborted" || (err && err.name === "AbortError")) {}
+        else out.textContent = (err && err.text) ? err.text : "풀이를 받지 못했습니다. 잠시 뒤 다시 눌러 주세요.";
+      })
+      .then(function () { btn.disabled = false; btn.textContent = "이 결과 쉬운 말로 풀어 줘"; });
+  });
+
+  // ---------- 시작 ----------
+  var local = loadLocal();
+  if (valid(local)) apply(local); else { renderForm(); renderResult(); }
+  setSave(valid(local) ? "이 브라우저에 저장된 입력을 불러옴" : "아직 저장한 입력 없음");
+
+  if (window.claude && typeof window.claude.use === "function") {
+    window.claude.use("sample").then(function (s) { if (s) { sampleFn = s; renderResult(); } }).catch(function () {});
+    Promise.all([window.claude.use("db"), window.claude.use("user")]).then(function (a) {
+      var db = a[0], user = a[1];
+      if (!db || !user) return null;
+      return user.id().then(function (id) {
+        if (!id) return null;
+        dbRef = db.doc("data/users/" + id + "/concentration");
+        var timer = setTimeout(function () { setSave("계정 저장소 응답 없음 · 이 브라우저에만 저장"); }, 10000);
+        return dbRef.get().then(function (snap) {
+          clearTimeout(timer);
+          var d = snap.exists ? snap.data() : null;
+          var localNow = loadLocal();
+          if (valid(d) && (!valid(localNow) || (d.savedAt || 0) > (localNow.savedAt || 0))) {
+            apply(d); saveLocal(d);
+            setSave("계정에 저장된 입력을 불러옴");
+          } else if (valid(localNow)) {
+            setSave("계정에 저장됨 · 닫았다 열어도 남습니다");
+            if (!valid(d) || (d.savedAt || 0) < (localNow.savedAt || 0)) dbRef.set(localNow).catch(function () {});
+          } else {
+            setSave("입력하면 계정에 저장됩니다");
+          }
+        }, function () { clearTimeout(timer); dbRef = null; setSave("계정 저장소를 쓸 수 없음 · 이 브라우저에만 저장"); });
+      });
+    }).catch(function () {});
+  }
+})();
+</script>
+
+</html>

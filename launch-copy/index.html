@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tradeweave 런칭 문구</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600&family=Noto+Serif+KR:wght@600;700&display=swap">
+<style>
+/* 레이아웃: 지도책 판형 한 열. 인스타 게시물 3장(정사각 미리보기 + 캡션) → 초대 메시지 → 30초 멘트 → 확인 메모.
+   Tradeweave 디자인 시스템(밝은 테마 하나만 확정)을 따르므로 일부러 밝은 화면 하나로 고정한다. */
+:root {
+  --paper: #f6f1e7; --ink: #1c2b3a; --atlas-blue: #234d86; --ochre: #9a6a10; --stone: #5b6573;
+  --card: #fffdf8; --land: #e5dccb; --rule: #d9d0bf; --on-accent: #ffffff;
+  --map-1: #8aaad0; --map-2: #6189be; --map-3: #3d69a5; --map-4: #234d86; --map-5: #122f57;
+  --blue-hover: #1b3d6c;
+  --serif: "Noto Serif KR", "Nanum Myeongjo", serif;
+  --sans: "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --s1: 4px; --s2: 8px; --s3: 16px; --s4: 24px; --s5: 40px;
+  --r-sm: 4px; --r-md: 6px;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html, body { background: var(--paper); color: var(--ink); }
+body {
+  font-family: var(--sans); font-size: 16px; line-height: 26px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 1040px; margin: 0 auto; }
+h1, h2, h3 { font-family: var(--serif); margin: 0; text-wrap: balance; }
+p { margin: 0; }
+:focus-visible { outline: 3px solid var(--ochre); outline-offset: 2px; }
+
+.top { display: flex; align-items: center; justify-content: space-between; gap: var(--s3); padding-block: var(--s3); border-bottom: 1px solid var(--rule); }
+.brand { font-family: var(--serif); font-weight: 700; font-size: 20px; }
+.tag { font-size: 12px; line-height: 18px; color: var(--stone); border: 1px solid var(--rule); border-radius: var(--r-sm); padding: 2px var(--s2); background: var(--card); }
+
+.intro { padding-block: var(--s5) var(--s4); display: grid; gap: var(--s3); max-width: 44em; }
+.eyebrow { font-size: 14px; line-height: 20px; font-weight: 500; color: var(--stone); letter-spacing: .04em; }
+.intro h1 { font-size: 40px; line-height: 48px; font-weight: 700; }
+.intro p { font-size: 17px; line-height: 28px; }
+.rules { display: flex; flex-wrap: wrap; gap: var(--s2); }
+.rules span { font-size: 13px; line-height: 20px; border: 1px solid var(--rule); background: var(--card); border-radius: var(--r-sm); padding: 2px var(--s2); }
+
+section.block { padding-block: var(--s5); border-top: 1px solid var(--rule); }
+.section-head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--s3); flex-wrap: wrap; margin-bottom: var(--s4); }
+.section-head h2 { font-size: 28px; line-height: 36px; }
+.section-head p { color: var(--stone); font-size: 14px; line-height: 20px; }
+
+.posts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s3); }
+.post { background: var(--card); border: 1px solid var(--rule); border-radius: var(--r-md); display: flex; flex-direction: column; min-width: 0; overflow: hidden; }
+.square { aspect-ratio: 1 / 1; max-width: 100%; background: var(--paper); border-bottom: 1px solid var(--rule); padding: var(--s4); display: flex; flex-direction: column; justify-content: space-between; gap: var(--s3); }
+.square .kicker { font-size: 12px; line-height: 18px; font-weight: 500; color: var(--stone); letter-spacing: .06em; }
+.square h3 { font-size: 24px; line-height: 34px; font-weight: 700; }
+.square .foot { display: flex; justify-content: space-between; align-items: flex-end; gap: var(--s2); }
+.square .wm { font-family: var(--serif); font-weight: 700; font-size: 15px; }
+.ramp { display: flex; gap: 2px; }
+.ramp i { width: 14px; height: 14px; display: block; }
+.tiles { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
+.tiles span { aspect-ratio: 1; background: var(--land); }
+.bars { display: grid; gap: 6px; }
+.bars div { height: 10px; background: var(--map-3); }
+.bars div.top1 { background: var(--ochre); }
+.srcline { font-size: 12px; line-height: 18px; color: var(--stone); border-top: 1px solid var(--rule); padding-top: var(--s2); }
+.caption-box { padding: var(--s3); display: grid; gap: var(--s2); flex: 1; }
+.caption-box .label { font-size: 12px; line-height: 18px; color: var(--stone); font-weight: 500; }
+.text { white-space: pre-wrap; font-size: 15px; line-height: 24px; overflow-wrap: anywhere; }
+.hash { color: var(--atlas-blue); font-size: 14px; line-height: 22px; }
+.ph { background: #f1e7cf; color: var(--ochre); border-radius: 3px; padding: 0 3px; font-weight: 500; }
+.row-end { margin-top: auto; display: flex; justify-content: space-between; align-items: center; gap: var(--s2); flex-wrap: wrap; padding-top: var(--s2); }
+.count { font-size: 12px; color: var(--stone); font-variant-numeric: tabular-nums; }
+
+.btn { font: 500 14px/20px var(--sans); border-radius: var(--r-sm); border: 1px solid var(--atlas-blue); cursor: pointer; padding: 6px var(--s3); background: var(--card); color: var(--atlas-blue); min-height: 36px; }
+.btn:hover { background: #eef2f8; }
+.btn.done { background: var(--atlas-blue); color: var(--on-accent); }
+
+.panel { background: var(--card); border: 1px solid var(--rule); border-radius: var(--r-md); padding: var(--s4); display: grid; gap: var(--s3); min-width: 0; }
+.two { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: var(--s4); align-items: start; }
+.aside { display: grid; gap: var(--s2); font-size: 14px; line-height: 22px; color: var(--ink); }
+.aside h3 { font-size: 17px; line-height: 24px; font-weight: 600; }
+.aside ul { margin: 0; padding-left: 1.2em; display: grid; gap: var(--s1); }
+
+.script { display: grid; gap: 0; }
+.cue { display: grid; grid-template-columns: 84px minmax(0, 1fr); gap: var(--s3); padding-block: var(--s3); border-top: 1px solid var(--rule); }
+.cue:first-child { border-top: 0; padding-top: 0; }
+.cue .t { font-size: 13px; line-height: 24px; color: var(--stone); font-variant-numeric: tabular-nums; font-weight: 500; }
+.cue .t b { display: block; color: var(--ink); font-weight: 600; }
+.cue p { font-size: 17px; line-height: 30px; }
+.cue .scene { font-size: 13px; line-height: 20px; color: var(--stone); margin-top: var(--s1); }
+.timeline { display: flex; height: 8px; border-radius: 2px; overflow: hidden; }
+.timeline i { display: block; }
+
+.notes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s3); }
+.notes .panel h3 { font-size: 18px; line-height: 26px; font-weight: 600; }
+.notes ul { margin: 0; padding-left: 1.2em; display: grid; gap: var(--s2); font-size: 15px; line-height: 24px; }
+
+footer { padding-block: var(--s4) var(--s5); border-top: 1px solid var(--rule); color: var(--stone); font-size: 12px; line-height: 18px; display: grid; gap: var(--s1); }
+
+@media (max-width: 860px) {
+  .posts { grid-template-columns: minmax(0, 1fr); max-width: 520px; }
+  .two, .notes { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 480px) {
+  .intro h1 { font-size: 30px; line-height: 38px; }
+  .square h3 { font-size: 21px; line-height: 30px; }
+  .cue { grid-template-columns: minmax(0, 1fr); gap: var(--s1); }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <span class="brand">Tradeweave</span>
+    <span class="tag">런칭 홍보 문구 · 초안</span>
+  </header>
+
+  <div class="intro">
+    <p class="eyebrow">LAUNCH COPY</p>
+    <h1>나라 하나를 고르면, 교역 지도가 펼쳐집니다</h1>
+    <p>한 장 기획서에 적힌 내용만 가지고 쓴 런칭 문구입니다. 링크와 연락처는 <span class="ph">[대괄호]</span> 자리로 남겨 두었으니 실제 값으로 바꿔 쓰면 됩니다. 각 문구 아래 버튼을 누르면 그대로 복사됩니다.</p>
+    <div class="rules" aria-label="지킨 원칙">
+      <span>수상·사용자 수·순위 표현 없음</span>
+      <span>실제 무역 수치 없음</span>
+      <span>교역 변화 원인 단정 없음</span>
+      <span>출처: CEPII BACI · 기준연도 2024</span>
+    </div>
+  </div>
+
+  <!-- 인스타그램 -->
+  <section class="block" aria-labelledby="ig">
+    <div class="section-head">
+      <h2 id="ig">인스타그램 게시물 3개</h2>
+      <p>핵심 기능 하나씩 · 해시태그 5개씩</p>
+    </div>
+    <div class="posts">
+
+      <article class="post">
+        <div class="square" aria-hidden="true">
+          <span class="kicker">교역 상대국 지도</span>
+          <h3>이 나라는<br>어디에 팔고,<br>어디서 사 올까?</h3>
+          <div class="tiles" id="tiles"></div>
+          <div class="foot"><span class="wm">Tradeweave</span><span class="ramp"><i style="background:var(--map-1)"></i><i style="background:var(--map-2)"></i><i style="background:var(--map-3)"></i><i style="background:var(--map-4)"></i><i style="background:var(--map-5)"></i></span></div>
+        </div>
+        <div class="caption-box">
+          <span class="label">캡션</span>
+          <div class="text" id="post1">이 나라는 어디에 팔고, 어디서 사 올까?
+
+나라 하나만 고르면 주요 교역 상대국이 지도 한 장에 펼쳐집니다. 수출과 수입은 버튼 하나로 바꿔 보고, 상위 5개국은 목록으로 바로 확인하세요.
+
+Tradeweave 런칭 👉 <span class="ph">[서비스 링크]</span></div>
+          <div class="hash" id="post1h">#Tradeweave #무역통계 #교역상대국 #해외영업 #국제통상</div>
+          <div class="row-end"><span class="count" data-count="post1"></span><button class="btn" type="button" data-copy="post1">캡션 복사</button></div>
+        </div>
+      </article>
+
+      <article class="post">
+        <div class="square" aria-hidden="true">
+          <span class="kicker">쏠림 정도 보기</span>
+          <h3>한 나라에<br>얼마나 기대고<br>있을까?</h3>
+          <div class="bars"><div class="top1" style="width:78%"></div><div style="width:46%"></div><div style="width:30%"></div><div style="width:18%"></div><div style="width:10%"></div></div>
+          <div class="foot"><span class="wm">Tradeweave</span><span class="count">막대는 모양 예시 · 실제 값 아님</span></div>
+        </div>
+        <div class="caption-box">
+          <span class="label">캡션</span>
+          <div class="text" id="post2">한 나라에 얼마나 기대고 있을까?
+
+1위 상대국이 전체 교역에서 차지하는 비중, 그리고 상위 몇 나라에 얼마나 몰려 있는지를 쉬운 말로 풀어 드립니다. 화면에는 "이렇게 달라졌다"까지만 보여 드리고, 원인은 단정하지 않습니다.
+
+Tradeweave 런칭 👉 <span class="ph">[서비스 링크]</span></div>
+          <div class="hash" id="post2h">#Tradeweave #무역의존도 #공급망 #경제안보 #국제정치경제</div>
+          <div class="row-end"><span class="count" data-count="post2"></span><button class="btn" type="button" data-copy="post2">캡션 복사</button></div>
+        </div>
+      </article>
+
+      <article class="post">
+        <div class="square" aria-hidden="true">
+          <span class="kicker">출처 · 기준연도 · CSV</span>
+          <h3>출처 없는 숫자는<br>올리지 않습니다</h3>
+          <div class="srcline">출처: CEPII BACI (Gaulier &amp; Zignago, 2010), UN Comtrade 기반 · 기준연도 2024</div>
+          <div class="foot"><span class="wm">Tradeweave</span><span class="tag">CSV 내려받기</span></div>
+        </div>
+        <div class="caption-box">
+          <span class="label">캡션</span>
+          <div class="text" id="post3">출처 없는 숫자는 올리지 않습니다.
+
+모든 숫자 옆에 출처와 기준연도를 붙였습니다. 데이터는 CEPII BACI(UN Comtrade 기반), 기준연도는 2024년입니다. 필요한 데이터는 CSV로 내려받아 리포트에 바로 쓰세요. 회원가입 없이 쓸 수 있습니다.
+
+Tradeweave 런칭 👉 <span class="ph">[서비스 링크]</span></div>
+          <div class="hash" id="post3h">#Tradeweave #무역데이터 #데이터출처 #CSV #리서치</div>
+          <div class="row-end"><span class="count" data-count="post3"></span><button class="btn" type="button" data-copy="post3">캡션 복사</button></div>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- 초대 메시지 -->
+  <section class="block" aria-labelledby="inv">
+    <div class="section-head">
+      <h2 id="inv">첫 사용자 초대 메시지</h2>
+      <p>카카오톡 · DM · 메일 본문 공용</p>
+    </div>
+    <div class="two">
+      <div class="panel">
+        <div class="text" id="invite"><span class="ph">[받는 분 이름]</span>님, 안녕하세요. Tradeweave를 만들고 있는 정주연입니다.
+
+Tradeweave는 나라 하나를 고르면 그 나라가 어느 나라와 얼마나 거래하는지, 특정 나라에 얼마나 기대고 있는지를 지도 한 장으로 보여 주는 웹서비스입니다. 모든 숫자에는 출처와 기준연도(CEPII BACI, 2024년)를 붙였고, 데이터는 CSV로 내려받을 수 있습니다.
+
+첫 사용자로 한번 써 보시고 솔직한 의견을 들려주실 수 있을까요? 회원가입 없이 바로 쓸 수 있고, 개인정보는 따로 받지 않습니다.
+
+· 써 보기: <span class="ph">[서비스 링크]</span>
+· 의견 보내기: <span class="ph">[의견 받을 곳]</span>
+
+특히 두 가지가 궁금합니다.
+1. 첫 화면에서 무엇을 하면 되는지 바로 알 수 있었나요?
+2. 찾고 싶던 나라의 정보를 찾으셨나요?
+
+시간 내 주셔서 고맙습니다.</div>
+        <div class="row-end"><span class="count" data-count="invite"></span><button class="btn" type="button" data-copy="invite">메시지 복사</button></div>
+      </div>
+      <div class="aside">
+        <h3>보낼 때 바꿀 것</h3>
+        <ul>
+          <li><span class="ph">[받는 분 이름]</span>, <span class="ph">[서비스 링크]</span>, <span class="ph">[의견 받을 곳]</span> 세 자리</li>
+          <li>받는 분이 해외영업 쪽이면 둘째 문단 앞에 "새 시장을 맡았을 때 빨리 감을 잡는 용도로 만들었습니다"를 넣어도 됩니다.</li>
+          <li>질문 두 개는 기획서의 "첫 화면에서 할 단 하나의 행동"을 확인하려는 것입니다. 다른 걸 확인하고 싶으면 바꿔 주세요.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 30초 멘트 -->
+  <section class="block" aria-labelledby="pitch">
+    <div class="section-head">
+      <h2 id="pitch">30초 소개 멘트</h2>
+      <p>한글 약 210음절 · 보통 속도로 읽으면 30초 안팎</p>
+    </div>
+    <div class="two">
+      <div class="panel">
+        <div class="timeline" aria-hidden="true"><i style="flex:5;background:var(--map-1)"></i><i style="flex:7;background:var(--map-2)"></i><i style="flex:12;background:var(--map-4)"></i><i style="flex:6;background:var(--ochre)"></i></div>
+        <div class="script">
+          <div class="cue"><span class="t"><b>문제</b>0–5초</span><div><p>이 나라는 주로 어디에 팔고, 어디서 사 올까요? 새 시장을 맡으면 가장 먼저 드는 질문입니다.</p></div></div>
+          <div class="cue"><span class="t"><b>불편</b>5–12초</span><div><p>그런데 답을 찾으려면 여러 사이트를 돌아야 하고, 찾은 자료마다 연도와 단위가 달라 서로 비교하기도 어렵습니다.</p></div></div>
+          <div class="cue"><span class="t"><b>해결</b>12–24초</span><div><p>Tradeweave는 나라 하나만 고르면 주요 교역 상대국을 지도 한 장과 상위 5개국 목록으로 보여 줍니다. 1위 상대국이 차지하는 비중과, 상위 몇 나라에 얼마나 몰려 있는지도 쉬운 말로 풀어 드립니다. 모든 숫자에는 출처와 기준연도를 붙였고, CSV로 내려받을 수 있습니다.</p><p class="scene">화면: 나라 선택 → 지도 → 쏠림 정도 → 출처 표기 순서로 넘기기</p></div></div>
+          <div class="cue"><span class="t"><b>행동</b>24–30초</span><div><p>회원가입은 필요 없습니다. 궁금한 나라 하나, 지금 골라 보세요.</p><p class="scene">자막: <span class="ph">[서비스 링크]</span></p></div></div>
+        </div>
+        <div class="row-end"><span class="count">구간 표시는 읽기용 안내이며 복사에는 대사만 들어갑니다</span><button class="btn" type="button" id="copyScript">멘트 복사</button></div>
+      </div>
+      <div class="aside">
+        <h3>읽을 때</h3>
+        <ul>
+          <li>"Tradeweave"는 "트레이드위브"로 읽습니다.</li>
+          <li>"5개국", "1위"는 기능 설명이지 순위 자랑이 아닙니다. 실제 나라 이름이나 수치는 넣지 않았습니다.</li>
+          <li>시간이 남으면 "원인은 단정하지 않고, 달라진 모습만 보여 드립니다"를 해결 구간 끝에 덧붙일 수 있습니다(약 3초).</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 확인 메모 -->
+  <section class="block" aria-labelledby="chk">
+    <div class="section-head">
+      <h2 id="chk">쓰기 전에 확인할 것</h2>
+      <p>기획서와 대조한 결과</p>
+    </div>
+    <div class="notes">
+      <div class="panel">
+        <h3>일부러 쓰지 않은 표현</h3>
+        <ul>
+          <li><b>"무료"</b>: 기획서에는 회원가입이 없다는 말만 있고 요금 이야기는 없습니다. 무료로 운영한다면 그때 넣으면 됩니다.</li>
+          <li><b>"최신 데이터"</b>: 기획서가 "최신" 대신 "기준연도"를 쓰기로 정했습니다.</li>
+          <li><b>"○○개국 지원"</b>: 지원 나라 수는 기획서에 없고 데이터 가공도 끝나지 않았습니다.</li>
+          <li><b>"실시간", "가장 정확한"</b>: 근거가 없어 뺐습니다.</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <h3>공개 전에 정해야 할 것</h3>
+        <ul>
+          <li><b>"런칭"이라는 말</b>: 기획서상 기술 스택과 배포 방식이 아직 정해지지 않았습니다. 실제 공개 전이라면 "곧 공개", "첫 사용자 모집"으로 바꾸는 편이 정확합니다.</li>
+          <li><b>기획서 표기 차이</b>: 핵심 기능 3번 설명에는 출처 예시가 "UN Comtrade"로 남아 있지만, 확정된 출처는 CEPII BACI입니다. 문구는 BACI 기준으로 썼고, 기획서도 맞춰 두면 좋습니다.</li>
+          <li><b>BACI 표기</b>: 이용 조건(Etalab 2.0)상 출처 표시가 필요하므로 게시물 3번 이미지의 출처 줄은 지우지 않는 것을 권합니다.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span>Tradeweave 디자인 시스템(지도책 방향, 밝은 테마)으로 만든 문구 초안입니다. 게시물 이미지는 구도 예시이며 실제 데이터를 담고 있지 않습니다.</span>
+    <span>근거 문서: Tradeweave 한 장 기획서 (2026-11-12)</span>
+  </footer>
+</div>
+
+<script>
+(function () {
+  // 첫 게시물의 지도 타일: 디자인 시스템 5단계 색 + 선택 나라(황토) 견본. 값과 무관한 장식 배열.
+  var pattern = ['l','l','m1','m2','l','l','l','m1','m3','sel','m4','m2','l','l','l','m2','m5','m3','m1','l','l','l','l','m1','m2','l','l','l'];
+  var colors = { l: 'var(--land)', m1: 'var(--map-1)', m2: 'var(--map-2)', m3: 'var(--map-3)', m4: 'var(--map-4)', m5: 'var(--map-5)', sel: 'var(--ochre)' };
+  var tiles = document.getElementById('tiles');
+  pattern.forEach(function (k) { var s = document.createElement('span'); s.style.background = colors[k]; tiles.appendChild(s); });
+
+  function textOf(id) {
+    var t = document.getElementById(id).innerText.trim();
+    var h = document.getElementById(id + 'h');
+    return h ? t + '\n\n' + h.innerText.trim() : t;
+  }
+  document.querySelectorAll('[data-count]').forEach(function (el) {
+    el.textContent = '공백 포함 ' + textOf(el.getAttribute('data-count')).length + '자';
+  });
+
+  function copy(text, btn) {
+    var label = btn.textContent;
+    function ok() { btn.textContent = '복사됨'; btn.classList.add('done'); setTimeout(function () { btn.textContent = label; btn.classList.remove('done'); }, 1600); }
+    function fallback() {
+      var ta = document.createElement('textarea'); ta.value = text; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); ok(); } catch (e) { btn.textContent = '직접 선택해 복사하세요'; }
+      document.body.removeChild(ta);
+    }
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(ok, fallback);
+      else fallback();
+    } catch (e) { fallback(); }
+  }
+  document.querySelectorAll('[data-copy]').forEach(function (btn) {
+    btn.addEventListener('click', function () { copy(textOf(btn.getAttribute('data-copy')), btn); });
+  });
+  document.getElementById('copyScript').addEventListener('click', function (e) {
+    var lines = Array.prototype.map.call(document.querySelectorAll('.cue p:not(.scene)'), function (p) { return p.innerText.trim(); });
+    copy(lines.join('\n'), e.currentTarget);
+  });
+})();
+</script>
+
+</html>

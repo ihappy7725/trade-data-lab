@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tradeweave 디자인 시스템</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600&family=Noto+Serif+KR:wght@600;700&display=swap">
+<style>
+/* 정적 사본: claude.ai Design System 타입 없이 README·색·컴포넌트 미리보기를 한 장에 보여 준다. 원본 토큰은 tokens.json. */
+:root{--paper:#f6f1e7;--ink:#1c2b3a;--atlas-blue:#234d86;--ochre:#9a6a10;--stone:#5b6573;--card:#fffdf8;--land:#e5dccb;--rule:#d9d0bf;--on-accent:#ffffff;--map-1:#8aaad0;--map-2:#6189be;--map-3:#3d69a5;--map-4:#234d86;--map-5:#122f57;--alert:#b42318;--font-serif:"Noto Serif KR", "Nanum Myeongjo", serif;--font-sans:"IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;--space-1:4px;--space-2:8px;--space-3:16px;--space-4:24px;--space-5:40px;--radius-sm:4px;--radius-md:6px;--radius-none:0px;color-scheme:light}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:400 16px/26px var(--font-sans)}
+.wrap{max-width:960px;margin:0 auto;padding:24px 16px 64px}
+.top{font-size:14px;margin-bottom:24px} .top a{color:var(--atlas-blue)}
+h1,h2,h3{font-family:var(--font-serif);line-height:1.3}
+h2{margin:40px 0 12px;font-size:24px} h3{font-size:18px}
+a{color:var(--atlas-blue)}
+table{border-collapse:collapse;width:100%;font-size:14px;margin:12px 0} th,td{border:1px solid var(--rule);padding:6px 8px;text-align:left;vertical-align:top} th{background:var(--card)}
+code{font-size:13px;background:var(--card);border:1px solid var(--rule);border-radius:4px;padding:0 4px}
+.tbl{overflow-x:auto}
+.cover{overflow-x:auto;border:1px solid var(--rule);margin-bottom:24px}
+.sws{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.sw{display:grid;gap:2px;font-size:13px;background:var(--card);border:1px solid var(--rule);border-radius:6px;padding:8px} .sw span{height:40px;border:1px solid var(--rule)} .sw code{border:0;padding:0;background:none}
+.comp{border-top:1px solid var(--rule);margin-top:40px}
+.preview{background:var(--paper);border:1px dashed var(--rule);padding:16px;border-radius:6px;overflow-x:auto}
+.preview { margin: 0; padding: 16px; background: var(--paper); color: var(--ink); font-family: var(--font-sans); }
+.tw-row { display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; }
+.tw-btn { font: 500 14px/20px var(--font-sans); height: 40px; padding: 0 var(--space-3); border-radius: var(--radius-sm); border: 1px solid var(--atlas-blue); cursor: pointer; }
+.tw-btn--primary { background: var(--atlas-blue); color: var(--on-accent); }
+.tw-btn--primary:hover { background: var(--map-5); border-color: var(--map-5); }
+.tw-btn--secondary { background: var(--card); color: var(--atlas-blue); }
+.tw-btn--secondary:hover { background: var(--paper); }
+.tw-btn:focus-visible, .tw-seg button:focus-visible { outline: 2px solid var(--ochre); outline-offset: 2px; }
+.tw-btn:disabled { background: var(--land); border-color: var(--land); color: var(--stone); cursor: not-allowed; }
+.tw-seg { display: inline-flex; border: 1px solid var(--atlas-blue); border-radius: var(--radius-sm); overflow: hidden; }
+.tw-seg button { font: 500 14px/20px var(--font-sans); height: 38px; padding: 0 var(--space-3); border: 0; background: var(--card); color: var(--atlas-blue); cursor: pointer; }
+.tw-seg button[aria-pressed="true"] { background: var(--atlas-blue); color: var(--on-accent); }
+.tw-card { background: var(--card); border: 1px solid var(--rule); border-radius: var(--radius-md); padding: var(--space-4); max-width: 360px; display: grid; gap: var(--space-2); }
+.tw-eyebrow { font: 500 12px/18px var(--font-sans); letter-spacing: .04em; color: var(--stone); }
+.tw-card h3 { margin: 0; font: 600 20px/28px var(--font-serif); color: var(--ink); }
+.tw-figure { font: 600 32px/36px var(--font-sans); font-variant-numeric: tabular-nums; color: var(--ink); }
+.tw-card p { margin: 0; font: 400 16px/26px var(--font-sans); }
+.tw-source { margin-top: var(--space-2); padding-top: var(--space-2); border-top: 1px solid var(--rule); font: 400 12px/18px var(--font-sans); color: var(--stone); }
+.tw-tag { justify-self: start; font: 500 12px/18px var(--font-sans); color: var(--stone); border: 1px dashed var(--stone); border-radius: var(--radius-sm); padding: 0 6px; }
+.tw-legend { display: grid; gap: var(--space-2); font: 400 12px/18px var(--font-sans); color: var(--stone); }
+.tw-legend__ramp { display: grid; grid-template-columns: repeat(5, 56px); gap: 2px; }
+.tw-legend__ramp span { height: 12px; }
+.tw-legend__labels { display: grid; grid-template-columns: repeat(5, 56px); gap: 2px; font-variant-numeric: tabular-nums; }
+.tw-legend__keys { display: flex; flex-wrap: wrap; gap: var(--space-3); }
+.tw-key { display: inline-flex; align-items: center; gap: var(--space-1); }
+.tw-key i { width: 12px; height: 12px; display: inline-block; }
+
+.preview{padding:16px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<p class="top"><a href="/">Tradeweave</a> · 디자인 시스템 (밝은 테마 1종) · 원본 <a href="tokens.json">tokens.json</a></p>
+<div class="cover"><style>
+  ._x { margin: 0; padding: 0; background: var(--paper); }
+  .cv { position: relative; width: 960px; height: 288px; overflow: hidden; background: var(--paper); }
+  .cv svg { position: absolute; left: 480px; top: 0; }
+  .b-blue { fill: var(--atlas-blue); } .b-deep { fill: var(--map-5); } .b-ochre { fill: var(--ochre); }
+  .b-land { fill: var(--land); } .b-tint { fill: var(--map-1); }
+  .grat { stroke: var(--rule); stroke-width: 1; fill: none; }
+  .txt { position: absolute; left: 40px; bottom: 40px; max-width: 440px; }
+  .name { font-family: var(--font-serif); font-weight: 700; font-size: 80px; line-height: .95; color: var(--ink); letter-spacing: -0.01em; }
+  .tag { margin-top: 16px; font-family: var(--font-sans); font-size: 14px; line-height: 20px; color: var(--stone); }
+</style>
+<div class="cv">
+  <svg width="480" height="288" viewBox="0 0 480 288" aria-hidden="true">
+    <!-- blocks: map-5 deep slab 160x288 · atlas-blue 160x184 · land 120x104 · map-1 tint 120x80 · ochre 40x40 (the one chosen country) -->
+    <!-- arrangement: flush modular grid bleeding off top and right edges, like map sheets laid edge to edge, radius-none -->
+    <!-- pattern: graticule (a few latitude/longitude hairlines in rule) because the system is an editorial atlas: "borders not shadows" -->
+    <!-- scales: gaps and sides from space-4 (24) / space-5 (40) multiples, radius-none -->
+    <rect class="b-land" x="40" y="0" width="120" height="104"/>
+    <rect class="b-tint" x="40" y="128" width="120" height="80"/>
+    <rect class="b-blue" x="184" y="0" width="136" height="184"/>
+    <rect class="b-deep" x="320" y="0" width="160" height="288"/>
+    <rect class="b-ochre" x="224" y="208" width="40" height="40"/>
+    <line class="grat" x1="0" y1="116" x2="480" y2="116"/>
+    <line class="grat" x1="0" y1="196" x2="480" y2="196"/>
+    <line class="grat" x1="172" y1="0" x2="172" y2="288"/>
+    <path class="grat" d="M0 260 Q 240 236 480 260"/>
+  </svg>
+  <div class="txt">
+    <div class="name">Tradeweave</div>
+    <div class="tag">나라 하나를 고르면 교역 상대와 쏠림을 지도 한 장으로 보여 준다</div>
+  </div>
+</div>
+</div>
+<h1 style="font-size:32px;margin:0 0 8px">Tradeweave 디자인 시스템</h1>
+<div class="tbl"><p>Tradeweave는 <strong>현대 지도책</strong>처럼 보인다. 종이색 바탕에 남색 잉크로 쓰고, 색은 지도 위의 데이터에 아껴 쓴다. 고지도의 분위기(종이, 세리프 지명)는 빌리되 장식은 가져오지 않는다. 사용자가 화면을 캡처해 리포트에 넣어도 믿고 인용할 수 있는 모습이 목표다.</p>
+<h2>핵심 색 5개</h2>
+<table>
+<thead>
+<tr>
+<th>토큰</th>
+<th>HEX</th>
+<th>용도</th>
+<th>대비 확인 (WCAG 2)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>paper</code></td>
+<td>#F6F1E7</td>
+<td>페이지 배경, 지도 바다</td>
+<td>기준 바탕</td>
+</tr>
+<tr>
+<td><code>ink</code></td>
+<td>#1C2B3A</td>
+<td>제목, 본문</td>
+<td>paper 위 12.8:1</td>
+</tr>
+<tr>
+<td><code>atlas-blue</code></td>
+<td>#234D86</td>
+<td>주 버튼, 링크, 선택된 토글, 지도 4단계</td>
+<td>paper 위 7.5:1 · 흰 글자 8.5:1</td>
+</tr>
+<tr>
+<td><code>ochre</code></td>
+<td>#9A6A10</td>
+<td>고른 나라, 키보드 포커스 링</td>
+<td>paper 위 4.2:1 (표시용 3:1 통과, 작은 글자용 4.5:1 미달) · 흰 글자 4.7:1</td>
+</tr>
+<tr>
+<td><code>stone</code></td>
+<td>#5B6573</td>
+<td>보조 글자, 출처·기준연도 줄</td>
+<td>paper 위 5.3:1 · card 위 5.8:1</td>
+</tr>
+</tbody>
+</table>
+<p>보조 색: <code>card</code> #FFFDF8(카드 바탕), <code>land</code> #E5DCCB(교역 없음·자료 없음 육지), <code>rule</code> #D9D0BF(장식용 구분선), <code>alert</code> #B42318(오류 문구 전용).</p>
+<ul>
+<li>글자는 <code>ink</code> 또는 <code>stone</code>만 쓴다. <code>ochre</code>와 지도 색을 글자 색으로 쓰지 않는다.</li>
+<li><code>ochre</code>는 한 화면에 한 곳(고른 나라)과 포커스 링에만 쓴다. 눈이 가장 먼저 가야 하는 곳이기 때문이다.</li>
+</ul>
+<h2>지도 색</h2>
+<ul>
+<li>교역 비중은 파랑 한 색의 5단계(<code>map-1</code> ~ <code>map-5</code>)로 칠한다. 밝기가 한 방향으로만 변하는지 검사기로 확인했다.</li>
+<li>바다는 <code>paper</code>, 교역 없는 나라는 <code>land</code>. 바다를 파랗게 칠하면 교역 색과 헷갈린다.</li>
+<li>수출과 수입은 같은 파랑 단계를 쓰고 토글로 바꾼다. 둘을 동시에 보여 줘야 할 때는 지도를 두 장 나란히 놓는다.</li>
+<li>지도에서 색만으로 값을 읽게 하지 않는다. 상위 5개 목록과 툴팁에 숫자를 함께 보여 준다(<code>map-1</code>은 바탕 대비 2.1:1).</li>
+<li>자세한 범례 규칙은 MapLegend를 따른다.</li>
+</ul>
+<h2>글꼴</h2>
+<table>
+<thead>
+<tr>
+<th>역할</th>
+<th>글꼴</th>
+<th>라이선스</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>제목 (<code>display</code>, <code>title</code>, <code>heading</code>)</td>
+<td>Noto Serif KR 600·700</td>
+<td>SIL Open Font License 1.1, 상업적 사용·웹 임베드 가능</td>
+</tr>
+<tr>
+<td>본문·버튼·숫자 (<code>body</code>, <code>label</code>, <code>figure</code>, <code>source</code>)</td>
+<td>IBM Plex Sans KR 400·500·600</td>
+<td>SIL Open Font License 1.1</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>둘 다 Google Fonts에서 무료로 불러올 수 있다. 라이선스는 google/fonts 저장소의 OFL.txt와 METADATA로 확인했다.</li>
+<li>세리프는 제목에만 쓴다. 본문, 표, 숫자에는 쓰지 않는다.</li>
+<li>숫자는 <code>font-variant-numeric: tabular-nums</code>로 자릿수를 맞춘다.</li>
+<li>본문을 Pretendard(OFL 1.1)로 바꿔도 된다. 다만 Google Fonts에 없어 jsDelivr 등에서 따로 불러와야 한다.</li>
+</ul>
+<h2>간격과 모서리</h2>
+<ul>
+<li>간격은 <code>space-1</code>(4) · <code>space-2</code>(8) · <code>space-3</code>(16) · <code>space-4</code>(24) · <code>space-5</code>(40)만 쓴다.</li>
+<li>버튼은 <code>radius-sm</code>(4px), 카드는 <code>radius-md</code>(6px), 지도 틀과 범례는 <code>radius-none</code>. 크게 둥근 모서리는 쓰지 않는다.</li>
+<li>구분은 그림자 대신 <code>rule</code> 테두리로 한다.</li>
+</ul>
+<h2>글쓰기</h2>
+<ul>
+<li>쉬운 말, 짧은 문장, "~한다/~이다" 체. 전문용어는 처음 나올 때 풀어 쓴다("쏠림 정도(1위 상대국 비중)").</li>
+<li>숫자에는 항상 출처와 기준연도를 붙인다: "출처: CEPII BACI (Gaulier &amp; Zignago, 2010), UN Comtrade 기반 · 기준연도 2024".</li>
+<li>"최신"이라고 쓰지 않는다. "기준연도 2024"라고 쓴다.</li>
+<li>변화의 원인을 단정하지 않는다. "줄었다"는 쓰고 "제재 때문에 줄었다"는 쓰지 않는다.</li>
+</ul>
+<h2>쓰면 안 되는 것</h2>
+<ul>
+<li><strong>고지도 장식</strong>: 범선, 나침반, 바다 괴물, 얼룩진 양피지 질감, 낡은 테두리. 분위기만 빌리고 장식은 빼야 데이터가 보인다.</li>
+<li><strong>빨강·초록으로 수출/수입 나누기</strong>: 적록색약 사용자가 구분하지 못한다.</li>
+<li><strong>무지개 색 지도</strong>: 순서가 없는 색은 많고 적음을 전하지 못한다.</li>
+<li><strong>파란 바다</strong>: 교역 비중 파랑과 겹친다.</li>
+<li><strong>황토색 남용</strong>: 고른 나라 말고 다른 곳에 쓰면 시선이 흩어진다.</li>
+<li><strong>출처 없는 숫자, "최신" 표기, 원인 단정 문구.</strong></li>
+<li><strong>실제 나라 이름에 지어낸 숫자</strong>: 시안에도 "가상국 A"와 "예시" 꼬리표를 쓴다.</li>
+<li><strong>세리프 본문·세리프 숫자</strong>: 작은 크기에서 읽기 어렵다.</li>
+<li><strong>3D 지구본, 날아다니는 교역선·곡선 애니메이션</strong>: 보기엔 화려하지만 비교가 어렵다.</li>
+<li><strong>그라데이션, 이모지, 큰 그림자, 왼쪽 색 띠 카드, 알약 모양 버튼.</strong></li>
+<li><strong>색만으로 상태 알리기</strong>: 오류는 <code>alert</code> 색과 함께 아이콘과 글로 알린다.</li>
+</ul>
+<h2>아직 정하지 않은 것</h2>
+<ul>
+<li>어두운 테마: 지금은 밝은 테마 하나만 있다. 필요하면 같은 규칙으로 따로 만들고 다시 대비를 검사한다.</li>
+<li>지도 5단계 구간: 실제 BACI 2024 분포를 본 뒤 조정한다.</li>
+<li>로고: 아직 없어 이름을 Noto Serif KR로 적는다.</li>
+</ul></div>
+<h2>색 토큰 전체</h2>
+<div class="sws"><div class="sw"><span style="background:#f6f1e7"></span><b>paper</b><code>#f6f1e7</code></div><div class="sw"><span style="background:#1c2b3a"></span><b>ink</b><code>#1c2b3a</code></div><div class="sw"><span style="background:#234d86"></span><b>atlas-blue</b><code>#234d86</code></div><div class="sw"><span style="background:#9a6a10"></span><b>ochre</b><code>#9a6a10</code></div><div class="sw"><span style="background:#5b6573"></span><b>stone</b><code>#5b6573</code></div><div class="sw"><span style="background:#fffdf8"></span><b>card</b><code>#fffdf8</code></div><div class="sw"><span style="background:#e5dccb"></span><b>land</b><code>#e5dccb</code></div><div class="sw"><span style="background:#d9d0bf"></span><b>rule</b><code>#d9d0bf</code></div><div class="sw"><span style="background:#ffffff"></span><b>on-accent</b><code>#ffffff</code></div><div class="sw"><span style="background:#8aaad0"></span><b>map-1</b><code>#8aaad0</code></div><div class="sw"><span style="background:#6189be"></span><b>map-2</b><code>#6189be</code></div><div class="sw"><span style="background:#3d69a5"></span><b>map-3</b><code>#3d69a5</code></div><div class="sw"><span style="background:#234d86"></span><b>map-4</b><code>#234d86</code></div><div class="sw"><span style="background:#122f57"></span><b>map-5</b><code>#122f57</code></div><div class="sw"><span style="background:#b42318"></span><b>alert</b><code>#b42318</code></div></div>
+<section class="comp"><h2>Button</h2><div class="preview">
+<div class="tw-row">
+  <button class="tw-btn tw-btn--primary" type="button">나라 고르기</button>
+  <button class="tw-btn tw-btn--secondary" type="button">CSV 내려받기</button>
+  <button class="tw-btn tw-btn--primary" type="button" disabled>불러오는 중</button>
+</div>
+<div class="tw-row" style="margin-top:16px">
+  <div class="tw-seg" role="group" aria-label="교역 방향">
+    <button type="button" aria-pressed="true">수출</button><button type="button" aria-pressed="false">수입</button>
+  </div>
+</div>
+<script>
+document.querySelectorAll('.tw-seg button').forEach(function (b) {
+  b.addEventListener('click', function () { b.parentNode.querySelectorAll('button').forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); }); });
+});
+</script>
+</div><div class="doc">
+<p>버튼은 세 가지뿐이다. 주 버튼은 화면마다 하나, 그 화면에서 할 단 하나의 행동(첫 화면에서는 "나라 고르기")에만 쓴다.</p>
+<ul>
+<li><strong>주 버튼</strong>: <code>atlas-blue</code> 바탕에 <code>on-accent</code> 글자, 높이 40px, 좌우 <code>space-3</code>, 모서리 <code>radius-sm</code>, 글자 <code>label</code>. 마우스를 올리면 <code>map-5</code>로 한 단계 진해진다.</li>
+<li><strong>보조 버튼</strong>: <code>card</code> 바탕, <code>atlas-blue</code> 1px 테두리와 글자. "CSV 내려받기", "출처 보기"처럼 곁가지 행동에 쓴다.</li>
+<li><strong>수출/수입 토글</strong>: 두 칸짜리 묶음 버튼. 고른 쪽은 <code>atlas-blue</code> 바탕, 안 고른 쪽은 <code>card</code> 바탕. <code>aria-pressed</code>로 상태를 알린다. 두 방향을 빨강·초록으로 나누지 않는다.</li>
+<li><strong>포커스</strong>: 모든 버튼은 키보드 포커스 때 <code>ochre</code> 2px 테두리를 2px 띄워 보여 준다.</li>
+<li><strong>비활성</strong>: <code>land</code> 바탕에 <code>stone</code> 글자. 왜 누를 수 없는지 버튼 문구로 말한다("불러오는 중").</li>
+<li>문구는 동사로 끝나는 짧은 말로 쓴다: "나라 고르기", "CSV 내려받기". "확인", "제출" 같은 모호한 말은 쓰지 않는다.</li>
+<li>아이콘만 있는 버튼, 그라데이션, 그림자, 둥근 알약 모양 버튼은 쓰지 않는다.</li>
+</ul></div></section><section class="comp"><h2>Card</h2><div class="preview">
+<article class="tw-card">
+  <span class="tw-tag">예시 · 실제 데이터 아님</span>
+  <div class="tw-eyebrow">수출 · 1위 상대국 비중</div>
+  <h3>가상국 A → 가상국 B</h3>
+  <div class="tw-figure">24.1%</div>
+  <p>수출 4달러 중 1달러가 한 나라로 간다. 상위 3개국을 합하면 절반을 넘는다.</p>
+  <div class="tw-source">출처: 예시 데이터 · 기준연도 2024</div>
+</article>
+</div><div class="doc">
+<p>카드는 숫자 하나와 그 뜻을 한 문장으로 전하는 상자이며, 바닥줄에 반드시 출처와 기준연도를 단다.</p>
+<p>구성은 위에서 아래로 고정한다.</p>
+<ol>
+<li><strong>머리말</strong> (<code>tw-eyebrow</code>, <code>stone</code>): 무엇을 재는지. "수출 · 1위 상대국 비중"</li>
+<li><strong>제목</strong> (<code>heading</code>, Noto Serif KR): 어느 나라 이야기인지.</li>
+<li><strong>핵심 숫자</strong> (<code>figure</code>, 고정폭 숫자): 하나만. 단위(%, 천 달러)를 붙인다.</li>
+<li><strong>설명</strong> (<code>body</code>): 쉬운 말 한두 문장. "이렇게 달라졌다"만 말하고 원인은 단정하지 않는다.</li>
+<li><strong>출처 줄</strong> (<code>source</code>, <code>stone</code>, 위에 <code>rule</code> 구분선): 서비스 화면에서는 "출처: CEPII BACI (Gaulier &amp; Zignago, 2010), UN Comtrade 기반 · 기준연도 2024"를 그대로 쓴다.</li>
+</ol>
+<p>모양: <code>card</code> 바탕, <code>rule</code> 1px 테두리, <code>radius-md</code>, 안쪽 여백 <code>space-4</code>. 그림자는 쓰지 않는다. 카드끼리는 같은 높이 기준선과 같은 순서를 지킨다.</p>
+<p>예시 화면이나 시안에는 "예시 · 실제 데이터 아님" 꼬리표(<code>tw-tag</code>)를 달고 나라 이름도 "가상국 A"처럼 실제 나라가 아님을 드러낸다. 실제 나라 이름에 지어낸 숫자를 붙이지 않는다.</p>
+<p>하지 말 것: 왼쪽 색 띠, 색으로 채운 카드 바탕, 숫자 두 개 이상, 출처 줄 생략, "최신" 표기.</p></div></section><section class="comp"><h2>MapLegend</h2><div class="preview">
+<div class="tw-legend" role="group" aria-label="지도 범례: 전체 수출에서 차지하는 비중">
+  <div style="color:var(--ink);font-weight:500">전체 수출에서 차지하는 비중</div>
+  <div class="tw-legend__ramp">
+    <span style="background:var(--map-1)"></span><span style="background:var(--map-2)"></span><span style="background:var(--map-3)"></span><span style="background:var(--map-4)"></span><span style="background:var(--map-5)"></span>
+  </div>
+  <div class="tw-legend__labels"><span>1% 미만</span><span>1~5%</span><span>5~10%</span><span>10~20%</span><span>20% 이상</span></div>
+  <div class="tw-legend__keys">
+    <span class="tw-key"><i style="background:var(--ochre)"></i>고른 나라</span>
+    <span class="tw-key"><i style="background:var(--land);outline:1px solid var(--rule)"></i>교역 없음 · 자료 없음</span>
+  </div>
+</div>
+</div><div class="doc">
+<p>지도 색은 파랑 한 가지 색의 5단계로 교역 비중을 보여 주고, 고른 나라만 황토색으로 칠한다.</p>
+<ul>
+<li>단계: <code>map-1</code>(1% 미만) → <code>map-5</code>(20% 이상). 밝을수록 적고 진할수록 많다. 구간은 초안이며 실제 BACI 2024 분포를 본 뒤 조정한다.</li>
+<li>수출과 수입은 같은 파랑 단계를 쓴다. 토글로 바꿀 때 범례 제목만 "전체 수출에서…" ↔ "전체 수입에서…"로 바꾼다.</li>
+<li>고른 나라: <code>ochre</code> 채움. 화면에 황토색은 이 나라 하나뿐이다.</li>
+<li>교역 없음·자료 없음: <code>land</code>. 바다는 <code>paper</code> 그대로 둔다.</li>
+<li>나라 경계선: <code>card</code> 색 0.5px. 진한 검은 선은 쓰지 않는다.</li>
+<li><code>map-1</code>은 바탕과 대비가 낮다(2.1:1). 그래서 지도 옆 상위 5개 목록과 마우스 툴팁에 숫자를 항상 함께 보여 준다.</li>
+<li>색 검사: 5단계는 밝기가 한 방향으로 변하고 단계 사이 밝기 차이가 충분함을 확인했다. 황토와 파랑은 적록색약 시뮬레이션에서도 크게 갈린다(OKLab ΔE 20 이상).</li>
+</ul></div></section>
+</div>
+<script>document.querySelectorAll('.tw-seg button').forEach(function(b){b.addEventListener('click',function(){b.parentNode.querySelectorAll('button').forEach(function(x){x.setAttribute('aria-pressed',x===b?'true':'false');});});});</script>
+</body>
+</html>

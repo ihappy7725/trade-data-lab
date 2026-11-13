@@ -1,0 +1,573 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tradeweave 랜딩</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600&family=Noto+Serif+KR:wght@600;700&display=swap">
+<style>
+/* 레이아웃: 한 열 지도책 판형. 첫 화면 → 기능 카드 3개 → 자리 표시 → 바닥글. 화면 전환은 #해시로 한다.
+   Tradeweave 디자인 시스템(밝은 테마 하나만 확정)을 그대로 따른다. 어두운 테마는 아직 정하지 않아 일부러 밝은 화면 하나로 고정한다. */
+:root {
+  --paper: #f6f1e7; --ink: #1c2b3a; --atlas-blue: #234d86; --ochre: #9a6a10; --stone: #5b6573;
+  --card: #fffdf8; --land: #e5dccb; --rule: #d9d0bf; --on-accent: #ffffff; --alert: #b42318;
+  --map-1: #8aaad0; --map-2: #6189be; --map-3: #3d69a5; --map-4: #234d86; --map-5: #122f57;
+  --blue-hover: #1b3d6c;
+  --serif: "Noto Serif KR", "Nanum Myeongjo", serif;
+  --sans: "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --s1: 4px; --s2: 8px; --s3: 16px; --s4: 24px; --s5: 40px;
+  --r-sm: 4px; --r-md: 6px;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html, body { background: var(--paper); color: var(--ink); }
+body {
+  font-family: var(--sans); font-size: 16px; line-height: 26px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 1040px; margin: 0 auto; }
+h1, h2, h3 { font-family: var(--serif); margin: 0; text-wrap: balance; word-break: keep-all; color: var(--ink); }
+p { margin: 0; }
+a { color: var(--atlas-blue); }
+.num { font-variant-numeric: tabular-nums; }
+:focus-visible { outline: 3px solid var(--ochre); outline-offset: 2px; }
+
+/* 머리띠 */
+.top { display: flex; align-items: center; justify-content: space-between; gap: var(--s3); padding-block: var(--s3); border-bottom: 1px solid var(--rule); }
+.brand { font-family: var(--serif); font-weight: 700; font-size: 20px; color: var(--ink); text-decoration: none; letter-spacing: .01em; }
+.proto-tag { font-size: 14px; line-height: 20px; color: var(--stone); border: 1px solid var(--rule); border-radius: var(--r-sm); padding: 2px var(--s2); background: var(--card); }
+
+/* 버튼 */
+.btn { font-family: var(--sans); font-weight: 500; font-size: 14px; line-height: 20px; border-radius: var(--r-sm); border: 1px solid var(--atlas-blue); cursor: pointer; padding: var(--s2) var(--s3); text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: var(--s2); min-height: 40px; }
+.btn-primary { background: var(--atlas-blue); color: var(--on-accent); }
+.btn-primary:hover { background: var(--blue-hover); border-color: var(--blue-hover); }
+.btn-secondary { background: var(--card); color: var(--atlas-blue); }
+.btn-secondary:hover { background: #eef2f8; }
+.btn-text { background: none; border-color: transparent; color: var(--atlas-blue); padding-inline: 0; }
+.btn-text:hover { text-decoration: underline; }
+.btn-hero { font-size: 20px; line-height: 28px; font-weight: 600; padding: var(--s3) var(--s5); min-height: 64px; }
+.btn-hero .arrow { font-size: 22px; }
+
+/* 첫 화면 */
+.hero { padding-block: var(--s5) var(--s5); display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: var(--s5); align-items: center; }
+.eyebrow { font-size: 14px; line-height: 20px; font-weight: 500; color: var(--stone); letter-spacing: .04em; margin-bottom: var(--s3); }
+.hero h1 { font-size: 46px; line-height: 58px; font-weight: 700; letter-spacing: -.01em; }
+.hero .lead { font-size: 18px; line-height: 30px; margin-top: var(--s3); max-width: 34em; word-break: keep-all; }
+.hero .cta-row { margin-top: var(--s4); display: flex; flex-direction: column; align-items: flex-start; gap: var(--s2); }
+.hero .cta-note { font-size: 14px; line-height: 20px; color: var(--stone); }
+
+/* 첫 화면 오른쪽: 지도 범례 견본 (실제 디자인 시스템의 5단계, 숫자 없음) */
+.plate { background: var(--card); border: 1px solid var(--rule); border-radius: var(--r-md); padding: var(--s4); display: grid; gap: var(--s3); }
+.plate-title { font-family: var(--serif); font-weight: 600; font-size: 18px; line-height: 26px; }
+.plate-map { display: grid; grid-template-columns: repeat(8, 1fr); gap: 3px; aspect-ratio: 8 / 5; max-width: 100%; }
+.plate-map span { background: var(--land); }
+.plate-map .m1 { background: var(--map-1); } .plate-map .m2 { background: var(--map-2); }
+.plate-map .m3 { background: var(--map-3); } .plate-map .m4 { background: var(--map-4); }
+.plate-map .m5 { background: var(--map-5); } .plate-map .sea { background: var(--paper); }
+.plate-map .sel { background: var(--ochre); box-shadow: inset 0 0 0 3px var(--paper), 0 0 0 2px var(--ink); position: relative; z-index: 1; }
+.sel-key { display: inline-block; width: 14px; height: 14px; vertical-align: -2px; margin-right: 4px; background: var(--ochre); box-shadow: inset 0 0 0 2px var(--paper), 0 0 0 1.5px var(--ink); }
+.legend { display: flex; gap: 0; }
+.legend div { flex: 1; min-width: 0; }
+.legend i { display: block; height: 12px; }
+.legend small { display: block; font-size: 14px; line-height: 20px; color: var(--stone); margin-top: var(--s1); }
+.caption { word-break: keep-all; font-size: 14px; line-height: 20px; color: var(--stone); }
+.badge { display: inline-block; font-size: 14px; line-height: 20px; font-weight: 500; color: var(--stone); border: 1px solid var(--rule); border-radius: var(--r-sm); padding: 0 6px; background: var(--paper); }
+
+/* 구역 */
+section.block { padding-block: var(--s5); border-top: 1px solid var(--rule); }
+.section-head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--s3); flex-wrap: wrap; margin-bottom: var(--s4); }
+.section-head h2 { font-size: 28px; line-height: 36px; }
+.section-head p { color: var(--stone); font-size: 14px; line-height: 20px; }
+
+/* 기능 카드 */
+.features { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s3); }
+.feature { text-align: left; font: inherit; color: inherit; background: var(--card); border: 1px solid var(--rule); border-radius: var(--r-md); padding: var(--s4); cursor: pointer; display: flex; flex-direction: column; gap: var(--s2); transition: border-color .15s; }
+.feature:hover { border-color: var(--atlas-blue); }
+.feature:hover .more { text-decoration: underline; }
+.feature .tag { font-size: 14px; line-height: 20px; color: var(--stone); font-weight: 500; }
+.feature h3 { font-size: 20px; line-height: 28px; font-weight: 600; }
+.feature p { font-size: 15px; line-height: 24px; color: var(--ink); }
+.feature .more { margin-top: auto; padding-top: var(--s2); font-size: 14px; line-height: 20px; font-weight: 500; color: var(--atlas-blue); }
+.glyph { height: 40px; display: flex; align-items: flex-end; gap: 3px; margin-bottom: var(--s1); }
+
+/* 자리 표시 */
+.slots { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s3); }
+.slot { border: 1.5px dashed var(--stone); border-radius: var(--r-md); padding: var(--s4); color: var(--stone); display: grid; gap: var(--s1); align-content: start; min-height: 120px; }
+.slot strong { font-weight: 600; color: var(--ink); font-size: 15px; }
+.slot .ph-line { font-size: 14px; line-height: 20px; }
+.logos { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s3); margin-top: var(--s3); }
+.logo-slot { border: 1.5px dashed var(--stone); border-radius: var(--r-md); height: 64px; display: flex; align-items: center; justify-content: center; font-size: 14px; color: var(--stone); text-align: center; padding: var(--s2); }
+.count-slot { display: flex; align-items: baseline; gap: var(--s2); }
+.count-slot .figure { font-size: 32px; line-height: 36px; font-weight: 600; color: var(--stone); }
+
+/* 바닥 */
+.final { text-align: left; display: flex; align-items: center; justify-content: space-between; gap: var(--s4); flex-wrap: wrap; }
+.final h2 { font-size: 28px; line-height: 36px; }
+footer { padding-block: var(--s4) var(--s5); border-top: 1px solid var(--rule); color: var(--stone); font-size: 14px; line-height: 20px; display: grid; gap: var(--s1); }
+
+/* 하위 화면 (기능 설명, 양식, 감사) */
+.view { padding-block: var(--s4) var(--s5); }
+.back { margin-bottom: var(--s3); }
+.detail { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--s5); align-items: start; }
+.detail h1 { font-size: 40px; line-height: 48px; font-weight: 700; }
+.detail .lead { font-size: 18px; line-height: 30px; margin-top: var(--s3); }
+.detail ul { margin: var(--s3) 0 0; padding-left: 1.2em; display: grid; gap: var(--s2); }
+.detail .actions { display: flex; gap: var(--s2); flex-wrap: wrap; margin-top: var(--s4); }
+.panel { background: var(--card); border: 1px solid var(--rule); border-radius: var(--r-md); padding: var(--s4); display: grid; gap: var(--s3); min-width: 0; }
+.panel-head { display: flex; justify-content: space-between; align-items: center; gap: var(--s2); flex-wrap: wrap; }
+.panel-head h2 { font-size: 20px; line-height: 28px; font-weight: 600; }
+.toggle { display: inline-flex; border: 1px solid var(--atlas-blue); border-radius: var(--r-sm); overflow: hidden; }
+.toggle button { font: 500 14px/20px var(--sans); border: 0; background: var(--card); color: var(--atlas-blue); padding: 6px var(--s3); cursor: pointer; }
+.toggle button[aria-pressed="true"] { background: var(--atlas-blue); color: var(--on-accent); }
+.rank { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s2); }
+.rank li { display: grid; grid-template-columns: 24px minmax(0, 1fr) 56px; gap: var(--s2); align-items: center; font-size: 15px; }
+.rank .bar { height: 10px; background: var(--map-4); }
+.rank .bar-track { background: var(--paper); }
+.rank .pos { color: var(--stone); font-size: 14px; }
+.rank .val { text-align: right; font-variant-numeric: tabular-nums; font-size: 14px; }
+.meter { display: grid; gap: var(--s1); }
+.meter-track { height: 16px; background: var(--land); display: flex; }
+.meter-track span:first-child { background: var(--map-5); }
+.meter-track span:nth-child(2) { background: var(--map-2); }
+.big { font-size: 32px; line-height: 36px; font-weight: 600; font-variant-numeric: tabular-nums; }
+table.csv { border-collapse: collapse; width: 100%; font-size: 14px; line-height: 20px; font-variant-numeric: tabular-nums; }
+table.csv th, table.csv td { text-align: left; padding: 6px var(--s2); border-bottom: 1px solid var(--rule); white-space: nowrap; }
+table.csv th { font-weight: 500; color: var(--stone); }
+.scroll-x { overflow-x: auto; }
+
+/* 양식 */
+.form-wrap { max-width: 640px; }
+.form-wrap h1 { font-size: 40px; line-height: 48px; }
+.form-wrap .lead { margin-top: var(--s2); color: var(--ink); }
+form { margin-top: var(--s4); display: grid; gap: var(--s4); }
+fieldset { border: 0; margin: 0; padding: 0; display: grid; gap: var(--s2); min-width: 0; }
+legend, .label { font-weight: 600; font-size: 15px; line-height: 22px; padding: 0; margin-bottom: var(--s1); }
+.hint { font-size: 14px; line-height: 20px; color: var(--stone); font-weight: 400; }
+select, input[type="text"] { font: 400 16px/24px var(--sans); color: var(--ink); background: var(--card); border: 1px solid var(--stone); border-radius: var(--r-sm); padding: 10px var(--s3); width: 100%; min-height: 48px; }
+select:focus-visible { outline: 3px solid var(--ochre); outline-offset: 1px; }
+.choices { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: var(--s2); }
+.choice { position: relative; }
+.choice input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+.choice span { display: flex; align-items: center; gap: var(--s2); border: 1px solid var(--rule); background: var(--card); border-radius: var(--r-sm); padding: 12px var(--s3); font-size: 15px; line-height: 22px; min-height: 48px; }
+.choice span::before { content: ""; width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid var(--stone); flex: none; background: var(--card); }
+.choice input:checked + span { border-color: var(--atlas-blue); box-shadow: inset 0 0 0 1px var(--atlas-blue); }
+.choice input:checked + span::before { border-color: var(--atlas-blue); background: radial-gradient(circle, var(--atlas-blue) 0 4px, var(--card) 5px); }
+.choice input:focus-visible + span { outline: 3px solid var(--ochre); outline-offset: 2px; }
+.error { color: var(--alert); font-size: 14px; line-height: 20px; display: flex; gap: var(--s1); align-items: center; }
+.privacy { font-size: 14px; line-height: 20px; color: var(--stone); background: var(--card); border: 1px solid var(--rule); border-radius: var(--r-md); padding: var(--s3); }
+.form-actions { display: flex; gap: var(--s2); flex-wrap: wrap; }
+
+/* 감사 */
+.thanks { max-width: 640px; padding-block: var(--s5); display: grid; gap: var(--s3); }
+.thanks h1 { font-size: 40px; line-height: 48px; }
+.summary { background: var(--card); border: 1px solid var(--rule); border-radius: var(--r-md); padding: var(--s4); display: grid; gap: var(--s2); }
+.summary dl { margin: 0; display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: var(--s1) var(--s3); }
+.summary dt { color: var(--stone); font-size: 14px; }
+.summary dd { margin: 0; font-weight: 500; }
+.summary .chosen { color: var(--ink); border-bottom: 3px solid var(--ochre); }
+
+/* 알림 */
+.toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(var(--s4) + env(safe-area-inset-bottom, 0px)); background: var(--ink); color: var(--paper); font-size: 14px; line-height: 20px; padding: 12px var(--s3); border-radius: var(--r-md); max-width: calc(100% - 32px); z-index: 20; }
+
+/* 휴대폰 */
+@media (max-width: 760px) {
+  .hero { grid-template-columns: minmax(0, 1fr); gap: var(--s4); padding-block: var(--s4); }
+  .hero h1 { font-size: 34px; line-height: 44px; }
+  .hero .lead { font-size: 17px; line-height: 28px; }
+  .btn-hero { width: 100%; padding-inline: var(--s3); }
+  .hero .cta-row { align-items: stretch; }
+  .features, .slots { grid-template-columns: minmax(0, 1fr); }
+  .logos { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .detail { grid-template-columns: minmax(0, 1fr); gap: var(--s4); }
+  .detail h1, .form-wrap h1, .thanks h1 { font-size: 30px; line-height: 38px; }
+  .section-head h2, .final h2 { font-size: 24px; line-height: 32px; }
+  .final .btn { width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="#" data-go="">Tradeweave</a>
+    <span class="proto-tag">프로토타입 · 가상 화면</span>
+  </header>
+
+  <!-- 첫 화면 -->
+  <main id="view-home" data-view="">
+    <div class="hero">
+      <div>
+        <p class="eyebrow">Tradeweave · 나라별 교역 상대국 지도</p>
+        <h1>나라 하나를 고르면,<br>교역 상대국이 지도에 칠해집니다</h1>
+        <p class="lead">어느 나라와 얼마나 거래하는지, 한 나라에 얼마나 몰려 있는지 한눈에 봅니다.</p>
+        <div class="cta-row">
+          <a class="btn btn-primary btn-hero" href="#pick" id="hero-cta">나라 하나 고르기 <span class="arrow" aria-hidden="true">→</span></a>
+          <span class="cta-note">회원가입 없이 바로 씁니다. 개인정보를 받지 않습니다.</span>
+        </div>
+      </div>
+      <figure class="plate" style="margin:0" aria-label="지도 색 단계 견본">
+        <div class="plate-title">교역 비중을 파랑 다섯 단계로</div>
+        <div class="plate-map" aria-hidden="true" id="plate-map"></div>
+        <div class="legend" aria-hidden="true">
+          <div><i style="background:var(--map-1)"></i><small>1% 미만</small></div>
+          <div><i style="background:var(--map-2)"></i><small>1~5%</small></div>
+          <div><i style="background:var(--map-3)"></i><small>5~10%</small></div>
+          <div><i style="background:var(--map-4)"></i><small>10~20%</small></div>
+          <div><i style="background:var(--map-5)"></i><small>20% 이상</small></div>
+        </div>
+        <figcaption class="caption"><span class="badge">가상</span> 실제 나라가 아닌 색 견본입니다. <span class="sel-key" aria-hidden="true"></span>테두리 칸이 고른 나라입니다. 구간은 초안입니다.</figcaption>
+      </figure>
+    </div>
+
+    <section class="block" aria-labelledby="features-title">
+      <div class="section-head">
+        <h2 id="features-title">할 수 있는 일 세 가지</h2>
+        <p>카드를 누르면 자세한 설명을 봅니다.</p>
+      </div>
+      <div class="features">
+        <button class="feature" type="button" data-go="map">
+          <span class="glyph" aria-hidden="true">
+            <i style="width:14px;height:40px;background:var(--map-5)"></i><i style="width:14px;height:30px;background:var(--map-4)"></i><i style="width:14px;height:22px;background:var(--map-3)"></i><i style="width:14px;height:14px;background:var(--map-2)"></i><i style="width:14px;height:8px;background:var(--map-1)"></i>
+          </span>
+          <span class="tag">기능 1</span>
+          <h3>교역 상대국 지도</h3>
+          <p>고른 나라의 주요 교역 상대국을 지도와 상위 5개 목록으로 봅니다. 수출과 수입은 버튼으로 바꿉니다.</p>
+          <span class="more">자세히 보기 →</span>
+        </button>
+        <button class="feature" type="button" data-go="share">
+          <span class="glyph" aria-hidden="true">
+            <i style="width:56px;height:16px;background:var(--map-5)"></i><i style="width:24px;height:16px;background:var(--map-2)"></i><i style="width:28px;height:16px;background:var(--land)"></i>
+          </span>
+          <span class="tag">기능 2</span>
+          <h3>쏠림 정도 보기</h3>
+          <p>1위 상대국이 전체 교역에서 차지하는 비중과, 상위 몇 나라에 얼마나 몰려 있는지를 쉬운 말로 설명합니다.</p>
+          <span class="more">자세히 보기 →</span>
+        </button>
+        <button class="feature" type="button" data-go="source">
+          <span class="glyph" aria-hidden="true">
+            <i style="width:48px;height:4px;background:var(--stone)"></i><i style="width:32px;height:4px;background:var(--rule)"></i><i style="width:24px;height:4px;background:var(--rule)"></i>
+          </span>
+          <span class="tag">기능 3</span>
+          <h3>출처·기준연도 표시와 내려받기</h3>
+          <p>모든 숫자 옆에 출처와 기준연도를 붙이고, 데이터를 CSV 파일로 내려받을 수 있습니다.</p>
+          <span class="more">자세히 보기 →</span>
+        </button>
+      </div>
+    </section>
+
+    <section class="block" aria-labelledby="proof-title">
+      <div class="section-head">
+        <h2 id="proof-title">쓰는 사람들</h2>
+        <p>아직 출시 전이라 비워 둔 자리입니다. 실제 자료가 생기면 채웁니다.</p>
+      </div>
+      <div class="slots">
+        <div class="slot"><strong>후기 자리 1</strong><span class="ph-line">실제 사용자에게 허락받은 후기를 넣습니다.</span><span class="ph-line">— 이름·소속 자리</span></div>
+        <div class="slot"><strong>후기 자리 2</strong><span class="ph-line">실제 사용자에게 허락받은 후기를 넣습니다.</span><span class="ph-line">— 이름·소속 자리</span></div>
+        <div class="slot">
+          <strong>사용자 수 자리</strong>
+          <div class="count-slot"><span class="figure num">— 명</span></div>
+          <span class="ph-line">실제 이용 기록이 쌓인 뒤 집계 기준과 함께 넣습니다.</span>
+        </div>
+      </div>
+      <div class="logos" aria-label="회사·기관 로고 자리">
+        <div class="logo-slot">로고 자리</div><div class="logo-slot">로고 자리</div><div class="logo-slot">로고 자리</div><div class="logo-slot">로고 자리</div>
+      </div>
+    </section>
+
+    <section class="block final">
+      <h2>궁금한 나라가 있나요?</h2>
+      <a class="btn btn-primary btn-hero" href="#pick">나라 하나 고르기 <span class="arrow" aria-hidden="true">→</span></a>
+    </section>
+  </main>
+
+  <!-- 기능 1 -->
+  <main id="view-map" data-view="map" hidden>
+    <div class="view">
+      <button class="btn btn-text back" type="button" data-go="">← 처음으로</button>
+      <div class="detail">
+        <div>
+          <p class="eyebrow">기능 1</p>
+          <h1>교역 상대국 지도</h1>
+          <p class="lead">나라 하나를 고르면 그 나라와 거래하는 나라들이 지도 위에 파랑 단계로 칠해지고, 옆에 상위 5개 상대국이 숫자와 함께 나옵니다.</p>
+          <ul>
+            <li>색이 진할수록 그 나라와의 교역 비중이 큽니다. 고른 나라는 황토색으로 표시합니다.</li>
+            <li>수출과 수입은 같은 색 단계를 쓰고 버튼으로 바꿔 봅니다.</li>
+            <li>색만으로 값을 읽지 않도록 목록에 숫자를 함께 적습니다.</li>
+          </ul>
+          <div class="actions">
+            <a class="btn btn-primary" href="#pick">나라 하나 고르기</a>
+            <button class="btn btn-secondary" type="button" data-go="share">다음 기능: 쏠림 정도 →</button>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-head">
+            <h2>가상국 A의 상위 5개 상대국</h2>
+            <div class="toggle" role="group" aria-label="수출·수입 바꾸기">
+              <button type="button" aria-pressed="true" data-flow="export">수출</button>
+              <button type="button" aria-pressed="false" data-flow="import">수입</button>
+            </div>
+          </div>
+          <ol class="rank" id="rank"></ol>
+          <p class="caption"><span class="badge">가상</span> 가상국과 지어낸 숫자로 만든 화면 견본입니다. 실제 서비스에서는 CEPII BACI 자료의 실제 값을 보여 줍니다.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- 기능 2 -->
+  <main id="view-share" data-view="share" hidden>
+    <div class="view">
+      <button class="btn btn-text back" type="button" data-go="">← 처음으로</button>
+      <div class="detail">
+        <div>
+          <p class="eyebrow">기능 2</p>
+          <h1>쏠림 정도 보기</h1>
+          <p class="lead">한 나라의 교역이 특정 상대국에 얼마나 몰려 있는지를 두 숫자와 쉬운 문장으로 보여 줍니다.</p>
+          <ul>
+            <li><b>1위 상대국 비중</b>: 가장 많이 거래하는 나라가 전체 교역에서 차지하는 몫입니다.</li>
+            <li><b>상위 몇 나라 합계</b>: 상위 3개, 5개 나라를 합치면 전체의 얼마인지 보여 줍니다.</li>
+            <li>숫자가 왜 그렇게 되었는지는 단정하지 않습니다. 화면에는 "이렇게 몰려 있다"만 적습니다.</li>
+          </ul>
+          <div class="actions">
+            <a class="btn btn-primary" href="#pick">나라 하나 고르기</a>
+            <button class="btn btn-secondary" type="button" data-go="source">다음 기능: 출처·내려받기 →</button>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h2>가상국 A의 수출 쏠림</h2></div>
+          <div class="meter">
+            <span class="caption">1위 상대국 비중</span>
+            <span class="big">24.0%</span>
+          </div>
+          <div class="meter">
+            <div class="meter-track" aria-hidden="true"><span style="width:24%"></span><span style="width:31%"></span></div>
+            <span class="caption">진한 파랑: 1위 상대국 · 옅은 파랑: 2~5위 · 바탕: 나머지 나라</span>
+          </div>
+          <p>가상국 A는 수출의 약 4분의 1을 한 나라에 팔고, 상위 5개 나라에 절반 남짓(55.0%)을 팝니다.</p>
+          <p class="caption"><span class="badge">가상</span> 가상국과 지어낸 숫자입니다. 어떤 지표로 쏠림을 보여 줄지는 아직 정하지 않았습니다.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- 기능 3 -->
+  <main id="view-source" data-view="source" hidden>
+    <div class="view">
+      <button class="btn btn-text back" type="button" data-go="">← 처음으로</button>
+      <div class="detail">
+        <div>
+          <p class="eyebrow">기능 3</p>
+          <h1>출처·기준연도 표시와 내려받기</h1>
+          <p class="lead">화면의 모든 숫자에는 어디서 온 자료인지, 몇 년 기준인지가 붙습니다. 보고서에 그대로 옮겨 써도 근거를 밝힐 수 있습니다.</p>
+          <ul>
+            <li>무역 통계는 보통 1~2년 늦게 나오므로 "최신" 대신 "기준연도"를 적습니다.</li>
+            <li>보고 있는 나라의 상대국별 값을 CSV 파일로 내려받습니다.</li>
+            <li>각국 정부가 발표한 통계와 차이가 있을 수 있다는 점도 함께 적습니다.</li>
+          </ul>
+          <div class="actions">
+            <a class="btn btn-primary" href="#pick">나라 하나 고르기</a>
+            <button class="btn btn-secondary" type="button" data-go="map">처음 기능: 상대국 지도 →</button>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-head">
+            <h2>내려받을 표 견본</h2>
+            <button class="btn btn-secondary" type="button" id="csv-btn">CSV 내려받기</button>
+          </div>
+          <div class="scroll-x">
+            <table class="csv">
+              <thead><tr><th>보고국</th><th>상대국</th><th>흐름</th><th>금액(천 달러)</th><th>기준연도</th></tr></thead>
+              <tbody>
+                <tr><td>가상국 A</td><td>가상국 B</td><td>수출</td><td>1,200,000</td><td>2024</td></tr>
+                <tr><td>가상국 A</td><td>가상국 C</td><td>수출</td><td>640,000</td><td>2024</td></tr>
+                <tr><td>가상국 A</td><td>가상국 D</td><td>수출</td><td>410,000</td><td>2024</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="caption">출처: CEPII BACI (Gaulier &amp; Zignago, 2010), UN Comtrade 기반 · 기준연도 2024</p>
+          <p class="caption"><span class="badge">가상</span> 표의 나라와 숫자는 지어낸 견본입니다. 출처 줄은 실제 서비스에 쓸 표기입니다.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- 양식 -->
+  <main id="view-pick" data-view="pick" hidden>
+    <div class="view">
+      <button class="btn btn-text back" type="button" data-go="">← 처음으로</button>
+      <div class="form-wrap">
+        <p class="eyebrow">시작하기</p>
+        <h1>어느 나라가 궁금한가요?</h1>
+        <p class="lead">나라 하나와 보고 싶은 방향만 고르면 됩니다.</p>
+        <form id="pick-form" novalidate>
+          <fieldset>
+            <label class="label" for="country">나라</label>
+            <select id="country" name="country" aria-describedby="country-error">
+              <option value="">나라를 고르세요</option>
+            </select>
+            <p class="error" id="country-error" hidden><span aria-hidden="true">⚠</span> 나라를 하나 골라 주세요.</p>
+          </fieldset>
+          <fieldset>
+            <legend>무엇을 볼까요?</legend>
+            <div class="choices">
+              <label class="choice"><input type="radio" name="flow" value="수출" id="flow-export" checked><span>수출 (그 나라가 파는 곳)</span></label>
+              <label class="choice"><input type="radio" name="flow" value="수입" id="flow-import"><span>수입 (그 나라가 사 오는 곳)</span></label>
+            </div>
+          </fieldset>
+          <fieldset>
+            <legend>어떤 일로 보시나요? <span class="hint">(선택, 익명)</span></legend>
+            <div class="choices">
+              <label class="choice"><input type="radio" name="role" value="해외영업" id="role-sales"><span>해외영업 업무</span></label>
+              <label class="choice"><input type="radio" name="role" value="국제통상·국제정치 공부·글쓰기" id="role-study"><span>국제통상·정치 공부·글쓰기</span></label>
+              <label class="choice"><input type="radio" name="role" value="기타" id="role-other"><span>기타</span></label>
+            </div>
+          </fieldset>
+          <p class="privacy">이름, 이메일, 연락처는 받지 않습니다. 이 프로토타입은 고른 내용을 어디에도 보내거나 저장하지 않습니다.</p>
+          <div class="form-actions">
+            <button class="btn btn-primary btn-hero" type="submit" id="submit-btn">지도 보기 <span class="arrow" aria-hidden="true">→</span></button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <!-- 감사 -->
+  <main id="view-thanks" data-view="thanks" hidden>
+    <div class="thanks">
+      <p class="eyebrow">고른 내용을 받았습니다</p>
+      <h1>감사합니다</h1>
+      <p>실제 서비스라면 이 다음 화면에서 바로 지도를 보여 줍니다. 지금은 프로토타입이라 여기까지입니다.</p>
+      <div class="summary">
+        <dl>
+          <dt>나라</dt><dd><span class="chosen" id="t-country">—</span></dd>
+          <dt>방향</dt><dd id="t-flow">—</dd>
+          <dt>쓰임</dt><dd id="t-role">—</dd>
+        </dl>
+      </div>
+      <div class="form-actions">
+        <a class="btn btn-primary" href="#pick">다른 나라 고르기</a>
+        <button class="btn btn-secondary" type="button" data-go="">처음으로</button>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <span>Tradeweave 프로토타입 · 화면 견본의 나라와 숫자는 모두 가상입니다.</span>
+    <span>실제 서비스 자료: CEPII BACI (Gaulier &amp; Zignago, 2010), UN Comtrade 기반 · 기준연도 2024 · Etalab Open Licence 2.0</span>
+  </footer>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+<script>
+(function () {
+  // 나라 목록 (선택지만, 숫자 없음)
+  var regions = {
+    "동아시아": ["대한민국", "중국", "일본", "대만", "몽골"],
+    "동남아시아": ["베트남", "인도네시아", "태국", "말레이시아", "필리핀", "싱가포르"],
+    "남아시아": ["인도", "방글라데시", "파키스탄"],
+    "북미": ["미국", "캐나다", "멕시코"],
+    "남미": ["브라질", "칠레", "아르헨티나"],
+    "유럽": ["독일", "프랑스", "영국", "이탈리아", "네덜란드", "폴란드"],
+    "중동·아프리카": ["사우디아라비아", "아랍에미리트", "튀르키예", "남아프리카공화국", "나이지리아"],
+    "오세아니아": ["오스트레일리아", "뉴질랜드"]
+  };
+  var sel = document.getElementById("country");
+  Object.keys(regions).forEach(function (r) {
+    var g = document.createElement("optgroup"); g.label = r;
+    regions[r].forEach(function (c) { var o = document.createElement("option"); o.value = c; o.textContent = c; g.appendChild(o); });
+    sel.appendChild(g);
+  });
+
+  // 첫 화면 색 견본 (추상 칸, 실제 나라 아님)
+  var pattern = [
+    "s s 1 2 2 s s s",
+    "s 1 3 4 2 1 s s",
+    "1 2 5 X 4 2 1 s",
+    "s 1 3 4 3 1 s s",
+    "s s 1 2 s s 1 s"
+  ];
+  var plate = document.getElementById("plate-map");
+  pattern.join(" ").split(" ").forEach(function (k) {
+    var span = document.createElement("span");
+    span.className = k === "s" ? "sea" : k === "X" ? "sel" : "m" + k;
+    plate.appendChild(span);
+  });
+
+  // 기능 1: 수출/수입 토글 (가상 숫자)
+  var data = {
+    export: [["가상국 B", 24.0], ["가상국 C", 12.8], ["가상국 D", 8.2], ["가상국 E", 5.6], ["가상국 F", 4.4]],
+    import: [["가상국 C", 18.5], ["가상국 G", 14.1], ["가상국 B", 9.7], ["가상국 H", 6.3], ["가상국 E", 3.9]]
+  };
+  var rank = document.getElementById("rank");
+  function drawRank(flow) {
+    rank.innerHTML = "";
+    data[flow].forEach(function (row, i) {
+      var li = document.createElement("li");
+      li.innerHTML = '<span class="pos num">' + (i + 1) + '</span>' +
+        '<span style="display:grid;gap:2px;min-width:0"><span>' + row[0] + '</span>' +
+        '<span class="bar-track"><span class="bar" style="display:block;width:' + (row[1] / 25 * 100) + '%"></span></span></span>' +
+        '<span class="val">' + row[1].toFixed(1) + '%</span>';
+      rank.appendChild(li);
+    });
+  }
+  drawRank("export");
+  document.querySelectorAll("[data-flow]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      document.querySelectorAll("[data-flow]").forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+      drawRank(b.dataset.flow);
+    });
+  });
+
+  // 알림
+  var toast = document.getElementById("toast"), tTimer;
+  function say(msg) {
+    toast.textContent = msg; toast.hidden = false;
+    clearTimeout(tTimer); tTimer = setTimeout(function () { toast.hidden = true; }, 3200);
+  }
+  document.getElementById("csv-btn").addEventListener("click", function () {
+    say("프로토타입이라 파일은 만들지 않습니다. 실제 서비스에서는 이 표가 CSV로 저장됩니다.");
+  });
+
+  // 화면 전환 (#해시)
+  var views = document.querySelectorAll("[data-view]");
+  var last = { country: null, flow: null, role: null };
+  function show(name) {
+    if (name === "thanks" && !last.country) name = "pick";
+    var found = false;
+    views.forEach(function (v) { var on = v.dataset.view === name; v.hidden = !on; if (on) found = true; });
+    if (!found) { views.forEach(function (v) { v.hidden = v.dataset.view !== ""; }); }
+    window.scrollTo(0, 0);
+  }
+  function route() { show((location.hash || "").replace(/^#/, "")); }
+  function go(name) {
+    if (("#" + name) === location.hash || (name === "" && !location.hash)) { show(name); return; }
+    location.hash = name;
+  }
+  document.querySelectorAll("[data-go]").forEach(function (el) {
+    el.addEventListener("click", function (e) { e.preventDefault(); go(el.dataset.go); });
+  });
+  window.addEventListener("hashchange", route);
+  route();
+
+  // 양식
+  var form = document.getElementById("pick-form"), err = document.getElementById("country-error");
+  sel.addEventListener("change", function () { if (sel.value) err.hidden = true; });
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    if (!sel.value) { err.hidden = false; sel.focus(); return; }
+    var fd = new FormData(form);
+    last = { country: fd.get("country"), flow: fd.get("flow"), role: fd.get("role") };
+    document.getElementById("t-country").textContent = last.country;
+    document.getElementById("t-flow").textContent = last.flow;
+    document.getElementById("t-role").textContent = last.role || "고르지 않음";
+    go("thanks");
+  });
+})();
+</script>
+
+</html>
