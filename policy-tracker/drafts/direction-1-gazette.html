@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Policyline 시안 1 · 관보 고시문</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&family=Gothic+A1:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --color-paper:#E8ECEE;
+  --color-sheet:#F8FAFA;
+  --color-ink:#1F2A44;
+  --color-ink-soft:#56607A;
+  --color-rule:#B9C2CC;
+  --color-seal:#A8322B;
+  --color-focus:#2C5AA0;
+  --font-title:"Nanum Myeongjo", serif;
+  --font-body:"Gothic A1", system-ui, sans-serif;
+  --s1:8px;--s2:16px;--s3:24px;--s4:32px;--s6:48px;--s8:64px;
+}
+*{box-sizing:border-box;margin:0}
+body{background:var(--color-paper);color:var(--color-ink);font-family:var(--font-body);font-size:16px;line-height:1.65;word-break:keep-all}
+.draft{background:var(--color-ink);color:var(--color-sheet);font-size:13px;padding:var(--s1) var(--s2);text-align:center}
+.wrap{max-width:1120px;margin:0 auto;padding:var(--s6) var(--s3) var(--s8)}
+header{display:grid;grid-template-columns:1fr auto;gap:var(--s3);align-items:end;border-bottom:3px double var(--color-ink);padding-bottom:var(--s3)}
+.mast{font-family:var(--font-title);font-weight:800;font-size:clamp(40px,7vw,72px);line-height:1.05;letter-spacing:-.01em}
+.mast small{display:block;font-size:18px;font-weight:400;color:var(--color-ink-soft);margin-top:var(--s1);letter-spacing:0}
+.issue{text-align:right;font-size:14px;color:var(--color-ink-soft)}
+.lede{max-width:40em;font-size:18px;margin:var(--s4) 0 var(--s6)}
+.lede strong{font-weight:700}
+h2{font-family:var(--font-title);font-size:26px;font-weight:700;margin-bottom:var(--s3)}
+.notices{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:var(--s3)}
+.notice{position:relative;display:flex;flex-direction:column;gap:var(--s2);background:var(--color-sheet);border:1px solid var(--color-rule);padding:var(--s4) var(--s3) var(--s3);text-decoration:none;color:inherit;transition:transform .2s ease-out}
+.notice:first-child{grid-column:span 2}
+.notice .no{font-size:13px;color:var(--color-ink-soft);border-bottom:1px solid var(--color-rule);padding-bottom:var(--s1)}
+.notice h3{font-family:var(--font-title);font-size:22px;line-height:1.35;font-weight:800;padding-right:88px}
+.notice:first-child h3{font-size:30px}
+.notice p{color:var(--color-ink-soft);font-size:15px}
+.notice dl{display:grid;grid-template-columns:auto 1fr;gap:4px var(--s2);font-size:14px}
+.notice dt{color:var(--color-ink-soft)}
+.seal{position:absolute;top:var(--s3);right:var(--s3);width:80px;height:80px;border:2px solid var(--color-seal);border-radius:50%;color:var(--color-seal);display:grid;place-content:center;text-align:center;font-size:12px;line-height:1.25;transform:rotate(-8deg);font-weight:700}
+.seal b{display:block;font-size:15px}
+.spark{display:block;width:100%;height:56px;border-top:1px dashed var(--color-rule);padding-top:var(--s1)}
+.spark-note{font-size:12px;color:var(--color-ink-soft)}
+.open{margin-top:auto;font-weight:700;border-top:1px solid var(--color-ink);padding-top:var(--s2)}
+.notice:hover{transform:translateY(-4px)}
+.notice:hover .open{text-decoration:underline}
+.notice:focus-visible{outline:3px solid var(--color-focus);outline-offset:4px}
+.notice:active{transform:translateY(0)}
+footer{margin-top:var(--s6);border-top:1px solid var(--color-rule);padding-top:var(--s3);font-size:13px;color:var(--color-ink-soft)}
+@media (max-width:700px){.notice:first-child{grid-column:auto}.notice:first-child h3{font-size:24px}header{grid-template-columns:1fr}.issue{text-align:left}}
+@media (prefers-reduced-motion:reduce){.notice{transition:none}.notice:hover{transform:none}}
+</style>
+</head>
+<body>
+<div class="draft">디자인 시안 1 · 그래프 모양과 숫자는 <b>가상</b>입니다 · 정책 날짜는 원문 확인 전</div>
+<div class="wrap">
+  <header>
+    <div class="mast">Policyline<small>정책 발표 전후의 교역량을 고시문처럼 읽습니다</small></div>
+    <div class="issue">2026년 11월 정리본<br>정책 5건 수록</div>
+  </header>
+  <p class="lede">관세·제재·수출통제가 <strong>발표된 날</strong>을 기준으로, 앞뒤 12개월 동안 해당 품목 교역이 어떻게 달라졌는지 봅니다. 원인은 단정하지 않습니다.</p>
+  <h2>최근 정책 이슈</h2>
+  <div class="notices" id="list"></div>
+  <footer>교역 자료: UN Comtrade 월별 자료 예정 (이 시안의 선은 가상) · 정책 원문 링크는 각 화면에 붙습니다</footer>
+</div>
+<script>
+const P=[
+ {t:"EU, 중국산 전기차에 상계관세",d:"2024-07-04",who:"EU → 중국",item:"전기 승용차",hs:"8703.80",flow:"중국 → EU 수출",s:[5,6,6,7,7,8,8,9,9,8,9,9,8,7,7,6,6,7,6,6,5,6,6,5,5]},
+ {t:"미국, 중국산 전기차 관세 100%",d:"2024-05-14",who:"미국 → 중국",item:"전기 승용차",hs:"8703.80",flow:"중국 → 미국 수출",s:[3,3,4,3,4,4,3,4,4,3,4,4,3,3,2,2,2,1,1,1,1,1,1,1,1]},
+ {t:"중국, 갈륨·게르마늄 수출통제",d:"2023-07-03",who:"중국 → 전 세계",item:"갈륨 등",hs:"8112.92",flow:"중국 → 전 세계 수출",s:[6,6,5,6,6,7,6,6,7,7,8,9,6,2,1,2,3,4,4,5,4,4,5,4,4]},
+ {t:"미국, 대중국 반도체 장비 수출통제",d:"2022-10-07",who:"미국 → 중국",item:"반도체 제조장비",hs:"8486",flow:"미국 → 중국 수출",s:[7,8,8,7,8,8,9,8,8,9,8,8,7,6,6,5,5,4,5,4,4,4,3,4,4]},
+ {t:"일본, 대한국 수출규제",d:"2019-07-01",who:"일본 → 한국",item:"불화수소",hs:"2811.11",flow:"일본 → 한국 수출",s:[7,7,6,7,7,7,6,7,7,6,7,7,5,3,2,1,1,1,1,2,1,2,2,2,2]}
+];
+function spark(s){const w=300,h=48,max=Math.max(...s),x=i=>i*w/(s.length-1),y=v=>h-4-(v/max)*(h-8);
+ const pts=s.map((v,i)=>x(i).toFixed(1)+","+y(v).toFixed(1)).join(" ");
+ return `<svg class="spark" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" aria-hidden="true"><line x1="${x(12)}" y1="0" x2="${x(12)}" y2="${h}" stroke="var(--color-seal)" stroke-width="1.5" stroke-dasharray="3 3" vector-effect="non-scaling-stroke"/><polyline points="${pts}" fill="none" stroke="var(--color-ink)" stroke-width="1.6" vector-effect="non-scaling-stroke"/></svg>`;}
+document.getElementById("list").innerHTML=P.map((p,i)=>{const [y,m,d]=p.d.split("-");return `
+<a class="notice" href="#policy-${i+1}">
+ <span class="no">정책 이슈 제${i+1}호 · ${p.who}</span>
+ <span class="seal" aria-label="발표일 ${p.d}">발표<b>${y}</b>${+m}.${+d}</span>
+ <h3>${p.t}</h3>
+ <dl><dt>품목</dt><dd>${p.item} (HS ${p.hs})</dd><dt>볼 흐름</dt><dd>${p.flow}</dd></dl>
+ ${spark(p.s)}<span class="spark-note">발표 전후 12개월 미리보기 · 가상</span>
+ <span class="open">이 정책의 전후 보기</span>
+</a>`}).join("");
+</script>
+</body>
+</html>

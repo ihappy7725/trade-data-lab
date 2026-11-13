@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Policyline 시안 2b · 제도와 선 (밤)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* 색 토큰 — theme-factory Ocean Depths를 바탕으로 Policyline에 맞게 조정 */
+  --color-bg:#0E1A2E;
+  --color-bg-raised:#132239;
+  --color-grid:rgba(168,196,220,.06);
+  --color-text:#F1F5F8;
+  --color-text-muted:#93A3B8;
+  --color-rule:rgba(168,196,220,.16);
+  --color-data:#A8DADC;
+  --color-line:#FF6B3D;
+  --color-button:#F1F5F8;
+  --color-button-text:#0E1A2E;
+  --color-focus:#7FB8FF;
+  --font-title:"Noto Serif KR", serif;
+  --font-body:"IBM Plex Sans KR", system-ui, sans-serif;
+  --space-1:8px;--space-2:16px;--space-3:24px;--space-4:32px;--space-6:48px;--space-8:64px;--space-12:96px;
+  --ease-out:cubic-bezier(.2,.7,.2,1);
+}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);color:var(--color-text);font-size:16px;line-height:1.6;word-break:keep-all;font-variant-numeric:tabular-nums;
+ background-color:var(--color-bg);
+ background-image:linear-gradient(var(--color-grid) 1px,transparent 1px),linear-gradient(90deg,var(--color-grid) 1px,transparent 1px);
+ background-size:80px 80px}
+a{color:inherit}
+.draft{background:var(--color-line);color:var(--color-button-text);font-size:13px;padding:var(--space-1) var(--space-2);text-align:center;font-weight:500}
+.wrap{max-width:1200px;margin:0 auto;padding:0 var(--space-6)}
+/* nav */
+nav{display:flex;align-items:center;justify-content:space-between;gap:var(--space-3);padding:var(--space-3) 0}
+.logo{display:flex;align-items:center;gap:12px;font-weight:600;font-size:18px;letter-spacing:.18em;text-decoration:none}
+.logo i{width:3px;height:26px;background:var(--color-line);display:block}
+.links{display:flex;gap:var(--space-4);font-size:15px;color:var(--color-text-muted)}
+.links a{text-decoration:none}
+.links a:hover{color:var(--color-text)}
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 var(--space-4);background:var(--color-button);color:var(--color-button-text);font:600 17px/1 var(--font-body);border:0;border-radius:4px;text-decoration:none;cursor:pointer;transition:transform .18s var(--ease-out),opacity .18s var(--ease-out)}
+.btn.small{min-height:40px;padding:0 var(--space-3);font-size:15px}
+.btn:hover{transform:translateY(-2px)}
+.btn:focus-visible{outline:3px solid var(--color-focus);outline-offset:3px}
+.btn:active{transform:translateY(0) scale(.98);transition-duration:.08s}
+.btn[disabled]{opacity:.4;cursor:not-allowed;transform:none}
+/* hero */
+.hero{padding:var(--space-12) 0 var(--space-6)}
+h1{font-family:var(--font-title);font-weight:300;font-size:clamp(40px,6.4vw,84px);line-height:1.12;letter-spacing:-.02em;max-width:13em}
+h1 span{color:var(--color-text-muted)}
+.lede{color:var(--color-text-muted);font-size:19px;max-width:32em;margin:var(--space-4) 0 var(--space-6)}
+.note{margin-top:var(--space-2);font-size:13px;color:var(--color-text-muted)}
+/* big chart */
+.chart{margin:var(--space-8) 0 var(--space-12);border-top:1px solid var(--color-rule);padding-top:var(--space-3)}
+.chart-head{display:flex;justify-content:space-between;gap:var(--space-3);flex-wrap:wrap;font-size:14px;color:var(--color-text-muted);margin-bottom:var(--space-2)}
+.chart-head b{color:var(--color-text);font-weight:500;font-size:16px}
+.chart svg{display:block;width:100%;height:auto;overflow:visible}
+.chart .data{opacity:0;animation:fade .9s var(--ease-out) .2s forwards}
+.chart .event{transform-box:fill-box;transform-origin:bottom;transform:scaleY(0);animation:grow .8s var(--ease-out) .6s forwards}
+.chart .event-label{opacity:0;animation:fade .4s var(--ease-out) 1.2s forwards}
+@keyframes fade{to{opacity:1}}
+@keyframes grow{to{transform:scaleY(1)}}
+.legend{display:flex;gap:var(--space-3);flex-wrap:wrap;font-size:13px;color:var(--color-text-muted);margin-top:var(--space-2)}
+.legend i{display:inline-block;width:16px;height:2px;vertical-align:middle;margin-right:var(--space-1)}
+/* list */
+h2{font-family:var(--font-title);font-weight:400;font-size:32px;margin-bottom:var(--space-3)}
+.rows{border-top:1px solid var(--color-rule)}
+.row{display:grid;grid-template-columns:110px 1fr minmax(280px,44%);gap:var(--space-4);align-items:center;padding:var(--space-4) var(--space-2);border-bottom:1px solid var(--color-rule);text-decoration:none;transition:background-color .18s var(--ease-out)}
+.row time{color:var(--color-text-muted);font-size:15px}
+.row h3{font-family:var(--font-title);font-weight:400;font-size:22px;line-height:1.35}
+.row p{color:var(--color-text-muted);font-size:14px;margin-top:4px}
+.row .go{display:inline-block;margin-top:var(--space-1);font-size:14px;font-weight:600;color:var(--color-line)}
+.row svg{width:100%;height:96px;display:block}
+.row small{display:block;font-size:12px;color:var(--color-text-muted);text-align:right;margin-top:4px}
+.row:hover{background:var(--color-bg-raised)}
+.row:hover .go{text-decoration:underline}
+.row:focus-visible{outline:3px solid var(--color-focus);outline-offset:-3px;background:var(--color-bg-raised)}
+.row:active{background:var(--color-bg)}
+footer{padding:var(--space-8) 0;font-size:13px;color:var(--color-text-muted)}
+@media (min-width:1100px){
+ .stage{display:grid;grid-template-columns:1fr 1.2fr;gap:var(--space-8);align-items:center;min-height:calc(100vh - 120px);padding:var(--space-4) 0 var(--space-8)}
+ .stage .hero{padding:0}
+ .stage h1{font-size:clamp(44px,4.4vw,68px)}
+ .stage .chart{margin:0}
+}
+@media (max-width:700px){.chart text{font-size:34px}}
+@media (max-width:860px){.links{display:none}.row{grid-template-columns:1fr;gap:var(--space-1)}.row small{text-align:left}.wrap{padding:0 var(--space-2)}.hero{padding-top:var(--space-8)}}
+@media (prefers-reduced-motion:reduce){.chart .data,.chart .event,.chart .event-label{animation:none;opacity:1;transform:none}.btn,.row{transition:none}.btn:hover{transform:none}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<div class="draft">디자인 시안 2b · 그래프 모양과 숫자는 <b>가상</b>입니다 · 정책 날짜는 원문 확인 전</div>
+<div class="wrap">
+  <nav>
+    <a class="logo" href="#"><i></i>POLICYLINE</a>
+    <div class="links"><a href="#list">정책 5건</a><a href="#how">읽는 법</a><a href="#source">출처</a></div>
+    <a class="btn small" href="#list">정책 고르기</a>
+  </nav>
+
+  <div class="stage">
+  <section class="hero">
+    <h1>정책이 발표된 날, <span>교역은 어떻게 움직였나.</span></h1>
+    <p class="lede">관세·제재·수출통제 발표일에 선을 긋고, 앞뒤 12개월의 월별 교역량을 나란히 봅니다. 원인은 단정하지 않고, 같은 시기에 일어난 변화만 보여 줍니다.</p>
+    <a class="btn" href="#list">정책 하나 고르기</a>
+    <p class="note">회원가입 없음. 모든 숫자에 출처와 기간을 붙입니다.</p>
+  </section>
+
+  <section class="chart" id="how" aria-label="발표 전후 그래프 읽는 법">
+    <div class="chart-head"><b>붉은 선이 발표일. 왼쪽은 발표 전 12개월, 오른쪽은 발표 후 12개월</b><span>예시 모양 · 가상</span></div>
+    <svg id="big" viewBox="0 0 1100 340" role="img" aria-label="가상 예시 그래프"></svg>
+    <div class="legend"><span><i style="background:var(--color-data)"></i>월별 교역량</span><span><i style="background:var(--color-text-muted)"></i>전·후 12개월 평균</span><span><i style="background:var(--color-line)"></i>정책 발표일</span></div>
+  </section>
+  </div>
+
+  <section id="list">
+    <h2>최근 정책 이슈</h2>
+    <div class="rows" id="rows"></div>
+  </section>
+
+  <footer id="source">교역 자료: UN Comtrade 월별 자료 예정 (이 시안의 그래프는 가상) · 정책 원문 링크는 각 정책 화면에 붙습니다</footer>
+</div>
+<script>
+const P=[
+ {t:"EU, 중국산 전기차에 상계관세",d:"2024-07-04",item:"전기 승용차 · HS 8703.80",flow:"중국 → EU 수출",s:[5,6,6,7,7,8,8,9,9,8,9,9,8,7,7,6,6,7,6,6,5,6,6,5,5]},
+ {t:"미국, 중국산 전기차 관세 100%",d:"2024-05-14",item:"전기 승용차 · HS 8703.80",flow:"중국 → 미국 수출",s:[3,3,4,3,4,4,3,4,4,3,4,4,3,3,2,2,2,1,1,1,1,1,1,1,1]},
+ {t:"중국, 갈륨·게르마늄 수출통제",d:"2023-07-03",item:"갈륨 등 · HS 8112.92",flow:"중국 → 전 세계 수출",s:[6,6,5,6,6,7,6,6,7,7,8,9,6,2,1,2,3,4,4,5,4,4,5,4,4]},
+ {t:"미국, 대중국 반도체 장비 수출통제",d:"2022-10-07",item:"반도체 제조장비 · HS 8486",flow:"미국 → 중국 수출",s:[7,8,8,7,8,8,9,8,8,9,8,8,7,6,6,5,5,4,5,4,4,4,3,4,4]},
+ {t:"일본, 대한국 수출규제",d:"2019-07-01",item:"불화수소 · HS 2811.11",flow:"일본 → 한국 수출",s:[7,7,6,7,7,7,6,7,7,6,7,7,5,3,2,1,1,1,1,2,1,2,2,2,2]}
+];
+// big chart (가상 모양)
+(function(){
+ const s=[62,66,60,68,71,65,70,74,69,72,76,73,70,58,44,38,35,37,33,36,39,35,38,40,37];
+ const W=1100,H=300,L=8,R=8,T=30,max=90,x=i=>L+i*(W-L-R)/(s.length-1),y=v=>T+(H-T)*(1-v/max);
+ const avg=a=>a.reduce((p,c)=>p+c,0)/a.length,b=avg(s.slice(0,12)),a=avg(s.slice(13));
+ let g="";
+ for(let i=0;i<=4;i++){const yy=T+(H-T)*i/4;g+=`<line x1="${L}" x2="${W-R}" y1="${yy}" y2="${yy}" stroke="var(--color-rule)"/>`}
+ ["-12개월","-6개월","발표 달","+6개월","+12개월"].forEach((t,i)=>{g+=`<text x="${x(i*6)}" y="${H+28}" fill="var(--color-text-muted)" font-size="13" text-anchor="${i==0?'start':i==4?'end':'middle'}">${t}</text>`});
+ g+=`<g class="data"><line x1="${x(0)}" x2="${x(12)}" y1="${y(b)}" y2="${y(b)}" stroke="var(--color-text-muted)" stroke-dasharray="6 6"/><line x1="${x(12)}" x2="${x(24)}" y1="${y(a)}" y2="${y(a)}" stroke="var(--color-text-muted)" stroke-dasharray="6 6"/>`;
+ g+=`<polygon points="${x(0)},${H} ${s.map((v,i)=>x(i)+','+y(v)).join(' ')} ${x(24)},${H}" fill="var(--color-data)" opacity=".08"/>`;
+ g+=`<polyline points="${s.map((v,i)=>x(i)+','+y(v)).join(' ')}" fill="none" stroke="var(--color-data)" stroke-width="2.5" stroke-linejoin="round"/></g>`;
+ g+=`<rect class="event" x="${x(12)-1.5}" y="${T-20}" width="3" height="${H-T+20}" fill="var(--color-line)"/>`;
+ g+=`<text class="event-label" x="${x(12)+12}" y="${T-6}" fill="var(--color-line)" font-size="15" font-weight="600">발표일</text>`;
+ document.getElementById("big").innerHTML=g;
+})();
+function spark(s){const w=400,h=96,max=Math.max(...s),x=i=>i*w/(s.length-1),y=v=>h-6-(v/max)*(h-14);
+ return `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" aria-hidden="true"><line x1="0" x2="${w}" y1="${h-1}" y2="${h-1}" stroke="var(--color-rule)" vector-effect="non-scaling-stroke"/><line x1="${x(12)}" y1="0" x2="${x(12)}" y2="${h}" stroke="var(--color-line)" stroke-width="2" vector-effect="non-scaling-stroke"/><polyline points="${s.map((v,i)=>x(i).toFixed(1)+','+y(v).toFixed(1)).join(' ')}" fill="none" stroke="var(--color-data)" stroke-width="2" stroke-linejoin="round" vector-effect="non-scaling-stroke"/></svg>`}
+document.getElementById("rows").innerHTML=P.map((p,i)=>`
+<a class="row" href="#policy-${i+1}">
+ <time datetime="${p.d}">${p.d.replaceAll('-','.')}</time>
+ <div><h3>${p.t}</h3><p>${p.item} · ${p.flow}</p><span class="go">발표 전후 보기</span></div>
+ <div>${spark(p.s)}<small>전후 12개월 미리보기 · 가상</small></div>
+</a>`).join("");
+</script>
+</body>
+</html>

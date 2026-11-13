@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Policyline 전 · 후 비교</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --color-bg:#0E1A2E;--color-bg-deep:#08111F;--color-text:#F1F5F8;--color-text-muted:#93A3B8;
+  --color-rule:rgba(168,196,220,.16);--color-data:#A8DADC;--color-accent:#FF6B3D;
+  --font-title:"Noto Serif KR",serif;--font-body:"IBM Plex Sans KR",system-ui,sans-serif;
+  --space-1:8px;--space-2:16px;--space-3:24px;--space-4:32px;--space-6:48px;--space-8:64px;
+}
+*{box-sizing:border-box;margin:0}
+body{background:var(--color-bg);color:var(--color-text);font-family:var(--font-body);font-size:16px;line-height:1.6;word-break:keep-all}
+.wrap{max-width:1200px;margin:0 auto;padding:var(--space-6) var(--space-3) var(--space-8)}
+h1{font-family:var(--font-title);font-weight:300;font-size:clamp(30px,4vw,48px);line-height:1.2}
+.lede{color:var(--color-text-muted);margin:var(--space-2) 0 var(--space-6);max-width:44em}
+h2{font-family:var(--font-title);font-weight:400;font-size:28px;margin:var(--space-8) 0 var(--space-3);padding-top:var(--space-3);border-top:1px solid var(--color-rule)}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-3);align-items:start}
+figure{margin:0}
+figcaption{display:flex;justify-content:space-between;gap:var(--space-2);font-size:14px;color:var(--color-text-muted);margin-bottom:var(--space-1)}
+figcaption b{color:var(--color-text);font-weight:600}
+.shot{max-height:900px;overflow:auto;border:1px solid var(--color-rule);border-radius:8px;background:var(--color-bg-deep)}
+.shot img{display:block;width:100%;height:auto}
+table{width:100%;border-collapse:collapse;font-size:15px}
+th,td{text-align:left;padding:12px var(--space-2) 12px 0;border-bottom:1px solid var(--color-rule);vertical-align:top}
+th{color:var(--color-text-muted);font-weight:500}
+td.c{text-align:center;width:90px}
+.yes{color:var(--color-accent);font-weight:600}
+.no{color:var(--color-text-muted)}
+tfoot td{font-weight:600;border-bottom:0}
+.note{font-size:14px;color:var(--color-text-muted);margin-top:var(--space-2)}
+ol.changes{padding-left:1.4em;display:grid;gap:var(--space-2)}
+ol.changes b{font-weight:600}
+ol.changes span{color:var(--color-text-muted)}
+.mine{display:grid;gap:var(--space-2)}
+.mine div{border:1px dashed var(--color-rule);border-radius:8px;padding:var(--space-2) var(--space-3);min-height:88px}
+.mine dt{font-weight:600}
+.mine dd{margin:var(--space-1) 0 0;color:var(--color-text-muted);font-size:14px}
+@media (max-width:760px){.pair{grid-template-columns:1fr}.wrap{padding:var(--space-4) var(--space-2)}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Policyline 전 · 후 비교</h1>
+  <p class="lede">before는 세부 요구 없이 "정책 발표 → 무역 변화 추적기" 아이디어만으로 단순하게 만든 첫 결과물을 재현한 화면입니다 (<code>review/before/index.html</code>). after는 PLAN.md · DESIGN.md 를 지켜 만든 지금 화면입니다 (<code>index.html</code>). 두 화면 모두 1440px 폭에서 찍었고, 같은 UN Comtrade 월별 자료를 씁니다.</p>
+
+  <h2>화면 나란히 보기</h2>
+  <div class="pair">
+    <figure><figcaption><b>before</b><span>1440px · 전체 페이지</span></figcaption><div class="shot"><img src="before.png" alt="before 화면: 보라 그라데이션 머리, 드롭다운과 그래프 하나, 같은 모양 카드 3개"></div></figure>
+    <figure><figcaption><b>after</b><span>1440px · 전체 페이지</span></figcaption><div class="shot"><img src="after.png" alt="after 화면: 남색 바탕, 분석할 정책 선택하기 버튼, 실제 자료 미니 그래프가 붙은 정책 목록"></div></figure>
+  </div>
+  <div class="pair" style="margin-top:var(--space-3)">
+    <figure><figcaption><b>before</b><span>320px · 전체 페이지</span></figcaption><div class="shot"><img src="before-mobile.png" alt="before 휴대폰 폭 화면"></div></figure>
+    <figure><figcaption><b>after</b><span>정책 화면 · 1440px</span></figcaption><div class="shot"><img src="after-detail.png" alt="after 정책 하나를 고른 화면: 발표 전후 그래프, 사실 해석 불확실, 출처"></div></figure>
+  </div>
+
+  <h2>슬롭 체크리스트 (해당하면 ✔, 적을수록 좋음)</h2>
+  <table>
+    <thead><tr><th>#</th><th>이런 모습이 있나?</th><th class="c">before</th><th class="c">after</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>컴퓨터 기본 글꼴 그대로 (특별히 고른 글꼴이 없음)</td><td class="c yes">✔</td><td class="c no">–</td></tr>
+      <tr><td>2</td><td>가운데 정렬 큰 제목 + 보라 · 파랑 그라데이션 배경</td><td class="c yes">✔</td><td class="c no">–</td></tr>
+      <tr><td>3</td><td>크기 · 간격 · 그림자가 전부 똑같은 카드 3~6개</td><td class="c yes">✔</td><td class="c no">–</td></tr>
+      <tr><td>4</td><td>제목 · 본문 크기 차이가 작아 무엇이 중요한지 안 보임</td><td class="c no">–</td><td class="c no">–</td></tr>
+      <tr><td>5</td><td>색이 여기저기 제각각 (같은 파랑이 조금씩 다름)</td><td class="c no">–</td><td class="c no">–</td></tr>
+      <tr><td>6</td><td>버튼에 마우스를 올리거나 눌러도 아무 변화가 없음</td><td class="c yes">✔</td><td class="c no">–</td></tr>
+      <tr><td>7</td><td>휴대폰 폭에서 글자가 넘치거나 겹침 <span style="color:var(--color-text-muted);font-size:13px">(before: 카드 3개가 80px로 좁아져 한 글자씩 꺾임)</span></td><td class="c yes" id="s7b">✔</td><td class="c no">–</td></tr>
+      <tr><td>8</td><td>"어디서 본 것 같다" — 서비스 이름만 바꾸면 다른 회사 것과 똑같음</td><td class="c yes">✔</td><td class="c no">–</td></tr>
+    </tbody>
+    <tfoot><tr><td></td><td>합계</td><td class="c">6 / 8</td><td class="c">0 / 8</td></tr></tfoot>
+  </table>
+  <p class="note">Claude가 채점했습니다. 3번: after의 정책 목록 5줄은 같은 모양이지만, 같은 종류의 데이터를 나열하는 목록이라 같은 모양으로 두었습니다. 다르게 보시면 고쳐 주세요.</p>
+
+  <h2>바뀐 점 5가지</h2>
+  <ol class="changes">
+    <li><b>글꼴 짝 (DESIGN.md 4장)</b> → <span>Arial 한 가지에서, 제목은 가는 명조 Noto Serif KR · 본문과 숫자는 IBM Plex Sans KR (폭이 같은 숫자)로 바뀜</span></li>
+    <li><b>색 토큰 · 주홍은 발표일에만 (DESIGN.md 5장)</b> → <span>보라 · 파랑 그라데이션 머리에서, 남색 밤 바탕 + 이름표 색만 쓰고 주홍은 발표일 · 시행일 선에만 쓰도록 바뀜</span></li>
+    <li><b>단 하나의 행동 (PLAN.md)</b> → <span>작은 드롭다운에서, 첫 화면의 흰 입체 버튼 "분석할 정책 선택하기"와 실제 자료 미니 그래프가 붙은 정책 목록으로 바뀜</span></li>
+    <li><b>상태 5가지 · 움직임 규칙 (DESIGN.md 7 · 8장)</b> → <span>마우스를 올려도 반응이 없던 것에서, 기본 · hover · focus · active · disabled 상태와 퇴장이 더 빠른 움직임, 모션 줄이기 설정 존중으로 바뀜</span></li>
+    <li><b>숫자에 출처 · 원인 단정 금지 (CLAUDE.md 공통 원칙)</b> → <span>출처 · 단위 · 날짜 없는 그래프 하나에서, 발표 · 시행일 선, 앞뒤 12개월 합계, 사실 · 해석 · 불확실 세 칸, 정책 원문 링크, 인용 문구와 CSV로 바뀜</span></li>
+  </ol>
+
+  <h2>내가 고른 것 (직접 쓰는 칸)</h2>
+  <dl class="mine">
+    <div><dt>방향</dt><dd></dd></div>
+    <div><dt>조합</dt><dd></dd></div>
+    <div><dt>안 고친 비평</dt><dd></dd></div>
+  </dl>
+</div>
+</body>
+</html>

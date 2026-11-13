@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Policyline 3폭 검수 전·후</title>
+<style>
+:root{--color-bg:#0E1A2E;--color-text:#F1F5F8;--color-text-muted:#93A3B8;--color-rule:rgba(168,196,220,.16)}
+body{margin:0;background:var(--color-bg);color:var(--color-text);font-family:"IBM Plex Sans KR",system-ui,sans-serif;padding:24px}
+h1{font-size:24px;margin:0 0 8px}p{color:var(--color-text-muted);margin:0 0 24px}
+h2{font-size:18px;margin:32px 0 12px;border-top:1px solid var(--color-rule);padding-top:16px}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
+figure{margin:0}figcaption{font-size:14px;color:var(--color-text-muted);margin-bottom:8px}
+img{width:100%;height:auto;border:1px solid var(--color-rule);border-radius:8px}
+.narrow img{max-width:320px}.mid img{max-width:384px}
+</style>
+</head>
+<body>
+<h1>Policyline 첫 화면 3폭 검수 — 전 · 후</h1>
+<p>2026-11-13 · playwright 전체 페이지 캡처 (css 픽셀)</p>
+<h2>320px · 작은 휴대폰</h2>
+<div class="pair narrow"><figure><figcaption>전</figcaption><img src="before-320.png" alt="320px 고치기 전"></figure><figure><figcaption>후</figcaption><img src="after-320.png" alt="320px 고친 뒤"></figure></div>
+<h2>768px · 태블릿</h2>
+<div class="pair mid"><figure><figcaption>전</figcaption><img src="before-768.png" alt="768px 고치기 전"></figure><figure><figcaption>후</figcaption><img src="after-768.png" alt="768px 고친 뒤"></figure></div>
+<h2>1440px · 노트북 · 모니터</h2>
+<div class="pair"><figure><figcaption>전</figcaption><img src="before-1440.png" alt="1440px 고치기 전"></figure><figure><figcaption>후</figcaption><img src="after-1440.png" alt="1440px 고친 뒤"></figure></div>
+</body>
+</html>

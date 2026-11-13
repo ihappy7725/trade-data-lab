@@ -1,0 +1,580 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Policyline · 정책 발표 전후 교역량</title>
+<meta name="description" content="관세·수출통제 등 정책 발표 전후 12개월의 월별 교역량을 나란히 비교합니다.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect width=%2232%22 height=%2232%22 rx=%226%22 fill=%22%230E1A2E%22/%3E%3Crect x=%2214%22 y=%225%22 width=%224%22 height=%2222%22 rx=%222%22 fill=%22%23FF6B3D%22/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* 색 토큰 — theme-factory Ocean Depths 바탕 */
+  --color-bg:#0E1A2E;
+  --color-bg-deep:#08111F;
+  --color-surface:#16263F;
+  --color-surface-top:#1D3150;
+  --color-edge:rgba(190,215,240,.14);
+  --color-highlight:rgba(220,235,255,.10);
+  --color-grid:rgba(168,196,220,.07);
+  --color-text:#F1F5F8;
+  --color-text-muted:#93A3B8;
+  --color-rule:rgba(168,196,220,.16);
+  --color-brand:#F1F5F8;
+  --color-brand-edge:#9FB2C8;
+  --color-brand-text:#0E1A2E;
+  --color-data:#A8DADC;
+  --color-accent:#FF6B3D;
+  --color-focus:#7FB8FF;
+  --shadow-1:0 1px 0 var(--color-highlight) inset,0 2px 4px rgba(0,0,0,.25),0 8px 16px rgba(0,0,0,.25);
+  --shadow-inset:inset 0 2px 4px rgba(0,0,0,.5),0 1px 0 var(--color-highlight);
+  --shadow-btn:0 4px 0 var(--color-brand-edge),0 8px 24px rgba(0,0,0,.35);
+  --shadow-btn-small:0 3px 0 var(--color-brand-edge),0 6px 16px rgba(0,0,0,.3);
+  --shadow-btn-pressed:0 0 0 var(--color-brand-edge),0 2px 8px rgba(0,0,0,.3);
+  --glow-accent:0 0 14px rgba(255,107,61,.55);
+  --color-glow:rgba(127,184,255,.10);
+  --shadow-2:0 1px 0 var(--color-highlight) inset,0 4px 8px rgba(0,0,0,.3),0 16px 32px rgba(0,0,0,.35),0 32px 64px rgba(0,0,0,.25);
+  --font-title:"Noto Serif KR", serif;
+  --font-body:"IBM Plex Sans KR", system-ui, sans-serif;
+  --space-1:8px;--space-2:16px;--space-3:24px;--space-4:32px;--space-6:48px;--space-8:64px;--space-12:96px;
+  --radius:12px;
+  --ease-out:cubic-bezier(.2,.7,.2,1);
+  --ease-out-quint:cubic-bezier(.23,1,.32,1);
+  --ease-in:cubic-bezier(.4,0,1,1);
+  --dur-enter:.22s;
+  --dur-exit:.14s;
+  --dur-press:.08s;
+  --color-sheen:rgba(255,255,255,.55);
+  --glow-brand:0 0 0 6px rgba(241,245,248,.08),0 12px 32px rgba(127,184,255,.25);
+}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);color:var(--color-text);font-size:16px;line-height:1.6;word-break:keep-all;font-variant-numeric:tabular-nums;background:var(--color-bg);overflow-x:hidden}
+a{color:inherit}
+button{font:inherit;color:inherit}
+.draft{position:relative;z-index:2;background:var(--color-surface-top);color:var(--color-text-muted);font-size:13px;padding:var(--space-1) var(--space-2);text-align:center;font-weight:500}
+.wrap{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:0 var(--space-6)}
+
+/* 3D floor grid behind the hero */
+.floor{position:absolute;inset:0 0 auto 0;height:960px;overflow:hidden;pointer-events:none;perspective:700px;z-index:0}
+.floor::before{content:"";position:absolute;left:-50%;right:-50%;top:40%;height:140%;
+  background-image:linear-gradient(var(--color-grid) 1px,transparent 1px),linear-gradient(90deg,var(--color-grid) 1px,transparent 1px);
+  background-size:80px 80px;transform:rotateX(62deg);transform-origin:top;
+  -webkit-mask-image:linear-gradient(to bottom,#000 0%,transparent 70%);mask-image:linear-gradient(to bottom,#000 0%,transparent 70%)}
+.floor::after{content:"";position:absolute;inset:0;background:radial-gradient(60% 50% at 70% 35%,var(--color-glow),transparent 70%)}
+
+/* nav */
+nav{display:flex;align-items:center;justify-content:space-between;gap:var(--space-3);padding:var(--space-3) 0}
+.logo{display:flex;align-items:center;gap:12px;font-weight:600;font-size:18px;letter-spacing:.18em;text-decoration:none}
+.logo i{width:3px;height:26px;background:var(--color-accent);display:block;box-shadow:var(--glow-accent)}
+.links{display:flex;gap:var(--space-4);font-size:15px;color:var(--color-text-muted)}
+.links a{text-decoration:none}
+.links a:hover{color:var(--color-text)}
+.nav-right{display:flex;align-items:center;gap:var(--space-2)}
+.lang{display:inline-flex;padding:4px;border-radius:999px;background:var(--color-bg-deep);box-shadow:var(--shadow-inset)}
+.lang button{border:0;background:none;padding:4px 12px;border-radius:999px;font-size:13px;font-weight:600;color:var(--color-text-muted);cursor:pointer;transition:transform .15s var(--ease-out)}
+.lang button[aria-pressed="true"]{background:var(--color-surface-top);color:var(--color-text);box-shadow:var(--shadow-1)}
+.lang button:focus-visible{outline:2px solid var(--color-focus);outline-offset:2px}
+.lang button:active{transform:scale(.95)}
+
+/* 3D buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:0 var(--space-4);background:var(--color-brand);color:var(--color-brand-text);font:600 17px/1 var(--font-body);border:0;border-radius:10px;text-decoration:none;cursor:pointer;
+  box-shadow:var(--shadow-btn)}
+.btn.small{min-height:40px;padding:0 var(--space-2);font-size:14px;box-shadow:var(--shadow-btn-small)}
+.btn:hover{transform:translateY(-2px)}
+.btn:focus-visible{outline:3px solid var(--color-focus);outline-offset:4px}
+.btn:active{transform:translateY(4px);box-shadow:var(--shadow-btn-pressed);transition-duration:.08s}
+.btn[disabled]{opacity:.4;cursor:not-allowed;transform:none}
+.btn.ghost{background:var(--color-surface-top);color:var(--color-text);box-shadow:0 4px 0 var(--color-bg-deep),var(--shadow-1)}
+
+/* hero */
+.hero{display:grid;grid-template-columns:1.25fr 1fr;gap:var(--space-6);align-items:center;min-height:min(calc(100vh - 140px),720px);padding:var(--space-6) 0 var(--space-12)}
+h1{font-family:var(--font-title);font-weight:300;font-size:clamp(34px,4vw,56px);text-wrap:balance;line-height:1.16;letter-spacing:-.02em}
+h1 span{display:block;color:var(--color-text-muted)}
+.lede{color:var(--color-text-muted);font-size:18px;max-width:32em;margin:var(--space-4) 0 var(--space-6)}
+.trust{display:flex;flex-wrap:wrap;gap:var(--space-1) var(--space-3);margin-top:var(--space-3);font-size:14px;color:var(--color-text-muted);list-style:none;padding:0}
+.trust li::before{content:"✔";color:var(--color-data);margin-right:6px}
+
+/* 3D stack of policy sheets */
+.stack{position:relative;height:420px;perspective:1400px}
+.sheet{position:absolute;left:8%;right:4%;padding:var(--space-3);border-radius:var(--radius);text-decoration:none;
+  background:linear-gradient(180deg,var(--color-surface-top),var(--color-surface));border:1px solid var(--color-edge);box-shadow:var(--shadow-2);
+  transform-style:preserve-3d;transform:rotateX(14deg) rotateY(-20deg) rotateZ(2deg) translate3d(var(--x),var(--y),var(--z));
+  opacity:0;animation:rise .7s var(--ease-out) forwards;animation-delay:var(--d);transition:transform .3s var(--ease-out)}
+.sheet time{font-size:13px;color:var(--color-text-muted)}
+.sheet b{display:block;font-family:var(--font-title);font-weight:400;font-size:20px;line-height:1.35;margin-top:4px}
+.sheet .bar{position:absolute;right:var(--space-3);top:var(--space-2);bottom:var(--space-2);width:3px;border-radius:2px;background:var(--color-accent);box-shadow:var(--glow-accent)}
+.sheet:hover{transform:rotateX(14deg) rotateY(-20deg) rotateZ(2deg) translate3d(calc(var(--x) - 16px),calc(var(--y) - 8px),calc(var(--z) + 40px))}
+.sheet:focus-visible{outline:3px solid var(--color-focus);outline-offset:4px}
+@keyframes rise{from{opacity:0;transform:rotateX(14deg) rotateY(-20deg) rotateZ(2deg) translate3d(var(--x),calc(var(--y) + 40px),var(--z))}to{opacity:1}}
+
+/* sections */
+section.block{padding:var(--space-12) 0;border-top:1px solid var(--color-rule)}
+h2{font-family:var(--font-title);font-weight:400;font-size:clamp(28px,3vw,40px);line-height:1.25;margin-bottom:var(--space-2)}
+.section-lede{color:var(--color-text-muted);max-width:38em;margin-bottom:var(--space-6)}
+
+/* filter */
+.filters{display:flex;flex-wrap:wrap;gap:var(--space-1);margin-bottom:var(--space-3)}
+.chip{border:0;cursor:pointer;padding:var(--space-1) var(--space-2);border-radius:999px;font-size:14px;font-weight:500;background:var(--color-bg-deep);color:var(--color-text-muted);box-shadow:var(--shadow-inset);transition:transform .15s var(--ease-out)}
+.chip[aria-pressed="true"]{background:var(--color-surface-top);color:var(--color-text);box-shadow:0 3px 0 var(--color-bg-deep),var(--shadow-1)}
+.chip:focus-visible{outline:2px solid var(--color-focus);outline-offset:2px}
+.chip:active{transform:translateY(2px)}
+
+/* policy rows */
+.rows{display:grid;gap:var(--space-2)}
+.row{display:grid;grid-template-columns:132px 1fr auto;gap:var(--space-4);align-items:center;padding:var(--space-3);text-decoration:none;
+  background:linear-gradient(180deg,var(--color-surface-top),var(--color-surface));border:1px solid var(--color-edge);border-radius:var(--radius);box-shadow:var(--shadow-1)}
+.row[hidden]{display:none}
+.row time{display:flex;align-items:center;gap:12px;color:var(--color-text-muted);font-size:15px}
+.row .mark{width:2px;height:40px;border-radius:1px;background:var(--color-accent);box-shadow:var(--glow-accent)}
+.row .type{display:inline-block;font-size:13px;color:var(--color-data);border:1px solid var(--color-edge);border-radius:999px;padding:0 8px;margin-bottom:6px}
+.row h3{font-family:var(--font-title);font-weight:400;font-size:21px;line-height:1.35}
+.row p{color:var(--color-text-muted);font-size:14px;margin-top:4px}
+.row .status{justify-self:end;font-size:13px;color:var(--color-text-muted);border:1px dashed var(--color-rule);border-radius:999px;padding:4px 12px;white-space:nowrap}
+.row:hover .status{color:var(--color-text)}
+.row:hover{transform:translateY(-4px);box-shadow:var(--shadow-2)}
+.row:focus-visible{outline:3px solid var(--color-focus);outline-offset:3px}
+.row:active{transform:translateY(0);box-shadow:var(--shadow-1);transition-duration:.08s}
+
+/* what you see: one schematic of a policy page (no panel) */
+.anatomy{display:grid;grid-template-columns:1.1fr 1fr;gap:var(--space-8);align-items:start}
+.sketch{margin:0;display:grid;gap:var(--space-1);padding:var(--space-2);border:1px dashed var(--color-rule);border-radius:4px}
+.sk-chart{position:relative;height:160px;border:1px solid var(--color-rule);border-radius:2px}
+.sk-base{position:absolute;left:var(--space-2);right:var(--space-2);bottom:var(--space-4);height:1px;background:var(--color-text-muted)}
+.sk-line{position:absolute;left:50%;top:var(--space-2);bottom:var(--space-2);width:2px;margin-left:-1px;background:var(--color-accent);box-shadow:var(--glow-accent)}
+.sk-lbl{position:absolute;bottom:var(--space-1);font-size:13px;color:var(--color-text-muted)}
+.sk-before{right:calc(50% + var(--space-2))}.sk-after{left:calc(50% + var(--space-2))}
+.sk-cols{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-1)}
+.sk-cols span,.sk-src{border:1px solid var(--color-rule);border-radius:2px;padding:var(--space-1);font-size:13px;color:var(--color-text-muted);text-align:center}
+.parts{margin:0;display:grid}
+.parts div{padding:var(--space-3) 0;border-top:1px solid var(--color-rule)}
+.parts div:last-child{border-bottom:1px solid var(--color-rule)}
+.parts dt{font-family:var(--font-title);font-size:22px;margin-bottom:var(--space-1)}
+.parts dd{margin:0;color:var(--color-text-muted);font-size:15px;max-width:38em}
+
+/* caveats: text on rules, no panel */
+.caveats{display:grid;grid-template-columns:repeat(2,1fr);column-gap:var(--space-6)}
+.caveat{padding:var(--space-3) 0;border-top:1px solid var(--color-rule)}
+.caveat h3{font-size:17px;font-weight:600;margin-bottom:4px}
+.caveat p{color:var(--color-text-muted);font-size:15px}
+
+/* cite: only the inset box stays */
+.cite{display:grid;grid-template-columns:1fr auto;gap:var(--space-3);align-items:center}
+.cite code{display:block;font-family:var(--font-body);font-size:15px;line-height:1.7;padding:var(--space-2) var(--space-3);border-radius:8px;background:var(--color-bg-deep);box-shadow:var(--shadow-inset)}
+.cite-actions{display:flex;flex-direction:column;gap:var(--space-2)}
+.cite small{grid-column:1/-1;color:var(--color-text-muted);font-size:13px}
+
+/* source table: plain rules */
+.src{width:100%;border-collapse:collapse;font-size:15px;border-top:1px solid var(--color-text-muted)}
+.src th,.src td{text-align:left;padding:var(--space-2) 0;border-bottom:1px solid var(--color-rule);vertical-align:top}
+.src th{width:28%;color:var(--color-text-muted);font-weight:500;padding-right:var(--space-3)}
+
+/* row: real mini chart */
+.row .mini{display:grid;gap:4px;justify-items:end;min-width:220px}
+.row .mini svg{width:220px;height:48px;display:block}
+.row .chg{font-size:13px;color:var(--color-text-muted);white-space:nowrap}
+.row .chg b{color:var(--color-text);font-weight:600}
+
+/* detail view */
+body.is-detail .hero,body.is-detail section.block:not(#detail){display:none}
+.detail{padding-top:var(--space-6)}
+.back{display:block;width:max-content;margin-bottom:var(--space-4);font-size:15px;color:var(--color-text-muted);text-decoration:none}
+.back:hover{color:var(--color-text);text-decoration:underline;text-underline-offset:4px}
+.detail h1{font-size:clamp(30px,3.6vw,48px);margin:var(--space-1) 0 var(--space-2)}
+.detail .meta{color:var(--color-text-muted);font-size:15px}
+.dates{display:flex;flex-wrap:wrap;gap:var(--space-1) var(--space-4);margin:var(--space-3) 0 var(--space-1);font-size:15px}
+.dates span{display:inline-flex;align-items:center;gap:var(--space-1)}
+.dates i{display:inline-block;width:2px;height:16px;background:var(--color-accent)}
+.dates i.dash{background:none;border-left:2px dashed var(--color-accent);width:0}
+.date-note{color:var(--color-text-muted);font-size:14px;max-width:60em}
+.chart-wrap{margin:var(--space-6) 0 var(--space-3)}
+.chart-wrap svg{display:block;width:100%;height:auto;overflow:visible}
+.chart-wrap text{font-family:var(--font-body);font-size:12px;fill:var(--color-text-muted)}
+.legend{display:flex;flex-wrap:wrap;gap:var(--space-1) var(--space-3);font-size:13px;color:var(--color-text-muted)}
+.legend i{display:inline-block;width:16px;height:2px;vertical-align:middle;margin-right:6px}
+.totals{display:grid;grid-template-columns:repeat(3,auto);justify-content:start;gap:var(--space-1) var(--space-6);margin:var(--space-4) 0 var(--space-6);padding:var(--space-2) 0;border-top:1px solid var(--color-rule);border-bottom:1px solid var(--color-rule)}
+.totals dt{font-size:13px;color:var(--color-text-muted)}
+.totals dd{margin:0;font-size:20px;font-weight:500}
+.fiu{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-4);margin-bottom:var(--space-6)}
+.fiu section{border-top:1px solid var(--color-text-muted);padding-top:var(--space-2)}
+.fiu h3{font-size:16px;font-weight:600;margin-bottom:var(--space-1)}
+.fiu p,.fiu li{color:var(--color-text-muted);font-size:15px}
+.fiu ul{margin:0;padding-left:1.1em;display:grid;gap:6px}
+.fiu .empty{font-style:normal;color:var(--color-text-muted)}
+.srcs{font-size:14px;color:var(--color-text-muted);display:grid;gap:6px;margin-bottom:var(--space-6)}
+.srcs a{color:var(--color-text);text-underline-offset:3px}
+.vals summary{cursor:pointer;color:var(--color-text-muted);font-size:14px}
+.vals table{border-collapse:collapse;font-size:14px;margin-top:var(--space-2)}
+.vals td,.vals th{padding:4px var(--space-2) 4px 0;border-bottom:1px solid var(--color-rule);text-align:right}
+.vals th{color:var(--color-text-muted);font-weight:500}
+.vals tr.ann td{color:var(--color-accent)}
+::selection{background:var(--color-accent);color:var(--color-brand-text)}
+
+/* toast */
+.toast{position:fixed;left:50%;bottom:var(--space-4);padding:12px 20px;border-radius:10px;background:var(--color-brand);color:var(--color-brand-text);font-weight:600;box-shadow:var(--shadow-2);transform:translate(-50%,24px);opacity:0;pointer-events:none;transition:transform .14s ease-in,opacity .14s ease-in;z-index:5}
+.toast.show{transform:translate(-50%,0);opacity:1;transition:transform .32s var(--ease-out),opacity .32s var(--ease-out)}
+
+footer{padding:var(--space-8) 0;font-size:13px;color:var(--color-text-muted);border-top:1px solid var(--color-rule)}
+
+@media (max-width:980px){
+  .hero{grid-template-columns:1fr;min-height:0;padding-top:var(--space-6);gap:var(--space-6)}
+  .stack{height:340px}
+  .anatomy{grid-template-columns:1fr;gap:var(--space-4)}
+  .fiu{grid-template-columns:1fr}
+  .row{grid-template-columns:96px 1fr;row-gap:var(--space-2)}.row>.status{grid-column:1/-1;justify-self:start}
+}
+@media (max-width:760px){
+  .wrap{padding:0 var(--space-2)}
+  .links{display:none}
+  .row{grid-template-columns:1fr;gap:var(--space-1)}.row .status,.row .mini{justify-self:start;justify-items:start;margin-top:var(--space-1)}
+  .totals{grid-template-columns:1fr 1fr}
+  .caveats{grid-template-columns:1fr}
+  .cite{grid-template-columns:1fr}.cite-actions{flex-direction:row;flex-wrap:wrap}
+  .stack{height:300px;overflow:clip}.sheet{left:0;right:15%}
+  section.block{padding:var(--space-8) 0}
+  .src tr{display:grid}.src th,.src td{width:auto;display:block}.src th{border-bottom:0;padding-bottom:0}
+}
+@media (max-width:480px){.stack{display:none}.hero{padding-bottom:var(--space-6)}}
+
+/* ===== 상태와 움직임 (DESIGN.md 7·8장) =====
+   - transform · opacity 만 움직인다. 그림자·색은 바로 바뀌거나, 겹쳐 둔 층의 opacity 로 바꾼다.
+   - 기본 상태로 돌아갈 때(퇴장)는 --dur-exit + ease-in, 들어갈 때(등장)는 --dur-enter + ease-out. */
+
+/* 공통: 키보드 선택은 모두 같은 테두리 */
+a:focus-visible,button:focus-visible{outline:3px solid var(--color-focus);outline-offset:3px}
+
+/* 1) 버튼 (.btn, .btn.ghost) */
+.btn{position:relative;transition:transform var(--dur-exit) var(--ease-in)}
+.btn:hover{transform:translateY(-2px);transition:transform var(--dur-enter) var(--ease-out-quint)}
+.btn:active{transform:translateY(4px);box-shadow:var(--shadow-btn-pressed);transition:transform var(--dur-press) var(--ease-out)}
+.btn:disabled,.btn[disabled]{opacity:.4;cursor:not-allowed;box-shadow:none}
+.btn:disabled:hover,.btn:disabled:active{transform:none}
+
+/* 2) 단 하나의 행동: 분석할 정책 선택하기 */
+.btn-primary{overflow:hidden}
+.btn-primary::before{content:"";position:absolute;top:0;bottom:0;left:0;width:40%;background:linear-gradient(100deg,transparent,var(--color-sheen),transparent);transform:translateX(-160%) skewX(-20deg);animation:sheen .9s var(--ease-in-out,ease-in-out) 1.4s 1 both;pointer-events:none}
+.btn-primary:hover{transform:translateY(-3px) scale(1.02);box-shadow:var(--shadow-btn),var(--glow-brand)}
+.btn-primary:active{transform:translateY(4px) scale(.98)}
+@keyframes sheen{to{transform:translateX(320%) skewX(-20deg)}}
+
+/* 3) 글자 링크: 위쪽 메뉴, 로고 */
+.links a,.logo{position:relative;transition:opacity var(--dur-exit) var(--ease-in)}
+.links a::after{content:"";position:absolute;left:0;right:0;bottom:-6px;height:2px;background:var(--color-text);transform:scaleX(0);transform-origin:left;transition:transform var(--dur-exit) var(--ease-in)}
+.links a:hover::after,.links a:focus-visible::after{transform:scaleX(1);transition:transform var(--dur-enter) var(--ease-out-quint)}
+.links a:active,.logo:active{opacity:.7;transition-duration:var(--dur-press)}
+.logo:hover i{transform:scaleY(1.15)}
+.logo i{transition:transform var(--dur-enter) var(--ease-out-quint)}
+
+/* 4) 언어 토글 · 필터 칩 */
+.lang button,.chip{transition:transform var(--dur-exit) var(--ease-in)}
+.lang button:hover,.chip:hover{color:var(--color-text)}
+.chip[aria-pressed="false"]:hover{transform:translateY(-1px);transition:transform var(--dur-enter) var(--ease-out-quint)}
+.lang button:active{transform:scale(.94);transition-duration:var(--dur-press)}
+.chip:active{transform:translateY(2px);transition-duration:var(--dur-press)}
+.lang button:disabled,.chip:disabled{opacity:.4;cursor:not-allowed;transform:none}
+
+/* 5) 정책 목록 행 · 첫 화면 카드: 깊은 그림자는 겹친 층의 opacity 로 */
+.row{position:relative}
+.row::after{content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:var(--shadow-2);opacity:0;pointer-events:none;transition:opacity var(--dur-exit) var(--ease-in)}
+.row{transition:transform var(--dur-exit) var(--ease-in)}
+.row:hover{transform:translateY(-4px);box-shadow:var(--shadow-1);transition:transform var(--dur-enter) var(--ease-out-quint)}
+.row:hover::after{opacity:1;transition:opacity var(--dur-enter) var(--ease-out-quint)}
+.row:active{transform:translateY(-1px);box-shadow:var(--shadow-1);transition:transform var(--dur-press) var(--ease-out)}
+.row[aria-disabled="true"]{opacity:.4;pointer-events:none}
+
+/* 6) 알림: 나타날 때 0.32초, 사라질 때 0.14초 (기존 .toast 규칙) */
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .sheet{opacity:1}
+  .btn-primary::before{display:none}
+  .btn:hover,.btn-primary:hover,.row:hover,.chip:hover,.logo:hover i{transform:none}
+  .sheet:hover{transform:rotateX(14deg) rotateY(-20deg) rotateZ(2deg) translate3d(var(--x),var(--y),var(--z))}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+<div class="floor" aria-hidden="true"></div>
+<div class="draft" data-i18n="draft"></div>
+<div class="wrap">
+  <nav>
+    <a class="logo" href="#"><i></i>POLICYLINE</a>
+    <div class="links">
+      <a href="#list" data-i18n="nav.list"></a>
+      <a href="#how" data-i18n="nav.how"></a>
+      <a href="#caveats" data-i18n="nav.caveats"></a>
+      <a href="#source" data-i18n="nav.source"></a>
+    </div>
+    <div class="nav-right">
+      <div class="lang" role="group" aria-label="Language">
+        <button type="button" data-lang="ko" aria-pressed="true">한</button>
+        <button type="button" data-lang="en" aria-pressed="false">EN</button>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div>
+      <h1 data-i18n="hero.h1"></h1>
+      <p class="lede" data-i18n="hero.sub"></p>
+      <a class="btn btn-primary" href="#list" data-i18n="hero.cta"></a>
+      <ul class="trust"><li data-i18n="hero.trust1"></li><li data-i18n="hero.trust2"></li></ul>
+    </div>
+    <div class="stack" id="stack"></div>
+  </header>
+
+  <section class="block" id="list">
+    <h2 data-i18n="list.h2"></h2>
+    <p class="section-lede" data-i18n="list.lede"></p>
+    <div class="filters" role="group" id="filters"></div>
+    <div class="rows" id="rows"></div>
+  </section>
+
+  <section class="block detail" id="detail" hidden aria-live="polite"></section>
+
+  <section class="block" id="how">
+    <h2 data-i18n="how.h2"></h2>
+    <p class="section-lede" data-i18n="how.lede"></p>
+    <div class="anatomy">
+      <figure class="sketch" aria-hidden="true">
+        <div class="sk-chart"><span class="sk-base"></span><span class="sk-line"></span><span class="sk-lbl sk-before" data-i18n="sk.before"></span><span class="sk-lbl sk-after" data-i18n="sk.after"></span></div>
+        <div class="sk-cols"><span data-i18n="how.fact"></span><span data-i18n="how.interp"></span><span data-i18n="how.unsure"></span></div>
+        <div class="sk-src" data-i18n="sk.src"></div>
+      </figure>
+      <dl class="parts">
+        <div><dt data-i18n="how.c1.h"></dt><dd data-i18n="how.c1.p"></dd></div>
+        <div><dt data-i18n="how.c2.h"></dt><dd data-i18n="how.c2.p"></dd></div>
+        <div><dt data-i18n="how.c3.h"></dt><dd data-i18n="how.c3.p"></dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="block" id="caveats">
+    <h2 data-i18n="cav.h2"></h2>
+    <p class="section-lede" data-i18n="cav.lede"></p>
+    <div class="caveats">
+      <div class="caveat"><h3 data-i18n="cav.1.h"></h3><p data-i18n="cav.1.p"></p></div>
+      <div class="caveat"><h3 data-i18n="cav.2.h"></h3><p data-i18n="cav.2.p"></p></div>
+      <div class="caveat"><h3 data-i18n="cav.3.h"></h3><p data-i18n="cav.3.p"></p></div>
+      <div class="caveat"><h3 data-i18n="cav.4.h"></h3><p data-i18n="cav.4.p"></p></div>
+    </div>
+  </section>
+
+  <section class="block" id="cite">
+    <h2 data-i18n="cite.h2"></h2>
+    <p class="section-lede" data-i18n="cite.lede"></p>
+    <div class="cite">
+      <code id="citeText" data-i18n="cite.example"></code>
+      <div class="cite-actions">
+        <button class="btn ghost small" type="button" id="copyBtn" data-i18n="cite.copy"></button>
+        <button class="btn ghost small" type="button" disabled data-i18n="cite.csv"></button>
+      </div>
+      <small data-i18n="cite.note"></small>
+    </div>
+  </section>
+
+  <section class="block" id="source">
+    <h2 data-i18n="src.h2"></h2>
+    <div class="src-wrap">
+      <table class="src">
+        <tr><th data-i18n="src.r1.k"></th><td data-i18n="src.r1.v"></td></tr>
+        <tr><th data-i18n="src.r2.k"></th><td data-i18n="src.r2.v"></td></tr>
+        <tr><th data-i18n="src.r3.k"></th><td data-i18n="src.r3.v"></td></tr>
+        <tr><th data-i18n="src.r4.k"></th><td data-i18n="src.r4.v"></td></tr>
+      </table>
+    </div>
+  </section>
+
+  <footer data-i18n="footer"></footer>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="data/policies.js"></script>
+<script>
+const I18N={
+ko:{
+ "draft":"교역 자료: UN Comtrade 월별 자료 ({f} 받음). 정책 날짜는 각국 정부·EU 공식 발표 기준입니다.",
+ "nav.list":"정책 5건","nav.how":"보는 것","nav.caveats":"읽을 때 주의","nav.source":"출처",
+ "hero.h1":"정책 발표 전후 12개월,<span>교역량의 객관적 변화</span>",
+ "hero.sub":"관세와 수출통제 등 주요 정책 시점을 기점으로 달라진 월별 교역 데이터를 나란히 비교합니다. 원인을 단정 짓지 않고, 같은 시기에 일어난 시장의 실제 변화만 제공합니다.",
+ "hero.cta":"분석할 정책 선택하기","hero.trust1":"로그인 없이 즉시 확인","hero.trust2":"투명한 출처 표기",
+ "list.h2":"분석할 정책 고르기","list.lede":"작은 그래프의 붉은 선이 발표 달입니다. 오른쪽 숫자는 발표 달을 뺀 앞뒤 12개월 합계의 차이로, 원인을 뜻하지 않습니다.",
+ "f.all":"전체","f.tariff":"관세","f.export":"수출통제",
+ "row.status":"데이터 준비 중","row.chg":"앞뒤 12개월 월평균","row.nodata":"자료 부족",
+ "d.back":"정책 목록으로","d.ann":"발표","d.eff":"시행","d.before":"발표 전 12개월 합계","d.after":"발표 후 12개월 합계","d.diff":"월평균 차이 (참고)",
+ "d.lg.data":"월별 교역액 (미국 달러)","d.lg.avg":"앞뒤 12개월 월평균","d.lg.ann":"발표 달","d.lg.eff":"시행 달",
+ "d.fact":"사실","d.interp":"해석","d.unsure":"불확실",
+ "d.interp.empty":"아직 정리하지 않았습니다. 연구·언론의 해석은 출처를 붙여 이 칸에 추가합니다.",
+ "d.u.cause":"같은 시기에 환율, 경기, 다른 나라의 정책 같은 다른 요인도 함께 움직였을 수 있습니다.",
+ "d.u.report":"이 값은 한쪽 나라가 신고한 값입니다. 상대국 신고값과 다를 수 있고 나중에 고쳐질 수 있습니다.",
+ "d.src.policy":"정책 원문","d.src.data":"교역 자료","d.vals":"월별 값 보기","d.month":"월","d.value":"교역액 (US$)","d.missing":"자료 없음",
+ "d.csv":"CSV 내려받기","d.missingN":"자료가 없는 달 {n}개는 합계에서 빠졌습니다.",
+ "how.h2":"정책 하나를 고르면 보는 것","how.lede":"한 화면에 세 가지를 함께 놓습니다. 숫자, 그 숫자를 읽는 방법, 그리고 원문입니다.",
+ "how.c1.h":"발표 전후 그래프","how.c1.p":"발표 전 12개월과 후 12개월의 월별 교역량을 한 그래프에 놓고, 발표일과 시행일에 선을 긋습니다. 전후 12개월 합계도 함께 보여 줍니다.",
+ "how.c2.h":"사실 · 해석 · 불확실","how.c2.p":"숫자로 확인되는 것, 연구·언론의 해석, 아직 모르는 것을 세 칸으로 나눠 씁니다.",
+ "how.fact":"사실","how.interp":"해석","how.unsure":"불확실","sk.before":"발표 전 12개월","sk.after":"발표 후 12개월","sk.src":"정책 원문 · 품목(HS) · 자료 출처와 기간",
+ "how.c3.h":"정책 원문과 자료 출처","how.c3.p":"정부 발표 원문 링크, 품목(HS 코드), 교역 자료의 출처와 기간을 그래프 바로 옆에 붙입니다.",
+ "cav.h2":"숫자를 읽을 때 주의할 점","cav.lede":"발표 전후로 숫자가 달라졌다고 해서 정책 때문이라고 말할 수는 없습니다. 같은 시기에 함께 움직인 것들을 먼저 떠올려 보세요.",
+ "cav.1.h":"계절에 따른 변화","cav.1.p":"어떤 품목은 매년 같은 달에 오르내립니다. 전년 같은 달과도 비교해 보세요.",
+ "cav.2.h":"같은 시기의 다른 사건","cav.2.p":"환율, 경기, 다른 나라의 정책, 공급 차질이 같은 시기에 겹칠 수 있습니다.",
+ "cav.3.h":"발표 전에 미리 움직인 거래","cav.3.p":"발표가 예고되면 그 전에 주문을 앞당기는 경우가 있어, 발표 직전 숫자가 높게 나올 수 있습니다.",
+ "cav.4.h":"신고 방식의 차이","cav.4.p":"수출국과 수입국이 신고한 값이 다를 수 있고, 최근 몇 달 자료는 나중에 고쳐질 수 있습니다.",
+ "cite.h2":"과제와 글에 그대로 쓰기","cite.lede":"정책 화면마다 인용 문구와 데이터 파일을 준비해 둡니다. 출처와 기간이 함께 따라갑니다.",
+ "cite.example":"Policyline, 「(정책 이름) 발표 전후 12개월 (품목) 교역량」, 자료: UN Comtrade 월별 자료 (기간), 확인일 (날짜).",
+ "cite.copy":"인용 문구 복사","cite.csv":"CSV는 정책 화면에서","cite.note":"인용 형식 틀입니다. 각 정책 화면에서는 괄호가 채워진 문구와 월별 값 CSV를 받을 수 있습니다.",
+ "src.h2":"출처와 방법",
+ "src.r1.k":"교역 자료","src.r1.v":"UN Comtrade 월별 상품 교역 자료 (신고국 기준). 원자료를 고치거나 추정하지 않으며, 빈 달은 \"자료 없음\"으로 표시합니다.",
+ "src.r2.k":"정책 정보","src.r2.v":"각국 정부의 공식 발표 원문. 발표일과 시행일을 나눠 적고, 원문 링크를 붙입니다.",
+ "src.r3.k":"품목 분류","src.r3.v":"HS 코드(통일상품명및부호체계) 기준. 정책 대상 품목과 가장 가까운 코드를 쓰고, 화면에 코드를 함께 밝힙니다.",
+ "src.r4.k":"비교 방법","src.r4.v":"발표 달을 빼고 앞 12개월과 뒤 12개월을 비교합니다. 퍼센트는 자료가 있는 달의 월평균끼리 비교한 참고용 값입니다.",
+ "footer":"Policyline은 Trade Data Lab의 두 번째 서비스입니다. 개인정보를 모으지 않습니다.",
+ "toast":"인용 문구를 복사했습니다","toast.soon":"이 정책의 발표 전후 화면은 교역 데이터를 넣은 뒤 열립니다","toast.fail":"복사하지 못했습니다. 문구를 직접 선택해 복사해 주세요"
+},
+en:{
+ "draft":"Trade data: UN Comtrade monthly (retrieved {f}). Policy dates follow official government and EU announcements.",
+ "nav.list":"5 policies","nav.how":"What you see","nav.caveats":"Read with care","nav.source":"Sources",
+ "hero.h1":"Twelve months before and after a policy:<span>what objectively changed in trade</span>",
+ "hero.sub":"Compare monthly trade data side by side, anchored on the dates of major policies such as tariffs and export controls. We don't claim causes — we show only the real market changes that happened in the same period.",
+ "hero.cta":"Choose a policy to analyze","hero.trust1":"No login, instant access","hero.trust2":"Transparent sourcing",
+ "list.h2":"Choose a policy","list.lede":"The red line in each small chart marks the announcement month. The figure on the right compares the 12-month totals before and after (announcement month excluded); it does not imply a cause.",
+ "f.all":"All","f.tariff":"Tariffs","f.export":"Export controls",
+ "row.status":"Data in preparation","row.chg":"12-month avg.","row.nodata":"Not enough data",
+ "d.back":"Back to policies","d.ann":"Announced","d.eff":"Effective","d.before":"12-month total before","d.after":"12-month total after","d.diff":"Change in monthly average (reference)",
+ "d.lg.data":"Monthly trade value (US$)","d.lg.avg":"Monthly average, before / after","d.lg.ann":"Announcement month","d.lg.eff":"Effective month",
+ "d.fact":"Fact","d.interp":"Interpretation","d.unsure":"Uncertain",
+ "d.interp.empty":"Not written yet. Research and media interpretations will be added here with their sources.",
+ "d.u.cause":"Other factors such as exchange rates, the business cycle and other countries' policies may have moved in the same period.",
+ "d.u.report":"These values are reported by one country. Partner-reported values can differ, and figures may be revised later.",
+ "d.src.policy":"Official text","d.src.data":"Trade data","d.vals":"Show monthly values","d.month":"Month","d.value":"Trade value (US$)","d.missing":"No data",
+ "d.csv":"Download CSV","d.missingN":"{n} month(s) with no data are left out of the totals.",
+ "how.h2":"What you see for each policy","how.lede":"Three things on one screen: the numbers, how to read them, and the original source.",
+ "how.c1.h":"Before-and-after chart","how.c1.p":"Monthly trade for the 12 months before and after, with lines at the announcement and effective dates, plus 12-month totals for each side.",
+ "how.c2.h":"Fact · Interpretation · Uncertain","how.c2.p":"What the numbers confirm, what research and media interpret, and what is still unknown, in three separate columns.",
+ "how.fact":"Fact","how.interp":"Interp.","how.unsure":"Uncertain","sk.before":"12 months before","sk.after":"12 months after","sk.src":"Official text · Product (HS) · Data source and period",
+ "how.c3.h":"Official text and data source","how.c3.p":"A link to the government's original announcement, the product (HS code), and the data source and period right next to the chart.",
+ "cav.h2":"Read the numbers with care","cav.lede":"A change around an announcement doesn't mean the policy caused it. Think first about what else moved in the same period.",
+ "cav.1.h":"Seasonal patterns","cav.1.p":"Some products rise and fall in the same months every year. Compare with the same month a year earlier.",
+ "cav.2.h":"Other events at the same time","cav.2.p":"Exchange rates, the business cycle, other countries' policies and supply disruptions can overlap.",
+ "cav.3.h":"Trade pulled forward","cav.3.p":"When a policy is expected, buyers may order early, so the months just before an announcement can look high.",
+ "cav.4.h":"Reporting differences","cav.4.p":"Exporter- and importer-reported values can differ, and recent months may be revised later.",
+ "cite.h2":"Use it in your papers","cite.lede":"Each policy page comes with a citation line and a data file. The source and period travel with them.",
+ "cite.example":"Policyline, \"(Product) trade 12 months before and after (policy name)\", data: UN Comtrade monthly (period), accessed (date).",
+ "cite.copy":"Copy citation","cite.csv":"CSV on each policy page","cite.note":"Citation template. Each policy page gives the filled-in citation and a CSV of monthly values.",
+ "src.h2":"Sources and method",
+ "src.r1.k":"Trade data","src.r1.v":"UN Comtrade monthly merchandise trade (reporter-based). Raw values are not edited or estimated; empty months are marked \"no data\".",
+ "src.r2.k":"Policy information","src.r2.v":"Official government announcements. Announcement and effective dates are listed separately, with links to the original text.",
+ "src.r3.k":"Product classification","src.r3.v":"Harmonized System (HS) codes. We use the code closest to the targeted product and show it on screen.",
+ "src.r4.k":"Comparison","src.r4.v":"Excluding the announcement month, we compare the 12 months before with the 12 months after. The percentage compares monthly averages of months with data and is for reference only.",
+ "footer":"Policyline is the second service of Trade Data Lab. We don't collect personal information.",
+ "toast":"Citation copied","toast.soon":"This policy's before-and-after page opens once trade data is added","toast.fail":"Couldn't copy. Please select the text and copy it yourself"
+}};
+const DATA=window.POLICYLINE_DATA||{meta:{},policies:[]};
+const P=DATA.policies.slice().sort((x,y)=>y.announced.localeCompare(x.announced));
+const ANN_IDX=12;
+const fmtHS=h=>h.length===6?h.slice(0,4)+"."+h.slice(4):h;
+const money=v=>v==null?t("d.missing"):new Intl.NumberFormat(lang==="ko"?"ko-KR":"en-US",{style:"currency",currency:"USD",notation:"compact",maximumFractionDigits:1}).format(v);
+function sums(p){const b=p.series.slice(0,ANN_IDX),a=p.series.slice(ANN_IDX+1);
+ const miss=[...b,...a].filter(x=>x.v==null).length;
+ const sb=b.reduce((s,x)=>s+(x.v||0),0),sa=a.reduce((s,x)=>s+(x.v||0),0),nb=b.filter(x=>x.v!=null).length,na=a.filter(x=>x.v!=null).length;
+ const mb=nb?sb/nb:0,ma=na?sa/na:0; // 빈 달이 있어도 흔들리지 않게 월평균으로 비교
+ return {sb,sa,miss,nb,na,pct:mb>0?(ma-mb)/mb*100:null,okB:nb>0,okA:na>0}}
+const pctTxt=x=>x==null?"–":(x>0?"+":"")+x.toFixed(0)+"%";
+function mini(p){const w=220,h=48,vals=p.series.map(x=>x.v),max=Math.max(1,...vals.filter(v=>v!=null)),X=i=>i*w/(vals.length-1),Y=v=>h-4-(v/max)*(h-8);
+ let d="",pen=false;vals.forEach((v,i)=>{if(v==null){pen=false;return}d+=(pen?"L":"M")+X(i).toFixed(1)+","+Y(v).toFixed(1);pen=true});
+ return `<svg viewBox="0 0 ${w} ${h}" aria-hidden="true"><line x1="0" x2="${w}" y1="${h-1}" y2="${h-1}" stroke="var(--color-rule)"/><line x1="${X(ANN_IDX)}" x2="${X(ANN_IDX)}" y1="0" y2="${h}" stroke="var(--color-accent)" stroke-width="2"/><path d="${d}" fill="none" stroke="var(--color-data)" stroke-width="1.6" stroke-linejoin="round"/></svg>`}
+function bigChart(p,W){const H=Math.round(Math.max(220,Math.min(360,W*.42))),L=64,R=12,T=16,B=32,vals=p.series.map(x=>x.v),max=Math.max(1,...vals.filter(v=>v!=null))*1.1;
+ const X=i=>L+i*(W-L-R)/(vals.length-1),Y=v=>T+(H-T-B)*(1-v/max);let g="";
+ for(let k=0;k<=3;k++){const v=max*k/3,y=Y(v);g+=`<line x1="${L}" x2="${W-R}" y1="${y}" y2="${y}" stroke="var(--color-rule)"/><text x="${L-8}" y="${y+4}" text-anchor="end">${money(v)}</text>`}
+ [0,6,ANN_IDX,18,24].forEach(i=>{g+=`<text x="${X(i)}" y="${H-8}" text-anchor="${i===0?"start":i===24?"end":"middle"}">${p.series[i].m.replace("-",".")}</text>`});
+ const s=sums(p),nb=p.series.slice(0,ANN_IDX).filter(x=>x.v!=null).length,na=p.series.slice(ANN_IDX+1).filter(x=>x.v!=null).length;
+ if(nb)g+=`<line x1="${X(0)}" x2="${X(ANN_IDX-1)}" y1="${Y(s.sb/nb)}" y2="${Y(s.sb/nb)}" stroke="var(--color-text-muted)" stroke-dasharray="6 6"/>`;
+ if(na)g+=`<line x1="${X(ANN_IDX+1)}" x2="${X(24)}" y1="${Y(s.sa/na)}" y2="${Y(s.sa/na)}" stroke="var(--color-text-muted)" stroke-dasharray="6 6"/>`;
+ const effIdx=p.series.findIndex(x=>x.m===p.effective.slice(0,7));
+ if(effIdx>ANN_IDX)g+=`<line x1="${X(effIdx)}" x2="${X(effIdx)}" y1="${T}" y2="${H-B}" stroke="var(--color-accent)" stroke-width="2" stroke-dasharray="5 5"/>`;
+ g+=`<line x1="${X(ANN_IDX)}" x2="${X(ANN_IDX)}" y1="${T-8}" y2="${H-B}" stroke="var(--color-accent)" stroke-width="2.5" style="filter:drop-shadow(var(--glow-accent))"/>`;
+ let d="",pen=false;vals.forEach((v,i)=>{if(v==null){pen=false;return}d+=(pen?"L":"M")+X(i).toFixed(1)+","+Y(v).toFixed(1);pen=true});
+ g+=`<path d="${d}" fill="none" stroke="var(--color-data)" stroke-width="2.5" stroke-linejoin="round"/>`;
+ vals.forEach((v,i)=>{if(v!=null)g+=`<circle cx="${X(i)}" cy="${Y(v)}" r="3" fill="var(--color-data)"><title>${p.series[i].m} · ${money(v)}</title></circle>`});
+ return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${p.title[lang]}, ${p.series[0].m} – ${p.series[24].m}">${g}</svg>`}
+function repRange(p){const r=p.series.map(x=>x.reporters).filter(x=>x!=null);if(!Array.isArray(p.comtrade.reporter)||!r.length)return "";
+ const lo=Math.min(...r),hi=Math.max(...r),n=p.comtrade.reporter.length;
+ return `<li>${lang==="ko"?`달마다 자료를 신고한 나라 수가 ${n}개국 중 ${lo}~${hi}개국으로 다릅니다. 신고가 없는 나라는 합계에 들어가지 않았습니다.`:`The number of reporting countries varies by month (${lo}–${hi} of ${n}). Countries with no record are not in the totals.`}</li>`}
+function citeFor(p){const per=p.series[0].m.replace("-",".")+"–"+p.series[24].m.replace("-","."),f=DATA.meta.fetched||"";
+ return lang==="ko"?`Policyline, 「${p.title.ko} 발표 전후 12개월 ${p.item.ko} 교역액」, 자료: UN Comtrade 월별 자료 (${per}, ${p.flow.ko}, HS ${fmtHS(p.hs)}), 받은 날 ${f}.`
+  :`Policyline, "${p.item.en} trade 12 months before and after: ${p.title.en}", data: UN Comtrade monthly (${per}, ${p.flow.en}, HS ${fmtHS(p.hs)}), retrieved ${f}.`}
+function csvFor(p){const rows=[["policy_id","month","value_usd","reporter_code","partner_codes","hs","flow","source","retrieved"]];
+ p.series.forEach(x=>rows.push([p.id,x.m,x.v??"",p.comtrade.reporter,p.comtrade.partners.join(" "),p.hs,p.comtrade.flowCode,"UN Comtrade",DATA.meta.fetched||""]));
+ return rows.map(r=>r.join(",")).join("\n")}
+function renderDetail(){const id=(location.hash.match(/^#policy\/(.+)$/)||[])[1],p=P.find(x=>x.id===id),el=document.getElementById("detail");
+ document.body.classList.toggle("is-detail",!!p);el.hidden=!p;if(!p)return;
+ const s=sums(p),fd=x=>fmt(x);
+ el.innerHTML=`<a class="back" href="#list">${t("d.back")}</a>
+  <span class="type">${t("f."+p.type)}</span>
+  <h1>${p.title[lang]}</h1>
+  <p class="meta">${p.item[lang]} · HS ${fmtHS(p.hs)} · ${p.flow[lang]}</p>
+  <p class="dates"><span><i></i>${t("d.ann")} ${fd(p.announced)}</span>${p.effective!==p.announced?`<span><i class="dash"></i>${t("d.eff")} ${fd(p.effective)}</span>`:""}</p>
+  <p class="date-note">${p.date_note[lang]}</p>
+  <div class="chart-wrap" id="bigChart"></div>
+  <div class="legend"><span><i style="background:var(--color-data)"></i>${t("d.lg.data")}</span><span><i style="background:var(--color-text-muted)"></i>${t("d.lg.avg")}</span><span><i style="background:var(--color-accent)"></i>${t("d.lg.ann")}</span>${p.effective.slice(0,7)!==p.announced.slice(0,7)?`<span><i style="background:none;border-top:2px dashed var(--color-accent);height:0"></i>${t("d.lg.eff")}</span>`:""}</div>
+  <dl class="totals"><div><dt>${t("d.before")}</dt><dd>${money(s.sb)}</dd></div><div><dt>${t("d.after")}</dt><dd>${money(s.sa)}</dd></div><div><dt>${t("d.diff")}</dt><dd>${pctTxt(s.pct)}</dd></div></dl>
+  <div class="fiu">
+   <section><h3>${t("d.fact")}</h3><ul>
+    <li>${lang==="ko"?`발표 달(${p.series[ANN_IDX].m.replace("-",".")})을 뺀 앞 12개월 합계는 ${money(s.sb)}, 뒤 12개월 합계는 ${money(s.sa)}입니다.`:`Excluding the announcement month (${p.series[ANN_IDX].m}), the 12-month total was ${money(s.sb)} before and ${money(s.sa)} after.`}</li>
+    ${s.miss?`<li>${t("d.missingN").replace("{n}",s.miss)}</li>`:""}
+    <li>${lang==="ko"?`발표 달 교역액: ${money(p.series[ANN_IDX].v)}`:`Announcement-month value: ${money(p.series[ANN_IDX].v)}`}</li>
+   </ul></section>
+   <section><h3>${t("d.interp")}</h3><p class="empty">${t("d.interp.empty")}</p></section>
+   <section><h3>${t("d.unsure")}</h3><ul><li>${t("d.u.cause")}</li><li>${t("d.u.report")}</li>${repRange(p)}${p.hs==="811292"?`<li>${p.date_note[lang].split(". ").slice(-1)[0]}</li>`:""}</ul></section>
+  </div>
+  <div class="srcs">
+   <div>${t("d.src.policy")}: <a href="${p.policy_source.url}" target="_blank" rel="noopener">${p.policy_source.label}</a></div>
+   <div>${t("d.src.data")}: <a href="${DATA.meta.url}" target="_blank" rel="noopener">UN Comtrade</a> · ${p.flow[lang]} · HS ${fmtHS(p.hs)} · ${p.series[0].m} – ${p.series[24].m} · ${lang==="ko"?"받은 날":"retrieved"} ${DATA.meta.fetched}</div>
+  </div>
+  <div class="cite"><code id="dCite">${citeFor(p)}</code><div class="cite-actions"><button class="btn ghost small" type="button" id="dCopy">${t("cite.copy")}</button><button class="btn ghost small" type="button" id="dCsv">${t("d.csv")}</button></div></div>
+  <details class="vals"><summary>${t("d.vals")}</summary><table><tr><th>${t("d.month")}</th><th>${t("d.value")}</th></tr>${p.series.map((x,i)=>`<tr${i===ANN_IDX?' class="ann"':""}><td>${x.m}</td><td>${x.v==null?t("d.missing"):Math.round(x.v).toLocaleString("en-US")}</td></tr>`).join("")}</table></details>`;
+ const draw=()=>{const box=document.getElementById("bigChart");if(box)box.innerHTML=bigChart(p,Math.max(280,box.clientWidth))};draw();
+ el._p=p;el._draw=draw;
+}
+window.addEventListener("resize",()=>{const el=document.getElementById("detail");if(!el.hidden&&el._draw)el._draw()});
+document.getElementById("detail").addEventListener("click",async e=>{const p=e.currentTarget._p;if(!p)return;
+ if(e.target.id==="dCopy"){try{await navigator.clipboard.writeText(citeFor(p));toast(t("toast"))}catch(err){toast(t("toast.fail"))}}
+ if(e.target.id==="dCsv"){const blob=new Blob(["\ufeff"+csvFor(p)],{type:"text/csv;charset=utf-8"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=`policyline-${p.id}.csv`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}});
+window.addEventListener("hashchange",()=>{renderDetail();if(location.hash.startsWith("#policy/"))scrollTo(0,0)});
+let lang="ko",filter="all";
+try{const saved=localStorage.getItem("policyline-lang");if(saved==="en"||saved==="ko")lang=saved}catch(e){}
+const t=k=>(I18N[lang][k]??k).replace("{f}",(window.POLICYLINE_DATA||{meta:{}}).meta.fetched||"");
+const fmt=d=>lang==="ko"?d.replaceAll("-","."):new Date(d+"T00:00:00").toLocaleDateString("en-US",{year:"numeric",month:"short",day:"numeric"});
+
+
+function render(){
+ document.documentElement.lang=lang;
+ document.querySelectorAll("[data-i18n]").forEach(el=>{el.innerHTML=t(el.dataset.i18n)});
+ document.querySelectorAll(".lang button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.lang===lang));
+ // 3D stack: three most recent
+ document.getElementById("stack").innerHTML=P.slice(0,3).map((p,i)=>`
+  <a class="sheet" href="#policy/${p.id}" style="--x:${i*28}px;--y:${40+i*104}px;--z:${-i*60}px;--d:${(.15+i*.12).toFixed(2)}s;z-index:${3-i}">
+   <time datetime="${p.announced}">${fmt(p.announced)}</time><b>${p.title[lang]}</b><i class="bar" aria-hidden="true"></i>
+  </a>`).join("");
+ // filters
+ document.getElementById("filters").innerHTML=["all","tariff","export"].map(f=>`<button class="chip" type="button" data-f="${f}" aria-pressed="${f===filter}">${t("f."+f)}</button>`).join("");
+ // rows
+ document.getElementById("rows").innerHTML=P.map((p,i)=>{const s=sums(p),ok=s.okB&&s.okA;return `
+ <a class="row" id="p${i}" href="#policy/${p.id}" ${filter!=="all"&&p.type!==filter?"hidden":""}>
+  <time datetime="${p.announced}"><i class="mark" aria-hidden="true"></i>${fmt(p.announced)}</time>
+  <div><span class="type">${t("f."+p.type)}</span><h3>${p.title[lang]}</h3><p>${p.item[lang]} · HS ${fmtHS(p.hs)} · ${p.flow[lang]}</p></div>
+  ${ok?`<div class="mini">${mini(p)}<span class="chg">${t("row.chg")} <b>${pctTxt(s.pct)}</b></span></div>`:`<span class="status">${t("row.nodata")}</span>`}
+ </a>`}).join("");
+ renderDetail();
+}
+document.querySelector(".lang").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;lang=b.dataset.lang;try{localStorage.setItem("policyline-lang",lang)}catch(e){}render()});
+document.getElementById("filters").addEventListener("click",e=>{const b=e.target.closest(".chip");if(!b)return;filter=b.dataset.f;render()});
+let toastTimer;
+function toast(msg){const el=document.getElementById("toast");el.textContent=msg;el.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove("show"),2200)}
+document.getElementById("copyBtn").addEventListener("click",async()=>{try{await navigator.clipboard.writeText(document.getElementById("citeText").textContent);toast(t("toast"))}catch(e){toast(t("toast.fail"))}});
+render();
+</script>
+</body>
+</html>
