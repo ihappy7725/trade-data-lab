@@ -1,19 +1,39 @@
-"""UN Comtrade 공개 미리보기 API에서 정책 5건의 발표 전후 월별 교역액을 받아 data/policies.json 을 만든다.
+"""UN Comtrade 에서 정책별 발표 전후 월별 교역액을 받아 data/policies.json · data/policies.js 를 만든다.
 
-내 컴퓨터에서 한 번 돌리는 데이터 준비 스크립트다 (서버 파일 아님, API 키 필요 없음).
-실행: python3 scripts/fetch_comtrade.py      (policy-tracker 폴더에서)
+데이터 준비 스크립트다 (서버 파일 아님). 내 컴퓨터나 GitHub Actions(매달 자동)에서 돌린다.
+실행: python3 scripts/fetch_comtrade.py              (policy-tracker 폴더에서, 전체)
+      python3 scripts/fetch_comtrade.py <정책 id>     (그 정책만 다시)
 
-- 미리보기 API는 한 번에 한 달만 받으므로 정책마다 25번(발표 달 앞뒤 12개월) 부른다.
+- API 키: 환경 변수 COMTRADE_KEY, 없으면 policy-tracker/.env 의 COMTRADE_KEY=... 한 줄을 읽는다.
+  키가 있으면 정식 API로 한 번에 12개월씩, 없으면 공개 미리보기 API로 한 달씩 받는다.
+  키 값은 화면·로그·파일 어디에도 찍지 않는다.
+- 아직 오지 않은 달(미래)은 부르지 않고 null 로 둔다.
 - 값은 고치거나 추정하지 않는다. 자료가 없는 달은 null 로 둔다.
 - 받은 원자료 행은 data/comtrade-raw.json 에 그대로 남긴다.
 """
 import json
+import os
 import subprocess
 import time
 import urllib.parse
 from datetime import date
 
-API = "https://comtradeapi.un.org/public/v1/preview/C/M/HS"
+API_PREVIEW = "https://comtradeapi.un.org/public/v1/preview/C/M/HS"
+API_KEYED = "https://comtradeapi.un.org/data/v1/get/C/M/HS"
+
+
+def load_key():
+    key = os.environ.get("COMTRADE_KEY", "").strip()
+    if key:
+        return key
+    env = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), ".env")
+    if os.path.exists(env):
+        with open(env, encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if line.startswith("COMTRADE_KEY="):
+                    return line.split("=", 1)[1].strip().strip('"').strip("'")
+    return ""
 
 # Comtrade 국가 코드 (EU 27개국: 이탈리아 381, 프랑스 251 은 Comtrade 고유 코드)
 EU27 = [40, 56, 100, 191, 196, 203, 208, 233, 246, 251, 276, 300, 348, 372, 381,
@@ -97,12 +117,14 @@ def months_around(day: str, span: int = 12):
     return out
 
 
-def fetch(params):
+def fetch(params, key=""):
     # urllib 대신 curl 을 쓴다 (일부 macOS Python 설치본에 인증서가 없어 HTTPS 가 실패함)
-    url = API + "?" + urllib.parse.urlencode(params)
+    # 키는 명령줄에 넣지 않고 표준 입력(curl -K -)으로 넘겨 다른 프로그램에 보이지 않게 한다
+    url = (API_KEYED if key else API_PREVIEW) + "?" + urllib.parse.urlencode(params)
+    cfg = f'header = "Ocp-Apim-Subscription-Key: {key}"\n' if key else ""
     last = None
-    for attempt in range(4):
-        r = subprocess.run(["curl", "-s", "-m", "40", url], capture_output=True, text=True)
+    for attempt in range(5):
+        r = subprocess.run(["curl", "-s", "-m", "60", "-K", "-", url], input=cfg, capture_output=True, text=True)
         try:
             d = json.loads(r.stdout)
             if "data" in d:
@@ -111,7 +133,39 @@ def fetch(params):
         except Exception as e:
             last = e
         time.sleep(3 * (attempt + 1))  # 429 등은 잠시 쉬었다 다시
-    raise last
+    raise RuntimeError(f"Comtrade 요청 실패: {last}")
+
+
+raw = []
+
+
+def get_series(p, key):
+    rep = p["reporter"] if isinstance(p["reporter"], list) else [p["reporter"]]
+    base = {"reporterCode": ",".join(map(str, rep)), "partnerCode": ",".join(map(str, p["partners"])),
+            "cmdCode": p["hs"], "flowCode": p["flowCode"]}
+    now = date.today().strftime("%Y%m")
+    periods = months_around(p["announced"])
+    asked = [x for x in periods if x <= now]
+    rows_by = {x: [] for x in periods}
+    step = 12 if key else 1  # 정식 API는 한 번에 최대 12개월
+    for i in range(0, len(asked), step):
+        chunk = asked[i:i + step]
+        d = fetch({**base, "period": ",".join(chunk)}, key)
+        for r in d.get("data", []):
+            per = str(r.get("period"))
+            if per in rows_by and r.get("partner2Code", 0) == 0 and r.get("customsCode") == "C00" and r.get("motCode", 0) == 0:
+                rows_by[per].append(r)
+        time.sleep(1.1)
+    series = []
+    for per in periods:
+        rows = rows_by[per]
+        raw.extend(rows)
+        item = {"m": f"{per[:4]}-{per[4:]}", "v": sum(r["primaryValue"] for r in rows) if rows else None,
+                "reporters": len({r["reporterCode"] for r in rows}), "partners": len({r["partnerCode"] for r in rows})}
+        if per > now:
+            item["future"] = True
+        series.append(item)
+    return series
 
 
 def main():
@@ -121,32 +175,22 @@ def main():
     if only:
         with open("data/policies.json", encoding="utf-8") as f:
             old = {x["id"]: x for x in json.load(f)["policies"]}
+    global raw
+    key = load_key()
+    print("API:", "정식 API (키 사용)" if key else "공개 미리보기 (키 없음)")
     raw, out = [], []
     for p in POLICIES:
         if only and p["id"] not in only:
             out.append(old[p["id"]])
             continue
-        series = []
-        for per in months_around(p["announced"]):
-            rep = p["reporter"] if isinstance(p["reporter"], list) else [p["reporter"]]
-            d = fetch({"reporterCode": ",".join(map(str, rep)), "period": per,
-                       "partnerCode": ",".join(map(str, p["partners"])),
-                       "cmdCode": p["hs"], "flowCode": p["flowCode"]})
-            rows = [r for r in d.get("data", [])
-                    if r.get("partner2Code", 0) == 0 and r.get("customsCode") == "C00" and r.get("motCode", 0) == 0]
-            raw.extend(rows)
-            value = sum(r["primaryValue"] for r in rows) if rows else None
-            series.append({"m": f"{per[:4]}-{per[4:]}", "v": value,
-                           "reporters": len({r["reporterCode"] for r in rows}),
-                           "partners": len({r["partnerCode"] for r in rows})})
-            time.sleep(1.1)
+        series = get_series(p, key)
         print(p["id"], sum(1 for s in series if s["v"] is not None), "/ 25 months")
         keep = {k: p[k] for k in p if k not in ("reporter", "partners", "flowCode")}
         keep["comtrade"] = {"reporter": p["reporter"], "partners": p["partners"], "flowCode": p["flowCode"]}
         keep["series"] = series
         out.append(keep)
     meta = {
-        "source": "UN Comtrade Database, monthly, HS (public preview API)",
+        "source": "UN Comtrade Database, monthly, HS" + ("" if key else " (public preview API)"),
         "url": "https://comtradeplus.un.org/",
         "unit": "US dollars (current), primaryValue",
         "fetched": date.today().isoformat(),
@@ -156,9 +200,9 @@ def main():
         json.dump({"meta": meta, "policies": out}, f, ensure_ascii=False, indent=1)
     raw_path = "data/comtrade-raw.json"
     if only:
-        with open(raw_path, encoding="utf-8") as f:
-            prev = json.load(f)
-        raw = prev + raw
+        if os.path.exists(raw_path):
+            with open(raw_path, encoding="utf-8") as f:
+                raw[:0] = json.load(f)
     with open(raw_path, "w", encoding="utf-8") as f:
         json.dump(raw, f, ensure_ascii=False)
     write_js()

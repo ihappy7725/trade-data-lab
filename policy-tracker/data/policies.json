@@ -741,126 +741,151 @@
     {
      "m": "2018-07",
      "v": 5582869.871,
+     "reporters": 1,
      "partners": 1
     },
     {
      "m": "2018-08",
      "v": 6728259.14,
+     "reporters": 1,
      "partners": 1
     },
     {
      "m": "2018-09",
      "v": 5453302.298,
+     "reporters": 1,
      "partners": 1
     },
     {
      "m": "2018-10",
      "v": 6252314.107,
+     "reporters": 1,
      "partners": 1
     },
     {
      "m": "2018-11",
      "v": 6410911.221,
+     "reporters": 1,
      "partners": 1
     },
     {
      "m": "2018-12",
      "v": 5151288.47,
+     "reporters": 1,
      "partners": 1
     },
     {
      "m": "2019-01",
      "v": 5753903.346,
+     "reporters": 1,
      "partners": 1
     },
     {
      "m": "2019-02",
      "v": 6214990.735,
+     "reporters": 1,
      "partners": 1
     },
     {
      "m": "2019-03",
      "v": 6932754.996,
+     "reporters": 1,
      "partners": 1
     },
     {
      "m": "2019-04",
      "v": 5646984.374,
+     "reporters": 1,
      "partners": 1
     },
     {
      "m": "2019-05",
      "v": 5028227.999,
+     "reporters": 1,
      "partners": 1
     },
     {
      "m": "2019-06",
      "v": 5503453.532,
+     "reporters": 1,
      "partners": 1
     },
     {
      "m": "2019-07",
      "v": 3704507.429,
+     "reporters": 1,
      "partners": 1
     },
     {
      "m": "2019-08",
      "v": null,
+     "reporters": 0,
      "partners": 0
     },
     {
      "m": "2019-09",
      "v": 34638.271,
+     "reporters": 1,
      "partners": 1
     },
     {
      "m": "2019-10",
      "v": 375829.767,
+     "reporters": 1,
      "partners": 1
     },
     {
      "m": "2019-11",
      "v": 431386.272,
+     "reporters": 1,
      "partners": 1
     },
     {
      "m": "2019-12",
      "v": 1378061.069,
+     "reporters": 1,
      "partners": 1
     },
     {
      "m": "2020-01",
      "v": 759794.314,
+     "reporters": 1,
      "partners": 1
     },
     {
      "m": "2020-02",
      "v": 1122769.288,
+     "reporters": 1,
      "partners": 1
     },
     {
      "m": "2020-03",
      "v": 986104.265,
+     "reporters": 1,
      "partners": 1
     },
     {
      "m": "2020-04",
      "v": 1274195.616,
+     "reporters": 1,
      "partners": 1
     },
     {
      "m": "2020-05",
      "v": 899276.864,
+     "reporters": 1,
      "partners": 1
     },
     {
      "m": "2020-06",
      "v": 513931.927,
+     "reporters": 1,
      "partners": 1
     },
     {
      "m": "2020-07",
      "v": 1112848.157,
+     "reporters": 1,
      "partners": 1
     }
    ]

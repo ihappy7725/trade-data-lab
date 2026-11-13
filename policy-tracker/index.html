@@ -6,6 +6,7 @@
 <title>Policyline · 정책 발표 전후 교역량</title>
 <meta name="description" content="관세·수출통제 등 정책 발표 전후 12개월의 월별 교역량을 나란히 비교합니다.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect width=%2232%22 height=%2232%22 rx=%226%22 fill=%22%230E1A2E%22/%3E%3Crect x=%2214%22 y=%225%22 width=%224%22 height=%2222%22 rx=%222%22 fill=%22%23FF6B3D%22/%3E%3C/svg%3E">
+<script>/* 테마: 저장된 선택 → 없으면 컴퓨터 설정 */(function(){var t;try{t=localStorage.getItem("policyline-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: light)").matches?"light":"dark";document.documentElement.dataset.theme=t})();</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap" rel="stylesheet">
@@ -49,6 +50,37 @@
   --color-sheen:rgba(255,255,255,.55);
   --glow-brand:0 0 0 6px rgba(241,245,248,.08),0 12px 32px rgba(127,184,255,.25);
 }
+:root{color-scheme:dark}
+/* 라이트 모드 토큰 (DESIGN.md 5장) */
+:root[data-theme="light"]{
+  color-scheme:light;
+  --color-bg:#EEF2F6;
+  --color-bg-deep:#E1E7EE;
+  --color-surface:#F7F9FB;
+  --color-surface-top:#FFFFFF;
+  --color-edge:rgba(14,26,46,.10);
+  --color-highlight:rgba(255,255,255,.9);
+  --color-grid:rgba(14,26,46,.06);
+  --color-text:#0E1A2E;
+  --color-text-muted:#4A5A70;
+  --color-rule:rgba(14,26,46,.14);
+  --color-brand:#0E1A2E;
+  --color-brand-edge:#050B15;
+  --color-brand-text:#F1F5F8;
+  --color-data:#1C6E74;
+  --color-accent:#C2410C;
+  --color-focus:#1D5FD1;
+  --color-glow:rgba(29,95,209,.08);
+  --color-sheen:rgba(255,255,255,.35);
+  --shadow-1:0 1px 0 var(--color-highlight) inset,0 1px 2px rgba(14,26,46,.08),0 4px 12px rgba(14,26,46,.08);
+  --shadow-2:0 1px 0 var(--color-highlight) inset,0 2px 6px rgba(14,26,46,.08),0 12px 28px rgba(14,26,46,.12),0 24px 48px rgba(14,26,46,.08);
+  --shadow-inset:inset 0 2px 4px rgba(14,26,46,.12),0 1px 0 var(--color-highlight);
+  --shadow-btn:0 4px 0 var(--color-brand-edge),0 8px 20px rgba(14,26,46,.2);
+  --shadow-btn-small:0 3px 0 var(--color-brand-edge),0 6px 14px rgba(14,26,46,.16);
+  --shadow-btn-pressed:0 0 0 var(--color-brand-edge),0 2px 6px rgba(14,26,46,.16);
+  --glow-accent:0 0 10px rgba(194,65,12,.35);
+  --glow-brand:0 0 0 6px rgba(14,26,46,.08),0 12px 28px rgba(29,95,209,.2);
+}
 *{box-sizing:border-box;margin:0}
 html{scroll-behavior:smooth}
 body{font-family:var(--font-body);color:var(--color-text);font-size:16px;line-height:1.6;word-break:keep-all;font-variant-numeric:tabular-nums;background:var(--color-bg);overflow-x:hidden}
@@ -78,6 +110,15 @@ nav{display:flex;align-items:center;justify-content:space-between;gap:var(--spac
 .lang button[aria-pressed="true"]{background:var(--color-surface-top);color:var(--color-text);box-shadow:var(--shadow-1)}
 .lang button:focus-visible{outline:2px solid var(--color-focus);outline-offset:2px}
 .lang button:active{transform:scale(.95)}
+
+/* theme toggle: same groove as the language toggle */
+.theme{position:relative;display:grid;place-items:center;width:40px;height:40px;border:0;border-radius:999px;cursor:pointer;background:var(--color-bg-deep);color:var(--color-text-muted);box-shadow:var(--shadow-inset);transition:transform var(--dur-exit,.14s) ease-in}
+.theme svg{grid-area:1/1;transition:transform .22s cubic-bezier(.23,1,.32,1),opacity .22s cubic-bezier(.23,1,.32,1)}
+:root[data-theme="dark"] .i-moon,:root[data-theme="light"] .i-sun{opacity:0;transform:rotate(-90deg) scale(.6)}
+.theme:hover{color:var(--color-text)}
+.theme:active{transform:scale(.94);transition-duration:.08s}
+.theme:focus-visible{outline:3px solid var(--color-focus);outline-offset:3px}
+.theme:disabled{opacity:.4;cursor:not-allowed}
 
 /* 3D buttons */
 .btn{display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:0 var(--space-4);background:var(--color-brand);color:var(--color-brand-text);font:600 17px/1 var(--font-body);border:0;border-radius:10px;text-decoration:none;cursor:pointer;
@@ -290,6 +331,7 @@ a:focus-visible,button:focus-visible{outline:3px solid var(--color-focus);outlin
   *,*::before,*::after{animation:none!important;transition:none!important}
   .sheet{opacity:1}
   .btn-primary::before{display:none}
+  .theme svg{transform:none!important}
   .btn:hover,.btn-primary:hover,.row:hover,.chip:hover,.logo:hover i{transform:none}
   .sheet:hover{transform:rotateX(14deg) rotateY(-20deg) rotateZ(2deg) translate3d(var(--x),var(--y),var(--z))}
   html{scroll-behavior:auto}
@@ -309,6 +351,10 @@ a:focus-visible,button:focus-visible{outline:3px solid var(--color-focus);outlin
       <a href="#source" data-i18n="nav.source"></a>
     </div>
     <div class="nav-right">
+      <button class="theme" type="button" id="themeBtn">
+        <svg class="i-sun" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5" fill="none" stroke="currentColor" stroke-width="2"/><g stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2.5v2.5M12 19v2.5M2.5 12H5M19 12h2.5M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"/></g></svg>
+        <svg class="i-moon" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+      </button>
       <div class="lang" role="group" aria-label="Language">
         <button type="button" data-lang="ko" aria-pressed="true">한</button>
         <button type="button" data-lang="en" aria-pressed="false">EN</button>
@@ -403,7 +449,7 @@ ko:{
  "hero.cta":"분석할 정책 선택하기","hero.trust1":"로그인 없이 즉시 확인","hero.trust2":"투명한 출처 표기",
  "list.h2":"분석할 정책 고르기","list.lede":"작은 그래프의 붉은 선이 발표 달입니다. 오른쪽 숫자는 발표 달을 뺀 앞뒤 12개월 합계의 차이로, 원인을 뜻하지 않습니다.",
  "f.all":"전체","f.tariff":"관세","f.export":"수출통제",
- "row.status":"데이터 준비 중","row.chg":"앞뒤 12개월 월평균","row.nodata":"자료 부족",
+ "theme.toLight":"라이트 모드로 보기","theme.toDark":"다크 모드로 보기","row.status":"데이터 준비 중","row.chg":"앞뒤 12개월 월평균","row.nodata":"자료 부족",
  "d.back":"정책 목록으로","d.ann":"발표","d.eff":"시행","d.before":"발표 전 12개월 합계","d.after":"발표 후 12개월 합계","d.diff":"월평균 차이 (참고)",
  "d.lg.data":"월별 교역액 (미국 달러)","d.lg.avg":"앞뒤 12개월 월평균","d.lg.ann":"발표 달","d.lg.eff":"시행 달",
  "d.fact":"사실","d.interp":"해석","d.unsure":"불확실",
@@ -441,7 +487,7 @@ en:{
  "hero.cta":"Choose a policy to analyze","hero.trust1":"No login, instant access","hero.trust2":"Transparent sourcing",
  "list.h2":"Choose a policy","list.lede":"The red line in each small chart marks the announcement month. The figure on the right compares the 12-month totals before and after (announcement month excluded); it does not imply a cause.",
  "f.all":"All","f.tariff":"Tariffs","f.export":"Export controls",
- "row.status":"Data in preparation","row.chg":"12-month avg.","row.nodata":"Not enough data",
+ "theme.toLight":"Switch to light mode","theme.toDark":"Switch to dark mode","row.status":"Data in preparation","row.chg":"12-month avg.","row.nodata":"Not enough data",
  "d.back":"Back to policies","d.ann":"Announced","d.eff":"Effective","d.before":"12-month total before","d.after":"12-month total after","d.diff":"Change in monthly average (reference)",
  "d.lg.data":"Monthly trade value (US$)","d.lg.avg":"Monthly average, before / after","d.lg.ann":"Announcement month","d.lg.eff":"Effective month",
  "d.fact":"Fact","d.interp":"Interpretation","d.unsure":"Uncertain",
@@ -553,6 +599,7 @@ function render(){
  document.documentElement.lang=lang;
  document.querySelectorAll("[data-i18n]").forEach(el=>{el.innerHTML=t(el.dataset.i18n)});
  document.querySelectorAll(".lang button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.lang===lang));
+ const tb=document.getElementById("themeBtn"),lbl=t(document.documentElement.dataset.theme==="light"?"theme.toDark":"theme.toLight");tb.setAttribute("aria-label",lbl);tb.title=lbl;
  // 3D stack: three most recent
  document.getElementById("stack").innerHTML=P.slice(0,3).map((p,i)=>`
   <a class="sheet" href="#policy/${p.id}" style="--x:${i*28}px;--y:${40+i*104}px;--z:${-i*60}px;--d:${(.15+i*.12).toFixed(2)}s;z-index:${3-i}">
@@ -570,6 +617,7 @@ function render(){
  renderDetail();
 }
 document.querySelector(".lang").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;lang=b.dataset.lang;try{localStorage.setItem("policyline-lang",lang)}catch(e){}render()});
+document.getElementById("themeBtn").addEventListener("click",()=>{const next=document.documentElement.dataset.theme==="light"?"dark":"light";document.documentElement.dataset.theme=next;try{localStorage.setItem("policyline-theme",next)}catch(e){}render();const el=document.getElementById("detail");if(!el.hidden&&el._draw)el._draw()});
 document.getElementById("filters").addEventListener("click",e=>{const b=e.target.closest(".chip");if(!b)return;filter=b.dataset.f;render()});
 let toastTimer;
 function toast(msg){const el=document.getElementById("toast");el.textContent=msg;el.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove("show"),2200)}
