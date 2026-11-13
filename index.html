@@ -3,12 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Tradeweave 랜딩</title>
+<title>Tradeweave · 나라별 교역 상대국 지도</title>
+<meta name="description" content="나라 하나를 고르면 2024년 교역 상대국이 지도에 칠해집니다. 출처: CEPII BACI.">
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600&family=Noto+Serif+KR:wght@600;700&display=swap">
 <style>
+[hidden]{display:none!important}
 /* 레이아웃: 한 열 지도책 판형. 첫 화면 → 기능 카드 3개 → 자리 표시 → 바닥글. 화면 전환은 #해시로 한다.
    Tradeweave 디자인 시스템(밝은 테마 하나만 확정)을 그대로 따른다. 어두운 테마는 아직 정하지 않아 일부러 밝은 화면 하나로 고정한다. */
 :root {
@@ -171,6 +173,36 @@ select:focus-visible { outline: 3px solid var(--ochre); outline-offset: 1px; }
 .summary dd { margin: 0; font-weight: 500; }
 .summary .chosen { color: var(--ink); border-bottom: 3px solid var(--ochre); }
 
+/* 결과: 실제 지도 */
+.result { padding-block: var(--s4) var(--s5); display: grid; gap: var(--s4); }
+.result-head { display: flex; justify-content: space-between; align-items: flex-end; gap: var(--s3); flex-wrap: wrap; }
+.result-head h1 { font-size: 36px; line-height: 44px; }
+.result-head .sub { color: var(--stone); font-size: 14px; line-height: 20px; margin-top: var(--s1); }
+.result-grid { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); gap: var(--s3); align-items: start; }
+.map-panel { padding: var(--s3); }
+.map-svg { display: block; width: 100%; height: auto; background: var(--paper); }
+.map-svg path { fill: var(--land); stroke: var(--card); stroke-width: .5; }
+.map-svg .c1 { fill: var(--map-1); } .map-svg .c2 { fill: var(--map-2); } .map-svg .c3 { fill: var(--map-3); }
+.map-svg .c4 { fill: var(--map-4); } .map-svg .c5 { fill: var(--map-5); }
+.map-svg .me { fill: var(--ochre); stroke: var(--ink); stroke-width: 1.2; }
+.map-svg circle { fill: var(--land); stroke: var(--card); stroke-width: .6; }
+.map-svg circle.me { stroke: var(--ink); stroke-width: 1.2; }
+.map-svg .hit:hover, .map-svg .on { stroke: var(--ink); stroke-width: 1.2; cursor: pointer; }
+.readout { min-height: 20px; font-size: 14px; line-height: 20px; color: var(--ink); }
+.legend-keys { display: flex; flex-wrap: wrap; gap: var(--s3); font-size: 14px; line-height: 20px; color: var(--stone); }
+.legend-keys i { display: inline-block; width: 14px; height: 14px; vertical-align: -2px; margin-right: 4px; }
+.facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s2); }
+.fact { display: grid; gap: 2px; }
+.fact .big { font-size: 26px; line-height: 32px; }
+.rank .val2 { display: block; font-size: 12px; line-height: 16px; color: var(--stone); text-align: right; }
+.rank li.real { grid-template-columns: 24px minmax(0, 1fr) 76px; }
+.loading { color: var(--stone); padding-block: var(--s5); }
+.notes { display: grid; gap: var(--s1); }
+@media (max-width: 760px) {
+  .result-grid { grid-template-columns: minmax(0, 1fr); }
+  .result-head h1 { font-size: 28px; line-height: 36px; }
+  .map-panel { padding: var(--s2); }
+}
 /* 알림 */
 .toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(var(--s4) + env(safe-area-inset-bottom, 0px)); background: var(--ink); color: var(--paper); font-size: 14px; line-height: 20px; padding: 12px var(--s3); border-radius: var(--r-md); max-width: calc(100% - 32px); z-index: 20; }
 
@@ -194,7 +226,7 @@ select:focus-visible { outline: 3px solid var(--ochre); outline-offset: 1px; }
 <div class="wrap">
   <header class="top">
     <a class="brand" href="#" data-go="">Tradeweave</a>
-    <span class="proto-tag">공개 준비 중</span>
+    <span class="proto-tag">기준연도 2024 · CEPII BACI</span>
   </header>
 
   <!-- 첫 화면 -->
@@ -312,7 +344,7 @@ select:focus-visible { outline: 3px solid var(--ochre); outline-offset: 1px; }
             </div>
           </div>
           <ol class="rank" id="rank"></ol>
-          <p class="caption"><span class="badge">가상</span> 가상국과 지어낸 숫자로 만든 화면 견본입니다. 실제 서비스에서는 CEPII BACI 자료의 실제 값을 보여 줍니다.</p>
+          <p class="caption"><span class="badge">가상</span> 가상국과 지어낸 숫자로 만든 화면 견본입니다. 나라를 고르면 CEPII BACI 2024 실제 값으로 지도와 목록을 봅니다.</p>
         </div>
       </div>
     </div>
@@ -389,7 +421,7 @@ select:focus-visible { outline: 3px solid var(--ochre); outline-offset: 1px; }
             </table>
           </div>
           <p class="caption">출처: CEPII BACI (Gaulier &amp; Zignago, 2010), UN Comtrade 기반 · 기준연도 2024</p>
-          <p class="caption"><span class="badge">가상</span> 표의 나라와 숫자는 지어낸 견본입니다. 출처 줄은 실제 서비스에 쓸 표기입니다.</p>
+          <p class="caption"><span class="badge">가상</span> 표의 나라와 숫자는 지어낸 견본입니다. 나라를 고른 뒤 결과 화면에서 실제 값을 CSV로 내려받습니다.</p>
         </div>
       </div>
     </div>
@@ -407,7 +439,7 @@ select:focus-visible { outline: 3px solid var(--ochre); outline-offset: 1px; }
           <fieldset>
             <label class="label" for="country">나라</label>
             <select id="country" name="country" aria-describedby="country-error">
-              <option value="">나라를 고르세요</option>
+              <option value="">나라 목록을 불러오는 중…</option>
             </select>
             <p class="error" id="country-error" hidden><span aria-hidden="true">⚠</span> 나라를 하나 골라 주세요.</p>
           </fieldset>
@@ -418,15 +450,7 @@ select:focus-visible { outline: 3px solid var(--ochre); outline-offset: 1px; }
               <label class="choice"><input type="radio" name="flow" value="수입" id="flow-import"><span>수입 (그 나라가 사 오는 곳)</span></label>
             </div>
           </fieldset>
-          <fieldset>
-            <legend>어떤 일로 보시나요? <span class="hint">(선택, 익명)</span></legend>
-            <div class="choices">
-              <label class="choice"><input type="radio" name="role" value="해외영업" id="role-sales"><span>해외영업 업무</span></label>
-              <label class="choice"><input type="radio" name="role" value="국제통상·국제정치 공부·글쓰기" id="role-study"><span>국제통상·정치 공부·글쓰기</span></label>
-              <label class="choice"><input type="radio" name="role" value="기타" id="role-other"><span>기타</span></label>
-            </div>
-          </fieldset>
-          <p class="privacy">이름, 이메일, 연락처는 받지 않습니다. 고른 내용은 어디에도 보내거나 저장하지 않습니다.</p>
+          <p class="privacy">이름, 이메일, 연락처는 받지 않습니다. 고른 나라는 어디에도 보내거나 저장하지 않고, 이 화면 안에서만 지도를 그립니다.</p>
           <div class="form-actions">
             <button class="btn btn-primary btn-hero" type="submit" id="submit-btn">지도 보기 <span class="arrow" aria-hidden="true">→</span></button>
           </div>
@@ -435,29 +459,58 @@ select:focus-visible { outline: 3px solid var(--ochre); outline-offset: 1px; }
     </div>
   </main>
 
-  <!-- 감사 -->
-  <main id="view-thanks" data-view="thanks" hidden>
-    <div class="thanks">
-      <p class="eyebrow">고른 내용을 받았습니다</p>
-      <h1>감사합니다</h1>
-      <p>지도 화면은 지금 준비하고 있습니다. 공개되면 이 다음 화면에서 고른 나라의 교역 상대국을 지도로 바로 보여 드립니다.</p>
-      <div class="summary">
-        <dl>
-          <dt>나라</dt><dd><span class="chosen" id="t-country">—</span></dd>
-          <dt>방향</dt><dd id="t-flow">—</dd>
-          <dt>쓰임</dt><dd id="t-role">—</dd>
-        </dl>
+  <!-- 결과: 실제 지도 -->
+  <main id="view-see" data-view="see" hidden>
+    <div class="result">
+      <div><a class="btn btn-text back" href="#pick">← 다른 나라 고르기</a></div>
+      <div class="result-head">
+        <div>
+          <p class="eyebrow" id="r-eyebrow">기준연도 2024 · 상품 전체</p>
+          <h1 id="r-title">교역 상대국</h1>
+          <p class="sub" id="r-sub"></p>
+        </div>
+        <div class="toggle" role="group" aria-label="수출·수입 바꾸기">
+          <button type="button" aria-pressed="true" data-rflow="export">수출</button>
+          <button type="button" aria-pressed="false" data-rflow="import">수입</button>
+        </div>
       </div>
-      <div class="form-actions">
-        <a class="btn btn-primary" href="#pick">다른 나라 고르기</a>
-        <button class="btn btn-secondary" type="button" data-go="">처음으로</button>
+      <p class="loading" id="r-loading">자료를 불러오는 중…</p>
+      <div class="result-grid" id="r-body" hidden>
+        <div class="panel map-panel">
+          <svg class="map-svg" id="r-map" role="img" aria-labelledby="r-map-desc"><desc id="r-map-desc"></desc></svg>
+          <p class="readout" id="r-readout" aria-live="polite">지도의 나라를 누르거나 마우스를 올리면 값이 나옵니다.</p>
+          <div class="legend" aria-hidden="true">
+            <div><i style="background:var(--map-1)"></i><small>1% 미만</small></div>
+            <div><i style="background:var(--map-2)"></i><small>1~5%</small></div>
+            <div><i style="background:var(--map-3)"></i><small>5~10%</small></div>
+            <div><i style="background:var(--map-4)"></i><small>10~20%</small></div>
+            <div><i style="background:var(--map-5)"></i><small>20% 이상</small></div>
+          </div>
+          <div class="legend-keys"><span><i class="sel-key"></i>고른 나라</span><span><i style="background:var(--land);outline:1px solid var(--rule)"></i>교역 없음 · 자료 없음</span><span id="r-legend-title"></span></div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h2 id="r-rank-title">상위 5개 상대국</h2></div>
+          <ol class="rank" id="r-rank"></ol>
+          <div class="facts">
+            <div class="fact"><span class="caption">1위 비중</span><span class="big num" id="r-cr1">—</span></div>
+            <div class="fact"><span class="caption">상위 3개 합계</span><span class="big num" id="r-cr3">—</span></div>
+            <div class="fact"><span class="caption">상위 5개 합계</span><span class="big num" id="r-cr5">—</span></div>
+          </div>
+          <p id="r-sentence"></p>
+          <button class="btn btn-secondary" type="button" id="r-csv">상대국 전체 CSV 내려받기</button>
+          <div class="notes">
+            <p class="caption">출처: CEPII BACI (Gaulier &amp; Zignago, 2010), UN Comtrade 기반 · HS22 V202601 · 기준연도 2024 · 단위 천 미국 달러(경상) · Etalab Open Licence 2.0</p>
+            <p class="caption">BACI는 수출국과 수입국이 신고한 값을 맞춘 자료라 각국 정부 발표 통계와 다를 수 있습니다. 대만 값은 BACI의 "Other Asia, nes" 항목입니다. 비중은 상품 전체 교역액 기준이며, 왜 이렇게 몰렸는지는 이 화면에서 판단하지 않습니다.</p>
+          </div>
+        </div>
       </div>
+      <p class="error" id="r-error" hidden><span aria-hidden="true">⚠</span> <span id="r-error-text">자료를 불러오지 못했습니다. 잠시 뒤 새로고침해 주세요.</span></p>
     </div>
   </main>
 
   <footer>
-    <span>Tradeweave · 공개 준비 중 · 화면 견본의 나라와 숫자는 모두 가상입니다.</span>
-    <span>실제 서비스 자료: CEPII BACI (Gaulier &amp; Zignago, 2010), UN Comtrade 기반 · 기준연도 2024 · Etalab Open Licence 2.0</span>
+    <span>Tradeweave · 지도 결과는 CEPII BACI 실제 값이고, 기능 설명 화면의 "가상" 표시 견본은 지어낸 숫자입니다.</span>
+    <span>자료: CEPII BACI (Gaulier &amp; Zignago, 2010), UN Comtrade 기반 · 기준연도 2024 · Etalab Open Licence 2.0 · 지도: Natural Earth</span>
   </footer>
 </div>
 
@@ -465,23 +518,47 @@ select:focus-visible { outline: 3px solid var(--ochre); outline-offset: 1px; }
 
 <script>
 (function () {
-  // 나라 목록 (선택지만, 숫자 없음)
+  // 나라 목록: 자주 찾는 나라(지역별) + 자료에 있는 나머지 나라(가나다순)
   var regions = {
-    "동아시아": ["대한민국", "중국", "일본", "대만", "몽골"],
-    "동남아시아": ["베트남", "인도네시아", "태국", "말레이시아", "필리핀", "싱가포르"],
-    "남아시아": ["인도", "방글라데시", "파키스탄"],
-    "북미": ["미국", "캐나다", "멕시코"],
-    "남미": ["브라질", "칠레", "아르헨티나"],
-    "유럽": ["독일", "프랑스", "영국", "이탈리아", "네덜란드", "폴란드"],
-    "중동·아프리카": ["사우디아라비아", "아랍에미리트", "튀르키예", "남아프리카공화국", "나이지리아"],
-    "오세아니아": ["오스트레일리아", "뉴질랜드"]
+    "동아시아": ["KOR", "CHN", "JPN", "S19", "MNG"],
+    "동남아시아": ["VNM", "IDN", "THA", "MYS", "PHL", "SGP"],
+    "남아시아": ["IND", "BGD", "PAK"],
+    "북미": ["USA", "CAN", "MEX"],
+    "남미": ["BRA", "CHL", "ARG"],
+    "유럽": ["DEU", "FRA", "GBR", "ITA", "NLD", "POL"],
+    "중동·아프리카": ["SAU", "ARE", "TUR", "ZAF", "NGA"],
+    "오세아니아": ["AUS", "NZL"]
   };
   var sel = document.getElementById("country");
-  Object.keys(regions).forEach(function (r) {
-    var g = document.createElement("optgroup"); g.label = r;
-    regions[r].forEach(function (c) { var o = document.createElement("option"); o.value = c; o.textContent = c; g.appendChild(o); });
+  var TRADE = null, MAP = null, loadP = null;
+  function load() {
+    if (!loadP) loadP = Promise.all([
+      fetch("data/trade-2024.json").then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); }),
+      fetch("data/world-map.json").then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+    ]).then(function (a) { TRADE = a[0]; MAP = a[1]; fillSelect(); return a; });
+    return loadP;
+  }
+  function nameOf(iso) { var c = TRADE && TRADE.countries[iso]; return c ? c.ko : iso; }
+  function fillSelect() {
+    var keep = sel.value;
+    sel.innerHTML = '<option value="">나라를 고르세요</option>';
+    var used = {};
+    Object.keys(regions).forEach(function (r) {
+      var g = document.createElement("optgroup"); g.label = r;
+      regions[r].forEach(function (iso) {
+        if (!TRADE.countries[iso]) return;
+        used[iso] = 1;
+        var o = document.createElement("option"); o.value = iso; o.textContent = nameOf(iso); g.appendChild(o);
+      });
+      sel.appendChild(g);
+    });
+    var rest = Object.keys(TRADE.countries).filter(function (k) { return !used[k]; })
+      .sort(function (a, b) { return nameOf(a).localeCompare(nameOf(b), "ko"); });
+    var g = document.createElement("optgroup"); g.label = "그 밖의 나라 (가나다순)";
+    rest.forEach(function (iso) { var o = document.createElement("option"); o.value = iso; o.textContent = nameOf(iso); g.appendChild(o); });
     sel.appendChild(g);
-  });
+    if (keep) sel.value = keep;
+  }
 
   // 첫 화면 색 견본 (추상 칸, 실제 나라 아님)
   var pattern = [
@@ -530,14 +607,16 @@ select:focus-visible { outline: 3px solid var(--ochre); outline-offset: 1px; }
     clearTimeout(tTimer); tTimer = setTimeout(function () { toast.hidden = true; }, 3200);
   }
   document.getElementById("csv-btn").addEventListener("click", function () {
-    say("CSV 내려받기는 지도 화면과 함께 공개됩니다. 공개 후에는 이 표가 CSV 파일로 저장됩니다.");
+    say("이 표는 가상 견본입니다. 나라를 고른 뒤 결과 화면에서 실제 값을 CSV로 내려받을 수 있습니다.");
   });
 
   // 화면 전환 (#해시)
   var views = document.querySelectorAll("[data-view]");
-  var last = { country: null, flow: null, role: null };
   function show(name) {
-    if (name === "thanks" && !last.country) name = "pick";
+    var m = /^see\/([A-Z0-9]{3})\/(export|import)$/.exec(name);
+    if (m) { name = "see"; renderResult(m[1], m[2]); }
+    else if (name === "see") name = "pick";
+    if (name === "pick") load().catch(function () {});
     var found = false;
     views.forEach(function (v) { var on = v.dataset.view === name; v.hidden = !on; if (on) found = true; });
     if (!found) { views.forEach(function (v) { v.hidden = v.dataset.view !== ""; }); }
@@ -551,6 +630,121 @@ select:focus-visible { outline: 3px solid var(--ochre); outline-offset: 1px; }
   document.querySelectorAll("[data-go]").forEach(function (el) {
     el.addEventListener("click", function (e) { e.preventDefault(); go(el.dataset.go); });
   });
+  // ---------- 결과: 실제 지도 ----------
+  var SVGNS = "http://www.w3.org/2000/svg";
+  var cur = { iso: null, flow: "export" };
+  function fmtPct(x) { return x >= 0.05 ? x.toFixed(1) + "%" : x > 0 ? "0.1% 미만" : "0%"; }
+  function fmtUsd(k) { // k: 천 달러
+    if (k >= 1e5) return Math.round(k / 1e5).toLocaleString("ko-KR") + "억 달러";
+    if (k >= 10) return Math.round(k / 10).toLocaleString("ko-KR") + "만 달러";
+    return Math.round(k * 1000).toLocaleString("ko-KR") + "달러";
+  }
+  function step(p) { return p >= 20 ? 5 : p >= 10 ? 4 : p >= 5 ? 3 : p >= 1 ? 2 : 1; }
+  function rows(iso, flow) {
+    var c = TRADE.countries[iso], list = c[flow === "export" ? "x" : "m"], total = 0;
+    list.forEach(function (r) { total += r[1]; });
+    return { total: total, list: list.map(function (r) { return { iso: r[0], v: r[1], p: total ? r[1] / total * 100 : 0 }; }) };
+  }
+  function renderResult(iso, flow) {
+    cur.iso = iso; cur.flow = flow;
+    document.querySelectorAll("[data-rflow]").forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.rflow === flow ? "true" : "false"); });
+    var body = document.getElementById("r-body"), loading = document.getElementById("r-loading"), errBox = document.getElementById("r-error");
+    if (!TRADE) {
+      body.hidden = true; loading.hidden = false; errBox.hidden = true;
+      load().then(function () { if (cur.iso === iso && cur.flow === flow) renderResult(iso, flow); })
+        .catch(function () { loading.hidden = true; errBox.hidden = false; });
+      return;
+    }
+    if (!TRADE.countries[iso]) { loading.hidden = true; body.hidden = true; errBox.hidden = false; document.getElementById("r-error-text").textContent = "자료에 없는 나라 코드입니다. 다른 나라를 골라 주세요."; return; }
+    loading.hidden = true; errBox.hidden = true; body.hidden = false;
+    var me = nameOf(iso), word = flow === "export" ? "수출" : "수입", d = rows(iso, flow);
+    document.title = me + "의 " + word + " 상대국 · Tradeweave";
+    document.getElementById("r-title").textContent = me + "의 " + word + " 상대국";
+    document.getElementById("r-sub").textContent = "2024년 " + word + " 합계 " + fmtUsd(d.total) + " · 상대국 " + d.list.length + "곳";
+    document.getElementById("r-legend-title").textContent = "색: 전체 " + word + "에서 차지하는 비중";
+    document.getElementById("r-rank-title").textContent = "상위 5개 " + word + " 상대국";
+    // 목록
+    var rank = document.getElementById("r-rank"); rank.innerHTML = "";
+    var top = d.list.slice(0, 5), maxP = top.length ? top[0].p : 1;
+    top.forEach(function (r, i) {
+      var li = document.createElement("li"); li.className = "real";
+      li.innerHTML = '<span class="pos num">' + (i + 1) + '</span>' +
+        '<span style="display:grid;gap:2px;min-width:0"><span></span>' +
+        '<span class="bar-track"><span class="bar" style="display:block;width:' + (r.p / maxP * 100) + '%"></span></span></span>' +
+        '<span class="val">' + fmtPct(r.p) + '<span class="val2">' + fmtUsd(r.v) + '</span></span>';
+      li.children[1].children[0].textContent = nameOf(r.iso);
+      rank.appendChild(li);
+    });
+    if (!top.length) rank.innerHTML = '<li class="caption">이 방향의 교역 기록이 없습니다.</li>';
+    function cr(n) { var t = 0; d.list.slice(0, n).forEach(function (r) { t += r.p; }); return t; }
+    document.getElementById("r-cr1").textContent = top.length ? fmtPct(cr(1)) : "—";
+    document.getElementById("r-cr3").textContent = top.length ? fmtPct(cr(3)) : "—";
+    document.getElementById("r-cr5").textContent = top.length ? fmtPct(cr(5)) : "—";
+    document.getElementById("r-sentence").textContent = top.length
+      ? me + "의 2024년 " + word + "에서 1위 상대국 " + nameOf(top[0].iso) + "의 비중은 " + fmtPct(cr(1)) + "이고, 상위 5개 나라를 합하면 " + fmtPct(cr(5)) + "입니다."
+      : "";
+    drawMap(iso, d, word);
+  }
+  function drawMap(iso, d, word) {
+    var svg = document.getElementById("r-map");
+    svg.setAttribute("viewBox", "0 0 " + MAP.w + " " + MAP.h);
+    while (svg.childNodes.length > 1) svg.removeChild(svg.lastChild);
+    var share = {}; d.list.forEach(function (r) { share[r.iso] = r; });
+    var readout = document.getElementById("r-readout");
+    function tip(code) {
+      if (!code) return "자료 없음";
+      if (code === iso) return nameOf(iso) + " (고른 나라)";
+      var r = share[code];
+      return nameOf(code) + ": " + (r ? fmtPct(r.p) + " · " + fmtUsd(r.v) : "교역 기록 없음");
+    }
+    function bind(el, code) {
+      var t = document.createElementNS(SVGNS, "title"); t.textContent = tip(code); el.appendChild(t);
+      if (!code) return;
+      el.classList.add("hit");
+      el.addEventListener("mouseenter", function () { readout.textContent = tip(code); });
+      el.addEventListener("click", function () {
+        svg.querySelectorAll(".on").forEach(function (x) { x.classList.remove("on"); });
+        el.classList.add("on"); readout.textContent = tip(code);
+      });
+    }
+    function cls(code) { return code === iso ? "me" : share[code] ? "c" + step(share[code].p) : ""; }
+    MAP.shapes.forEach(function (s) {
+      var p = document.createElementNS(SVGNS, "path"); p.setAttribute("d", s[1]);
+      var c = cls(s[0]); if (c) p.setAttribute("class", c);
+      bind(p, s[0]); svg.appendChild(p);
+    });
+    MAP.dots.forEach(function (s) {
+      var c = document.createElementNS(SVGNS, "circle");
+      c.setAttribute("cx", s[1]); c.setAttribute("cy", s[2]); c.setAttribute("r", s[0] === iso ? 4 : 2.6);
+      var k = cls(s[0]); if (k) c.setAttribute("class", k);
+      if (k && k !== "me") c.style.fill = "var(--map-" + k.slice(1) + ")";
+      if (k === "me") c.style.fill = "var(--ochre)";
+      bind(c, s[0]); svg.appendChild(c);
+    });
+    // 고른 나라를 맨 위로
+    svg.querySelectorAll(".me").forEach(function (x) { svg.appendChild(x); });
+    var top = d.list.slice(0, 5).map(function (r) { return nameOf(r.iso) + " " + fmtPct(r.p); }).join(", ");
+    document.getElementById("r-map-desc").textContent = nameOf(iso) + "의 " + word + " 상대국 지도. 상위 5개: " + top;
+    readout.textContent = "지도의 나라를 누르거나 마우스를 올리면 값이 나옵니다.";
+  }
+  document.querySelectorAll("[data-rflow]").forEach(function (b) {
+    b.addEventListener("click", function () { if (cur.iso) go("see/" + cur.iso + "/" + b.dataset.rflow); });
+  });
+  document.getElementById("r-csv").addEventListener("click", function () {
+    if (!TRADE || !cur.iso) return;
+    var word = cur.flow === "export" ? "수출" : "수입", d = rows(cur.iso, cur.flow), m = TRADE.meta;
+    var q = function (x) { x = String(x); return /[",\n]/.test(x) ? '"' + x.replace(/"/g, '""') + '"' : x; };
+    var lines = [["보고국", "보고국 코드", "상대국", "상대국 코드", "흐름", "금액(천 달러)", "비중(%)", "기준연도", "출처"].join(",")];
+    d.list.forEach(function (r) {
+      lines.push([nameOf(cur.iso), cur.iso, nameOf(r.iso), r.iso, word, r.v, r.p.toFixed(3), m.year, m.source + " · " + m.version].map(q).join(","));
+    });
+    var blob = new Blob(["\ufeff" + lines.join("\r\n")], { type: "text/csv;charset=utf-8" });
+    var a = document.createElement("a"); a.href = URL.createObjectURL(blob);
+    a.download = "tradeweave_" + cur.iso + "_" + cur.flow + "_" + m.year + ".csv";
+    document.body.appendChild(a); a.click(); setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+    say("CSV 파일을 내려받았습니다. 상대국 " + d.list.length + "곳");
+  });
+
   window.addEventListener("hashchange", route);
   route();
 
@@ -561,11 +755,7 @@ select:focus-visible { outline: 3px solid var(--ochre); outline-offset: 1px; }
     e.preventDefault();
     if (!sel.value) { err.hidden = false; sel.focus(); return; }
     var fd = new FormData(form);
-    last = { country: fd.get("country"), flow: fd.get("flow"), role: fd.get("role") };
-    document.getElementById("t-country").textContent = last.country;
-    document.getElementById("t-flow").textContent = last.flow;
-    document.getElementById("t-role").textContent = last.role || "고르지 않음";
-    go("thanks");
+    go("see/" + fd.get("country") + "/" + (fd.get("flow") === "수입" ? "import" : "export"));
   });
 })();
 </script>
