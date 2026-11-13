@@ -1,0 +1,119 @@
+{
+ "_note": "Policyline 정책 목록. 정책을 추가할 때는 여기에 한 덩어리를 넣고 scripts/fetch_trade.py 를 돌린다. 날짜·HS 코드·원문 링크는 반드시 정부 원문으로 확인한 값만 넣는다. source.api: comtrade | eurostat | census (census 는 CENSUS_KEY 가 있을 때만, 없으면 fallback 을 쓴다)",
+ "policies": [
+  {
+   "id": "cn-ree-2025",
+   "announced": "2025-04-04", "effective": "2025-04-04",
+   "title": {"ko": "중국, 희토류 7종 수출통제", "en": "China's export controls on seven rare earths"},
+   "type": "export", "hs": "850511",
+   "item": {"ko": "영구자석 (금속제)", "en": "Permanent magnets (metal)"},
+   "flow": {"ko": "미국의 중국산 수입 (미국 신고)", "en": "US imports from China (reported by the US)"},
+   "source": {"api": "census", "direction": "imports", "level": "HS6", "commodity": "850511", "country": "5700",
+              "fallback": {"api": "comtrade", "reporter": 842, "partners": [156], "flowCode": "M"}},
+   "policy_source": {"label": "MOFCOM·GACC Announcement No. 18 of 2025 (4 April 2025)", "url": "https://english.mofcom.gov.cn/Policies/AnnouncementsOrders/art/2025/art_0dd87cbee7b045bf93fabe6ab2faceee.html"},
+   "date_note": {"ko": "2025년 4월 4일 발표·즉시 시행. 사마륨·가돌리늄·테르븀·디스프로슘·루테튬·스칸듐·이트륨 관련 품목. 그래프는 미국이 신고한 중국산 영구자석 수입으로, 통제 대상 전체가 아니다. 2025년 10월 추가 통제(공고 제61호)도 있었다.",
+                 "en": "Announced 4 April 2025, effective immediately; items related to samarium, gadolinium, terbium, dysprosium, lutetium, scandium and yttrium. The chart shows US-reported imports of permanent magnets from China, not every controlled item. Further controls followed in October 2025 (Announcement No. 61)."}
+  },
+  {
+   "id": "us-auto-232-2025",
+   "announced": "2025-03-26", "effective": "2025-04-03",
+   "title": {"ko": "미국, 수입 자동차 관세 25% (232조)", "en": "US 25% tariff on imported cars (Section 232)"},
+   "type": "tariff", "hs": "8703",
+   "item": {"ko": "승용차", "en": "Passenger cars"},
+   "flow": {"ko": "미국의 전 세계 수입 (미국 신고)", "en": "US imports from the world (reported by the US)"},
+   "source": {"api": "census", "direction": "imports", "level": "HS4", "commodity": "8703", "country": "-",
+              "fallback": {"api": "comtrade", "reporter": 842, "partners": [0], "flowCode": "M"}},
+   "policy_source": {"label": "Proclamation 10908 (26 March 2025), Federal Register 2025-05930", "url": "https://www.federalregister.gov/documents/2025/04/03/2025-05930/adjusting-imports-of-automobiles-and-automobile-parts-into-the-united-states"},
+   "date_note": {"ko": "2025년 3월 26일 서명, 4월 3일부터 승용차에 25% 추가 관세. 부품 관세는 5월 3일부터. 미국산 부품 비율에 따른 일부 감면이 있다.",
+                 "en": "Signed 26 March 2025; 25% additional tariff on cars from 3 April, on parts from 3 May. Partial relief applies for US content."}
+  },
+  {
+   "id": "us-steel-232-2025",
+   "announced": "2025-02-10", "effective": "2025-03-12",
+   "title": {"ko": "미국, 철강 관세 25% 복원·확대 (232조)", "en": "US restores and expands 25% steel tariff (Section 232)"},
+   "type": "tariff", "hs": "72",
+   "item": {"ko": "철강 (HS 72 전체)", "en": "Iron and steel (all of HS 72)"},
+   "flow": {"ko": "미국의 전 세계 수입 (미국 신고)", "en": "US imports from the world (reported by the US)"},
+   "source": {"api": "census", "direction": "imports", "level": "HS2", "commodity": "72", "country": "-",
+              "fallback": {"api": "comtrade", "reporter": 842, "partners": [0], "flowCode": "M"}},
+   "policy_source": {"label": "Proclamation 10896 (10 February 2025), Federal Register 2025-02833", "url": "https://www.federalregister.gov/documents/2025/02/18/2025-02833/adjusting-imports-of-steel-into-the-united-states"},
+   "date_note": {"ko": "2025년 2월 10일 서명, 3월 12일부터 나라별 예외를 없애고 파생상품까지 25%. 같은 날 알루미늄도 25%로 올렸지만(HS 76) 이 그래프에는 없다.",
+                 "en": "Signed 10 February 2025; from 12 March country exemptions ended and derivatives were covered at 25%. Aluminum was raised to 25% the same day (HS 76) but is not in this chart."}
+  },
+  {
+   "id": "cn-us-ga-ban-2024",
+   "announced": "2024-12-03", "effective": "2024-12-03",
+   "title": {"ko": "중국, 갈륨·게르마늄 대미 수출 금지", "en": "China bans gallium and germanium exports to the US"},
+   "type": "export", "hs": "811292",
+   "item": {"ko": "갈륨·게르마늄 등 (가공 전 금속·분말)", "en": "Gallium, germanium etc. (unwrought, powders)"},
+   "flow": {"ko": "미국의 중국산 수입 (미국 신고)", "en": "US imports from China (reported by the US)"},
+   "source": {"api": "census", "direction": "imports", "level": "HS6", "commodity": "811292", "country": "5700",
+              "fallback": {"api": "comtrade", "reporter": 842, "partners": [156], "flowCode": "M"}},
+   "policy_source": {"label": "MOFCOM Announcement No. 46 of 2024 (summary: IEA policy database)", "url": "https://www.iea.org/policies/26794-strengthening-the-export-control-of-relevant-dual-use-items-to-the-united-states"},
+   "date_note": {"ko": "2024년 12월 3일 발표·즉시 시행. 2025년 11월 9일부터 효력이 정지됐다(정지 기간 2026년 11월 27일까지). HS 8112.92 에는 인듐 등 다른 금속도 함께 들어 있다.",
+                 "en": "Announced 3 December 2024, effective immediately. Suspended from 9 November 2025 (until 27 November 2026). HS 8112.92 also includes other metals such as indium."}
+  },
+  {
+   "id": "eu-bev-cvd-2024",
+   "announced": "2024-07-04", "effective": "2024-07-05",
+   "title": {"ko": "EU, 중국산 전기차에 상계관세", "en": "EU countervailing duties on Chinese EVs"},
+   "type": "tariff", "hs": "870380",
+   "item": {"ko": "전기 승용차", "en": "Electric cars"},
+   "flow": {"ko": "EU의 중국산 수입 (Eurostat)", "en": "EU imports from China (Eurostat)"},
+   "source": {"api": "eurostat", "reporter": "EU", "partner": "CN", "product": "870380", "flow": "1"},
+   "policy_source": {"label": "Commission Implementing Regulation (EU) 2024/1866 (3 July 2024, OJ 4 July 2024)", "url": "https://eur-lex.europa.eu/eli/reg_impl/2024/1866/oj"},
+   "date_note": {"ko": "잠정 상계관세 규정은 7월 3일 채택, 7월 4일 관보 게재, 7월 5일부터 적용. 확정 관세는 2024년 10월 29일 규정(EU) 2024/2754.",
+                 "en": "Provisional regulation adopted 3 July, published 4 July, applied from 5 July 2024. Definitive duties: Regulation (EU) 2024/2754 of 29 October 2024."}
+  },
+  {
+   "id": "us-ev-301-2024",
+   "announced": "2024-05-14", "effective": "2024-09-27",
+   "title": {"ko": "미국, 중국산 전기차 관세 100%", "en": "US 100% tariff on Chinese EVs"},
+   "type": "tariff", "hs": "870380",
+   "item": {"ko": "전기 승용차", "en": "Electric cars"},
+   "flow": {"ko": "미국의 중국산 수입 (미국 신고)", "en": "US imports from China (reported by the US)"},
+   "source": {"api": "census", "direction": "imports", "level": "HS6", "commodity": "870380", "country": "5700",
+              "fallback": {"api": "comtrade", "reporter": 842, "partners": [156], "flowCode": "M"}},
+   "policy_source": {"label": "USTR Section 301 four-year review and modifications (Federal Register, Sept 2024)", "url": "https://ustr.gov/sites/default/files/Section%20301%20Modifications%20Determination%20FRN%20(Sept%2012%202024)%20(FINAL).pdf"},
+   "date_note": {"ko": "2024년 5월 14일 인상 계획 발표, 2024년 9월 27일 이후 통관분부터 100% 적용.",
+                 "en": "Increase announced 14 May 2024; 100% applies to entries on or after 27 September 2024."}
+  },
+  {
+   "id": "cn-ga-ge-2023",
+   "announced": "2023-07-03", "effective": "2023-08-01",
+   "title": {"ko": "중국, 갈륨·게르마늄 수출통제", "en": "China's gallium and germanium export controls"},
+   "type": "export", "hs": "811292",
+   "item": {"ko": "갈륨·게르마늄 등 (가공 전 금속·분말)", "en": "Gallium, germanium etc. (unwrought, powders)"},
+   "flow": {"ko": "중국 → 전 세계 수출 (중국 신고)", "en": "China → world exports (reported by China)"},
+   "source": {"api": "comtrade", "reporter": 156, "partners": [0], "flowCode": "X"},
+   "policy_source": {"label": "MOFCOM·GACC Announcement No. 23 of 2023 (summary: IEA policy database)", "url": "https://www.iea.org/policies/17893-announcement-on-the-implementation-of-export-control-of-items-related-to-gallium-and-germanium"},
+   "date_note": {"ko": "2023년 7월 3일 공고, 8월 1일 시행. HS 8112.92 에는 인듐 등 다른 금속도 함께 들어 있다.",
+                 "en": "Announced 3 July 2023, effective 1 August 2023. HS 8112.92 also includes other metals such as indium."}
+  },
+  {
+   "id": "us-semi-2022",
+   "announced": "2022-10-07", "effective": "2022-10-07",
+   "title": {"ko": "미국, 대중국 반도체 장비 수출통제", "en": "US chip-equipment export controls on China"},
+   "type": "export", "hs": "8486",
+   "item": {"ko": "반도체 제조장비", "en": "Chipmaking equipment"},
+   "flow": {"ko": "미국 → 중국 수출 (미국 신고)", "en": "US → China exports (reported by the US)"},
+   "source": {"api": "census", "direction": "exports", "level": "HS4", "commodity": "8486", "country": "5700",
+              "fallback": {"api": "comtrade", "reporter": 842, "partners": [156], "flowCode": "X"}},
+   "policy_source": {"label": "BIS press release, 7 October 2022", "url": "https://www.bis.gov/press-release/commerce-implements-new-export-controls-advanced-computing-semiconductor-manufacturing-items-peoples"},
+   "date_note": {"ko": "2022년 10월 7일 발표. 반도체 제조장비 통제는 같은 날, 일부 조항은 10월 12일·21일 시행.",
+                 "en": "Announced 7 October 2022. Equipment controls effective the same day; other parts on 12 and 21 October."}
+  },
+  {
+   "id": "jp-kr-2019",
+   "announced": "2019-07-01", "effective": "2019-07-04",
+   "title": {"ko": "일본, 대한국 수출규제", "en": "Japan's export restrictions on Korea"},
+   "type": "export", "hs": "281111",
+   "item": {"ko": "불화수소", "en": "Hydrogen fluoride"},
+   "flow": {"ko": "일본 → 한국 수출 (일본 신고)", "en": "Japan → Korea exports (reported by Japan)"},
+   "source": {"api": "comtrade", "reporter": 392, "partners": [410], "flowCode": "X"},
+   "policy_source": {"label": "METI, Update of licensing policies and procedures in relation to the Republic of Korea (1 July 2019)", "url": "https://www.meti.go.jp/policy/external_economy/export_control_korea/index-en.html"},
+   "date_note": {"ko": "2019년 7월 1일 발표, 7월 4일부터 개별 허가.",
+                 "en": "Announced 1 July 2019; individual licences required from 4 July."}
+  }
+ ]
+}

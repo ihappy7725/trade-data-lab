@@ -6,7 +6,7 @@
 <title>Policyline · 정책 발표 전후 교역량</title>
 <meta name="description" content="관세·수출통제 등 정책 발표 전후 12개월의 월별 교역량을 나란히 비교합니다.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect width=%2232%22 height=%2232%22 rx=%226%22 fill=%22%230E1A2E%22/%3E%3Crect x=%2214%22 y=%225%22 width=%224%22 height=%2222%22 rx=%222%22 fill=%22%23FF6B3D%22/%3E%3C/svg%3E">
-<script>/* 테마: 저장된 선택 → 없으면 컴퓨터 설정 */(function(){var t;try{t=localStorage.getItem("policyline-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: light)").matches?"light":"dark";document.documentElement.dataset.theme=t})();</script>
+<script>/* 테마: 저장된 선택 → 없으면 다크 */(function(){var t;try{t=localStorage.getItem("policyline-theme")}catch(e){}if(t!=="light"&&t!=="dark")t="dark";document.documentElement.dataset.theme=t})();</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap" rel="stylesheet">
@@ -277,7 +277,8 @@ footer{padding:var(--space-8) 0;font-size:13px;color:var(--color-text-muted);bor
   section.block{padding:var(--space-8) 0}
   .src tr{display:grid}.src th,.src td{width:auto;display:block}.src th{border-bottom:0;padding-bottom:0}
 }
-@media (max-width:480px){.stack{display:none}.hero{padding-bottom:var(--space-6)}}
+@media (max-width:480px){.stack{display:none}.hero{padding-bottom:var(--space-6)}
+  .logo{font-size:15px;letter-spacing:.12em;gap:var(--space-1)}.nav-right{gap:var(--space-1)}.theme{width:36px;height:36px}.lang button{padding:4px 10px}}
 
 /* ===== 상태와 움직임 (DESIGN.md 7·8장) =====
    - transform · opacity 만 움직인다. 그림자·색은 바로 바뀌거나, 겹쳐 둔 층의 opacity 로 바꾼다.
@@ -442,22 +443,22 @@ a:focus-visible,button:focus-visible{outline:3px solid var(--color-focus);outlin
 <script>
 const I18N={
 ko:{
- "draft":"교역 자료: UN Comtrade 월별 자료 ({f} 받음). 정책 날짜는 각국 정부·EU 공식 발표 기준입니다.",
- "nav.list":"정책 5건","nav.how":"보는 것","nav.caveats":"읽을 때 주의","nav.source":"출처",
+ "draft":"교역 자료: UN Comtrade · Eurostat 월별 자료 ({f} 받음). 정책 날짜는 각국 정부·EU 공식 발표 기준입니다.",
+ "nav.list":"정책 {n}건","nav.how":"보는 것","nav.caveats":"읽을 때 주의","nav.source":"출처",
  "hero.h1":"정책 발표 전후 12개월,<span>교역량의 객관적 변화</span>",
  "hero.sub":"관세와 수출통제 등 주요 정책 시점을 기점으로 달라진 월별 교역 데이터를 나란히 비교합니다. 원인을 단정 짓지 않고, 같은 시기에 일어난 시장의 실제 변화만 제공합니다.",
  "hero.cta":"분석할 정책 선택하기","hero.trust1":"로그인 없이 즉시 확인","hero.trust2":"투명한 출처 표기",
  "list.h2":"분석할 정책 고르기","list.lede":"작은 그래프의 붉은 선이 발표 달입니다. 오른쪽 숫자는 발표 달을 뺀 앞뒤 12개월 합계의 차이로, 원인을 뜻하지 않습니다.",
  "f.all":"전체","f.tariff":"관세","f.export":"수출통제",
- "theme.toLight":"라이트 모드로 보기","theme.toDark":"다크 모드로 보기","row.status":"데이터 준비 중","row.chg":"앞뒤 12개월 월평균","row.nodata":"자료 부족",
- "d.back":"정책 목록으로","d.ann":"발표","d.eff":"시행","d.before":"발표 전 12개월 합계","d.after":"발표 후 12개월 합계","d.diff":"월평균 차이 (참고)",
+ "theme.toLight":"라이트 모드로 보기","theme.toDark":"다크 모드로 보기","row.status":"데이터 준비 중","row.chg":"앞뒤 12개월 월평균","row.short":"발표 후 {n}개월 자료 · 월평균","row.wait":"발표 후 자료 기다리는 중","row.nodata":"자료 부족",
+ "d.back":"정책 목록으로","d.ann":"발표","d.eff":"시행","d.before":"발표 전 {n}개월 합계","d.after":"발표 후 {n}개월 합계","d.diff":"월평균 차이 (참고)",
  "d.lg.data":"월별 교역액 (미국 달러)","d.lg.avg":"앞뒤 12개월 월평균","d.lg.ann":"발표 달","d.lg.eff":"시행 달",
  "d.fact":"사실","d.interp":"해석","d.unsure":"불확실",
  "d.interp.empty":"아직 정리하지 않았습니다. 연구·언론의 해석은 출처를 붙여 이 칸에 추가합니다.",
  "d.u.cause":"같은 시기에 환율, 경기, 다른 나라의 정책 같은 다른 요인도 함께 움직였을 수 있습니다.",
  "d.u.report":"이 값은 한쪽 나라가 신고한 값입니다. 상대국 신고값과 다를 수 있고 나중에 고쳐질 수 있습니다.",
  "d.src.policy":"정책 원문","d.src.data":"교역 자료","d.vals":"월별 값 보기","d.month":"월","d.value":"교역액 (US$)","d.missing":"자료 없음",
- "d.csv":"CSV 내려받기","d.missingN":"자료가 없는 달 {n}개는 합계에서 빠졌습니다.",
+ "d.csv":"CSV 내려받기","d.missingN":"기록이 없는 달 {n}개는 합계에서 빠졌습니다.","d.futN":"발표 후 12개월 중 {n}개월은 아직 지나지 않았거나 자료가 나오지 않았습니다. 자료가 나오면 매달 자동으로 채워집니다.","d.u.eu":"EU 27개국 전체를 합친 Eurostat 값이고 단위는 유로입니다. 각국 신고값과 다를 수 있습니다.",
  "how.h2":"정책 하나를 고르면 보는 것","how.lede":"한 화면에 세 가지를 함께 놓습니다. 숫자, 그 숫자를 읽는 방법, 그리고 원문입니다.",
  "how.c1.h":"발표 전후 그래프","how.c1.p":"발표 전 12개월과 후 12개월의 월별 교역량을 한 그래프에 놓고, 발표일과 시행일에 선을 긋습니다. 전후 12개월 합계도 함께 보여 줍니다.",
  "how.c2.h":"사실 · 해석 · 불확실","how.c2.p":"숫자로 확인되는 것, 연구·언론의 해석, 아직 모르는 것을 세 칸으로 나눠 씁니다.",
@@ -469,10 +470,10 @@ ko:{
  "cav.3.h":"발표 전에 미리 움직인 거래","cav.3.p":"발표가 예고되면 그 전에 주문을 앞당기는 경우가 있어, 발표 직전 숫자가 높게 나올 수 있습니다.",
  "cav.4.h":"신고 방식의 차이","cav.4.p":"수출국과 수입국이 신고한 값이 다를 수 있고, 최근 몇 달 자료는 나중에 고쳐질 수 있습니다.",
  "cite.h2":"과제와 글에 그대로 쓰기","cite.lede":"정책 화면마다 인용 문구와 데이터 파일을 준비해 둡니다. 출처와 기간이 함께 따라갑니다.",
- "cite.example":"Policyline, 「(정책 이름) 발표 전후 12개월 (품목) 교역량」, 자료: UN Comtrade 월별 자료 (기간), 확인일 (날짜).",
+ "cite.example":"Policyline, 「(정책 이름) 발표 전후 12개월 (품목) 교역액」, 자료: (출처) 월별 자료 (기간), 받은 날 (날짜).",
  "cite.copy":"인용 문구 복사","cite.csv":"CSV는 정책 화면에서","cite.note":"인용 형식 틀입니다. 각 정책 화면에서는 괄호가 채워진 문구와 월별 값 CSV를 받을 수 있습니다.",
  "src.h2":"출처와 방법",
- "src.r1.k":"교역 자료","src.r1.v":"UN Comtrade 월별 상품 교역 자료 (신고국 기준). 원자료를 고치거나 추정하지 않으며, 빈 달은 \"자료 없음\"으로 표시합니다.",
+ "src.r1.k":"교역 자료","src.r1.v":"UN Comtrade 월별 상품 교역 자료(신고국 기준), EU 정책은 Eurostat Comext 월별 자료를 씁니다. 정책마다 출처와 통화를 표시하고, 매달 자동으로 다시 받습니다. 원자료를 고치거나 추정하지 않으며, 빈 달은 \"자료 없음\"으로 표시합니다.",
  "src.r2.k":"정책 정보","src.r2.v":"각국 정부의 공식 발표 원문. 발표일과 시행일을 나눠 적고, 원문 링크를 붙입니다.",
  "src.r3.k":"품목 분류","src.r3.v":"HS 코드(통일상품명및부호체계) 기준. 정책 대상 품목과 가장 가까운 코드를 쓰고, 화면에 코드를 함께 밝힙니다.",
  "src.r4.k":"비교 방법","src.r4.v":"발표 달을 빼고 앞 12개월과 뒤 12개월을 비교합니다. 퍼센트는 자료가 있는 달의 월평균끼리 비교한 참고용 값입니다.",
@@ -480,22 +481,22 @@ ko:{
  "toast":"인용 문구를 복사했습니다","toast.soon":"이 정책의 발표 전후 화면은 교역 데이터를 넣은 뒤 열립니다","toast.fail":"복사하지 못했습니다. 문구를 직접 선택해 복사해 주세요"
 },
 en:{
- "draft":"Trade data: UN Comtrade monthly (retrieved {f}). Policy dates follow official government and EU announcements.",
- "nav.list":"5 policies","nav.how":"What you see","nav.caveats":"Read with care","nav.source":"Sources",
+ "draft":"Trade data: UN Comtrade and Eurostat monthly (retrieved {f}). Policy dates follow official government and EU announcements.",
+ "nav.list":"{n} policies","nav.how":"What you see","nav.caveats":"Read with care","nav.source":"Sources",
  "hero.h1":"Twelve months before and after a policy:<span>what objectively changed in trade</span>",
  "hero.sub":"Compare monthly trade data side by side, anchored on the dates of major policies such as tariffs and export controls. We don't claim causes — we show only the real market changes that happened in the same period.",
  "hero.cta":"Choose a policy to analyze","hero.trust1":"No login, instant access","hero.trust2":"Transparent sourcing",
  "list.h2":"Choose a policy","list.lede":"The red line in each small chart marks the announcement month. The figure on the right compares the 12-month totals before and after (announcement month excluded); it does not imply a cause.",
  "f.all":"All","f.tariff":"Tariffs","f.export":"Export controls",
- "theme.toLight":"Switch to light mode","theme.toDark":"Switch to dark mode","row.status":"Data in preparation","row.chg":"12-month avg.","row.nodata":"Not enough data",
- "d.back":"Back to policies","d.ann":"Announced","d.eff":"Effective","d.before":"12-month total before","d.after":"12-month total after","d.diff":"Change in monthly average (reference)",
+ "theme.toLight":"Switch to light mode","theme.toDark":"Switch to dark mode","row.status":"Data in preparation","row.chg":"12-month avg.","row.short":"{n} months after · avg.","row.wait":"Waiting for post-announcement data","row.nodata":"Not enough data",
+ "d.back":"Back to policies","d.ann":"Announced","d.eff":"Effective","d.before":"Total, {n} months before","d.after":"Total, {n} months after","d.diff":"Change in monthly average (reference)",
  "d.lg.data":"Monthly trade value (US$)","d.lg.avg":"Monthly average, before / after","d.lg.ann":"Announcement month","d.lg.eff":"Effective month",
  "d.fact":"Fact","d.interp":"Interpretation","d.unsure":"Uncertain",
  "d.interp.empty":"Not written yet. Research and media interpretations will be added here with their sources.",
  "d.u.cause":"Other factors such as exchange rates, the business cycle and other countries' policies may have moved in the same period.",
  "d.u.report":"These values are reported by one country. Partner-reported values can differ, and figures may be revised later.",
  "d.src.policy":"Official text","d.src.data":"Trade data","d.vals":"Show monthly values","d.month":"Month","d.value":"Trade value (US$)","d.missing":"No data",
- "d.csv":"Download CSV","d.missingN":"{n} month(s) with no data are left out of the totals.",
+ "d.csv":"Download CSV","d.missingN":"{n} month(s) with no record are left out of the totals.","d.futN":"{n} of the 12 months after have not passed yet or have no published data. They fill in automatically each month.","d.u.eu":"These are Eurostat values for the EU-27 as a whole, in euros, and can differ from individual members' reports.",
  "how.h2":"What you see for each policy","how.lede":"Three things on one screen: the numbers, how to read them, and the original source.",
  "how.c1.h":"Before-and-after chart","how.c1.p":"Monthly trade for the 12 months before and after, with lines at the announcement and effective dates, plus 12-month totals for each side.",
  "how.c2.h":"Fact · Interpretation · Uncertain","how.c2.p":"What the numbers confirm, what research and media interpret, and what is still unknown, in three separate columns.",
@@ -507,10 +508,10 @@ en:{
  "cav.3.h":"Trade pulled forward","cav.3.p":"When a policy is expected, buyers may order early, so the months just before an announcement can look high.",
  "cav.4.h":"Reporting differences","cav.4.p":"Exporter- and importer-reported values can differ, and recent months may be revised later.",
  "cite.h2":"Use it in your papers","cite.lede":"Each policy page comes with a citation line and a data file. The source and period travel with them.",
- "cite.example":"Policyline, \"(Product) trade 12 months before and after (policy name)\", data: UN Comtrade monthly (period), accessed (date).",
+ "cite.example":"Policyline, \"(Product) trade 12 months before and after (policy name)\", data: (source) monthly (period), retrieved (date).",
  "cite.copy":"Copy citation","cite.csv":"CSV on each policy page","cite.note":"Citation template. Each policy page gives the filled-in citation and a CSV of monthly values.",
  "src.h2":"Sources and method",
- "src.r1.k":"Trade data","src.r1.v":"UN Comtrade monthly merchandise trade (reporter-based). Raw values are not edited or estimated; empty months are marked \"no data\".",
+ "src.r1.k":"Trade data","src.r1.v":"UN Comtrade monthly merchandise trade (reporter-based); EU policies use Eurostat Comext monthly data. Each policy shows its source and currency, and data refreshes automatically every month. Raw values are not edited or estimated; empty months are marked \"no data\".",
  "src.r2.k":"Policy information","src.r2.v":"Official government announcements. Announcement and effective dates are listed separately, with links to the original text.",
  "src.r3.k":"Product classification","src.r3.v":"Harmonized System (HS) codes. We use the code closest to the targeted product and show it on screen.",
  "src.r4.k":"Comparison","src.r4.v":"Excluding the announcement month, we compare the 12 months before with the 12 months after. The percentage compares monthly averages of months with data and is for reference only.",
@@ -521,38 +522,40 @@ const DATA=window.POLICYLINE_DATA||{meta:{},policies:[]};
 const P=DATA.policies.slice().sort((x,y)=>y.announced.localeCompare(x.announced));
 const ANN_IDX=12;
 const fmtHS=h=>h.length===6?h.slice(0,4)+"."+h.slice(4):h;
-const money=v=>v==null?t("d.missing"):new Intl.NumberFormat(lang==="ko"?"ko-KR":"en-US",{style:"currency",currency:"USD",notation:"compact",maximumFractionDigits:1}).format(v);
+const money=(v,cur="USD")=>v==null?t("d.missing"):new Intl.NumberFormat(lang==="ko"?"ko-KR":"en-US",{style:"currency",currency:cur,notation:"compact",maximumFractionDigits:1}).format(v);
+const curOf=p=>(p.data_source&&p.data_source.currency)||"USD";
 function sums(p){const b=p.series.slice(0,ANN_IDX),a=p.series.slice(ANN_IDX+1);
- const miss=[...b,...a].filter(x=>x.v==null).length;
+ const fut=a.filter(x=>x.future).length,miss=[...b,...a].filter(x=>x.v==null&&!x.future).length;
  const sb=b.reduce((s,x)=>s+(x.v||0),0),sa=a.reduce((s,x)=>s+(x.v||0),0),nb=b.filter(x=>x.v!=null).length,na=a.filter(x=>x.v!=null).length;
- const mb=nb?sb/nb:0,ma=na?sa/na:0; // 빈 달이 있어도 흔들리지 않게 월평균으로 비교
- return {sb,sa,miss,nb,na,pct:mb>0?(ma-mb)/mb*100:null,okB:nb>0,okA:na>0}}
+ const mb=nb?sb/nb:0,ma=na?sa/na:0; // 빈 달 · 아직 오지 않은 달이 있어도 흔들리지 않게 월평균으로 비교
+ return {sb,sa,miss,fut,nb,na,pct:mb>0?(ma-mb)/mb*100:null,okB:nb>0,okA:na>0}}
 const pctTxt=x=>x==null?"–":(x>0?"+":"")+x.toFixed(0)+"%";
 function mini(p){const w=220,h=48,vals=p.series.map(x=>x.v),max=Math.max(1,...vals.filter(v=>v!=null)),X=i=>i*w/(vals.length-1),Y=v=>h-4-(v/max)*(h-8);
  let d="",pen=false;vals.forEach((v,i)=>{if(v==null){pen=false;return}d+=(pen?"L":"M")+X(i).toFixed(1)+","+Y(v).toFixed(1);pen=true});
  return `<svg viewBox="0 0 ${w} ${h}" aria-hidden="true"><line x1="0" x2="${w}" y1="${h-1}" y2="${h-1}" stroke="var(--color-rule)"/><line x1="${X(ANN_IDX)}" x2="${X(ANN_IDX)}" y1="0" y2="${h}" stroke="var(--color-accent)" stroke-width="2"/><path d="${d}" fill="none" stroke="var(--color-data)" stroke-width="1.6" stroke-linejoin="round"/></svg>`}
 function bigChart(p,W){const H=Math.round(Math.max(220,Math.min(360,W*.42))),L=64,R=12,T=16,B=32,vals=p.series.map(x=>x.v),max=Math.max(1,...vals.filter(v=>v!=null))*1.1;
  const X=i=>L+i*(W-L-R)/(vals.length-1),Y=v=>T+(H-T-B)*(1-v/max);let g="";
- for(let k=0;k<=3;k++){const v=max*k/3,y=Y(v);g+=`<line x1="${L}" x2="${W-R}" y1="${y}" y2="${y}" stroke="var(--color-rule)"/><text x="${L-8}" y="${y+4}" text-anchor="end">${money(v)}</text>`}
+ for(let k=0;k<=3;k++){const v=max*k/3,y=Y(v);g+=`<line x1="${L}" x2="${W-R}" y1="${y}" y2="${y}" stroke="var(--color-rule)"/><text x="${L-8}" y="${y+4}" text-anchor="end">${money(v,curOf(p))}</text>`}
  [0,6,ANN_IDX,18,24].forEach(i=>{g+=`<text x="${X(i)}" y="${H-8}" text-anchor="${i===0?"start":i===24?"end":"middle"}">${p.series[i].m.replace("-",".")}</text>`});
  const s=sums(p),nb=p.series.slice(0,ANN_IDX).filter(x=>x.v!=null).length,na=p.series.slice(ANN_IDX+1).filter(x=>x.v!=null).length;
  if(nb)g+=`<line x1="${X(0)}" x2="${X(ANN_IDX-1)}" y1="${Y(s.sb/nb)}" y2="${Y(s.sb/nb)}" stroke="var(--color-text-muted)" stroke-dasharray="6 6"/>`;
- if(na)g+=`<line x1="${X(ANN_IDX+1)}" x2="${X(24)}" y1="${Y(s.sa/na)}" y2="${Y(s.sa/na)}" stroke="var(--color-text-muted)" stroke-dasharray="6 6"/>`;
+ const lastA=p.series.reduce((k,x,i)=>x.v!=null?i:k,ANN_IDX+1);
+ if(na)g+=`<line x1="${X(ANN_IDX+1)}" x2="${X(lastA)}" y1="${Y(s.sa/na)}" y2="${Y(s.sa/na)}" stroke="var(--color-text-muted)" stroke-dasharray="6 6"/>`;
  const effIdx=p.series.findIndex(x=>x.m===p.effective.slice(0,7));
  if(effIdx>ANN_IDX)g+=`<line x1="${X(effIdx)}" x2="${X(effIdx)}" y1="${T}" y2="${H-B}" stroke="var(--color-accent)" stroke-width="2" stroke-dasharray="5 5"/>`;
  g+=`<line x1="${X(ANN_IDX)}" x2="${X(ANN_IDX)}" y1="${T-8}" y2="${H-B}" stroke="var(--color-accent)" stroke-width="2.5" style="filter:drop-shadow(var(--glow-accent))"/>`;
  let d="",pen=false;vals.forEach((v,i)=>{if(v==null){pen=false;return}d+=(pen?"L":"M")+X(i).toFixed(1)+","+Y(v).toFixed(1);pen=true});
  g+=`<path d="${d}" fill="none" stroke="var(--color-data)" stroke-width="2.5" stroke-linejoin="round"/>`;
- vals.forEach((v,i)=>{if(v!=null)g+=`<circle cx="${X(i)}" cy="${Y(v)}" r="3" fill="var(--color-data)"><title>${p.series[i].m} · ${money(v)}</title></circle>`});
+ vals.forEach((v,i)=>{if(v!=null)g+=`<circle cx="${X(i)}" cy="${Y(v)}" r="3" fill="var(--color-data)"><title>${p.series[i].m} · ${money(v,curOf(p))}</title></circle>`});
  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${p.title[lang]}, ${p.series[0].m} – ${p.series[24].m}">${g}</svg>`}
-function repRange(p){const r=p.series.map(x=>x.reporters).filter(x=>x!=null);if(!Array.isArray(p.comtrade.reporter)||!r.length)return "";
- const lo=Math.min(...r),hi=Math.max(...r),n=p.comtrade.reporter.length;
+function repRange(p){const r=p.series.map(x=>x.reporters).filter(x=>x!=null);const rep=p.data_source&&p.data_source.query&&p.data_source.query.reporter;if(!Array.isArray(rep)||!r.length)return "";
+ const lo=Math.min(...r),hi=Math.max(...r),n=rep.length;
  return `<li>${lang==="ko"?`달마다 자료를 신고한 나라 수가 ${n}개국 중 ${lo}~${hi}개국으로 다릅니다. 신고가 없는 나라는 합계에 들어가지 않았습니다.`:`The number of reporting countries varies by month (${lo}–${hi} of ${n}). Countries with no record are not in the totals.`}</li>`}
 function citeFor(p){const per=p.series[0].m.replace("-",".")+"–"+p.series[24].m.replace("-","."),f=DATA.meta.fetched||"";
- return lang==="ko"?`Policyline, 「${p.title.ko} 발표 전후 12개월 ${p.item.ko} 교역액」, 자료: UN Comtrade 월별 자료 (${per}, ${p.flow.ko}, HS ${fmtHS(p.hs)}), 받은 날 ${f}.`
-  :`Policyline, "${p.item.en} trade 12 months before and after: ${p.title.en}", data: UN Comtrade monthly (${per}, ${p.flow.en}, HS ${fmtHS(p.hs)}), retrieved ${f}.`}
-function csvFor(p){const rows=[["policy_id","month","value_usd","reporter_code","partner_codes","hs","flow","source","retrieved"]];
- p.series.forEach(x=>rows.push([p.id,x.m,x.v??"",p.comtrade.reporter,p.comtrade.partners.join(" "),p.hs,p.comtrade.flowCode,"UN Comtrade",DATA.meta.fetched||""]));
+ return lang==="ko"?`Policyline, 「${p.title.ko} 발표 전후 12개월 ${p.item.ko} 교역액」, 자료: ${p.data_source.name} 월별 자료 (${per}, ${curOf(p)}, ${p.flow.ko}, HS ${fmtHS(p.hs)}), 받은 날 ${f}.`
+  :`Policyline, "${p.item.en} trade 12 months before and after: ${p.title.en}", data: ${p.data_source.name} monthly (${per}, ${curOf(p)}, ${p.flow.en}, HS ${fmtHS(p.hs)}), retrieved ${f}.`}
+function csvFor(p){const q=JSON.stringify(p.data_source.query).replaceAll('"',"'"),rows=[["policy_id","month","value","currency","source","query","hs","retrieved","note"]];
+ p.series.forEach(x=>rows.push([p.id,x.m,x.v??"",curOf(p),p.data_source.name,`"${q}"`,p.hs,DATA.meta.fetched||"",x.future?"future":(x.v==null?"no record":"")]));
  return rows.map(r=>r.join(",")).join("\n")}
 function renderDetail(){const id=(location.hash.match(/^#policy\/(.+)$/)||[])[1],p=P.find(x=>x.id===id),el=document.getElementById("detail");
  document.body.classList.toggle("is-detail",!!p);el.hidden=!p;if(!p)return;
@@ -565,19 +568,20 @@ function renderDetail(){const id=(location.hash.match(/^#policy\/(.+)$/)||[])[1]
   <p class="date-note">${p.date_note[lang]}</p>
   <div class="chart-wrap" id="bigChart"></div>
   <div class="legend"><span><i style="background:var(--color-data)"></i>${t("d.lg.data")}</span><span><i style="background:var(--color-text-muted)"></i>${t("d.lg.avg")}</span><span><i style="background:var(--color-accent)"></i>${t("d.lg.ann")}</span>${p.effective.slice(0,7)!==p.announced.slice(0,7)?`<span><i style="background:none;border-top:2px dashed var(--color-accent);height:0"></i>${t("d.lg.eff")}</span>`:""}</div>
-  <dl class="totals"><div><dt>${t("d.before")}</dt><dd>${money(s.sb)}</dd></div><div><dt>${t("d.after")}</dt><dd>${money(s.sa)}</dd></div><div><dt>${t("d.diff")}</dt><dd>${pctTxt(s.pct)}</dd></div></dl>
+  <dl class="totals"><div><dt>${t("d.before").replace("{n}",s.nb)}</dt><dd>${money(s.sb,curOf(p))}</dd></div><div><dt>${t("d.after").replace("{n}",s.na)}</dt><dd>${money(s.sa,curOf(p))}</dd></div><div><dt>${t("d.diff")}</dt><dd>${pctTxt(s.pct)}</dd></div></dl>
   <div class="fiu">
    <section><h3>${t("d.fact")}</h3><ul>
-    <li>${lang==="ko"?`발표 달(${p.series[ANN_IDX].m.replace("-",".")})을 뺀 앞 12개월 합계는 ${money(s.sb)}, 뒤 12개월 합계는 ${money(s.sa)}입니다.`:`Excluding the announcement month (${p.series[ANN_IDX].m}), the 12-month total was ${money(s.sb)} before and ${money(s.sa)} after.`}</li>
+    <li>${lang==="ko"?`발표 달(${p.series[ANN_IDX].m.replace("-",".")})을 뺀 앞 ${s.nb}개월 합계는 ${money(s.sb,curOf(p))}, 뒤 ${s.na}개월 합계는 ${money(s.sa,curOf(p))}입니다.`:`Excluding the announcement month (${p.series[ANN_IDX].m}), the total was ${money(s.sb,curOf(p))} for ${s.nb} months before and ${money(s.sa,curOf(p))} for ${s.na} months after.`}</li>
+    ${s.fut?`<li>${t("d.futN").replace("{n}",s.fut)}</li>`:""}
     ${s.miss?`<li>${t("d.missingN").replace("{n}",s.miss)}</li>`:""}
-    <li>${lang==="ko"?`발표 달 교역액: ${money(p.series[ANN_IDX].v)}`:`Announcement-month value: ${money(p.series[ANN_IDX].v)}`}</li>
+    <li>${lang==="ko"?`발표 달 교역액: ${money(p.series[ANN_IDX].v,curOf(p))}`:`Announcement-month value: ${money(p.series[ANN_IDX].v,curOf(p))}`}</li>
    </ul></section>
    <section><h3>${t("d.interp")}</h3><p class="empty">${t("d.interp.empty")}</p></section>
-   <section><h3>${t("d.unsure")}</h3><ul><li>${t("d.u.cause")}</li><li>${t("d.u.report")}</li>${repRange(p)}${p.hs==="811292"?`<li>${p.date_note[lang].split(". ").slice(-1)[0]}</li>`:""}</ul></section>
+   <section><h3>${t("d.unsure")}</h3><ul><li>${t("d.u.cause")}</li><li>${t("d.u.report")}</li>${repRange(p)}${p.data_source.api==="eurostat"?`<li>${t("d.u.eu")}</li>`:""}${p.hs==="811292"?`<li>${p.date_note[lang].split(". ").slice(-1)[0]}</li>`:""}</ul></section>
   </div>
   <div class="srcs">
    <div>${t("d.src.policy")}: <a href="${p.policy_source.url}" target="_blank" rel="noopener">${p.policy_source.label}</a></div>
-   <div>${t("d.src.data")}: <a href="${DATA.meta.url}" target="_blank" rel="noopener">UN Comtrade</a> · ${p.flow[lang]} · HS ${fmtHS(p.hs)} · ${p.series[0].m} – ${p.series[24].m} · ${lang==="ko"?"받은 날":"retrieved"} ${DATA.meta.fetched}</div>
+   <div>${t("d.src.data")}: <a href="${p.data_source.url}" target="_blank" rel="noopener">${p.data_source.name}</a> · ${curOf(p)} · ${p.flow[lang]} · HS ${fmtHS(p.hs)} · ${p.series[0].m} – ${p.series[24].m} · ${lang==="ko"?"받은 날":"retrieved"} ${DATA.meta.fetched}</div>
   </div>
   <div class="cite"><code id="dCite">${citeFor(p)}</code><div class="cite-actions"><button class="btn ghost small" type="button" id="dCopy">${t("cite.copy")}</button><button class="btn ghost small" type="button" id="dCsv">${t("d.csv")}</button></div></div>
   <details class="vals"><summary>${t("d.vals")}</summary><table><tr><th>${t("d.month")}</th><th>${t("d.value")}</th></tr>${p.series.map((x,i)=>`<tr${i===ANN_IDX?' class="ann"':""}><td>${x.m}</td><td>${x.v==null?t("d.missing"):Math.round(x.v).toLocaleString("en-US")}</td></tr>`).join("")}</table></details>`;
@@ -591,7 +595,7 @@ document.getElementById("detail").addEventListener("click",async e=>{const p=e.c
 window.addEventListener("hashchange",()=>{renderDetail();if(location.hash.startsWith("#policy/"))scrollTo(0,0)});
 let lang="ko",filter="all";
 try{const saved=localStorage.getItem("policyline-lang");if(saved==="en"||saved==="ko")lang=saved}catch(e){}
-const t=k=>(I18N[lang][k]??k).replace("{f}",(window.POLICYLINE_DATA||{meta:{}}).meta.fetched||"");
+const t=k=>(I18N[lang][k]??k).replace("{f}",(window.POLICYLINE_DATA||{meta:{}}).meta.fetched||"").replace("{n}",k==="nav.list"?((window.POLICYLINE_DATA||{policies:[]}).policies.length):"{n}");
 const fmt=d=>lang==="ko"?d.replaceAll("-","."):new Date(d+"T00:00:00").toLocaleDateString("en-US",{year:"numeric",month:"short",day:"numeric"});
 
 
@@ -612,7 +616,7 @@ function render(){
  <a class="row" id="p${i}" href="#policy/${p.id}" ${filter!=="all"&&p.type!==filter?"hidden":""}>
   <time datetime="${p.announced}"><i class="mark" aria-hidden="true"></i>${fmt(p.announced)}</time>
   <div><span class="type">${t("f."+p.type)}</span><h3>${p.title[lang]}</h3><p>${p.item[lang]} · HS ${fmtHS(p.hs)} · ${p.flow[lang]}</p></div>
-  ${ok?`<div class="mini">${mini(p)}<span class="chg">${t("row.chg")} <b>${pctTxt(s.pct)}</b></span></div>`:`<span class="status">${t("row.nodata")}</span>`}
+  ${ok?`<div class="mini">${mini(p)}<span class="chg">${s.fut?t("row.short").replace("{n}",s.na):t("row.chg")} <b>${pctTxt(s.pct)}</b></span></div>`:`<span class="status">${s.fut?t("row.wait"):t("row.nodata")}</span>`}
  </a>`}).join("");
  renderDetail();
 }
