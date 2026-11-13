@@ -3,15 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Tradeweave · 나라별 교역 상대국 지도</title>
-<meta name="description" content="나라 하나를 고르면 2024년 교역 상대국이 지도에 칠해집니다. 출처: CEPII BACI.">
+<title>Trade weave · 세계 교역의 연결을 읽다</title>
+<meta name="description" content="국가별 교역 상대국과 교역 집중도를 지도와 데이터로 살펴봅니다. 기준연도 2024 · 출처: CEPII BACI.">
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600&family=Noto+Serif+KR:wght@600;700&display=swap">
 <style>
 [hidden]{display:none!important}
-/* 레이아웃: 한 열 지도책 판형. 첫 화면 → 기능 카드 3개 → 자리 표시 → 바닥글. 화면 전환은 #해시로 한다.
+/* 레이아웃: 지도 중심 랜딩 → 기능 소개 → 활용 분야 → 바닥글. 화면 전환은 #해시로 한다.
    Tradeweave 디자인 시스템(밝은 테마 하나만 확정)을 그대로 따른다. 어두운 테마는 아직 정하지 않아 일부러 밝은 화면 하나로 고정한다. */
 :root {
   --paper: #f6f1e7; --ink: #1c2b3a; --atlas-blue: #234d86; --ochre: #9a6a10; --stone: #5b6573;
@@ -238,111 +238,153 @@ select:focus-visible { outline: 3px solid var(--ochre); outline-offset: 1px; }
   .final .btn { width: 100%; }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
+
+/* Landing refinement: DS colors, type, spacing and square map frame. */
+body { margin: 0; }
+.wrap { max-width: 1200px; padding-inline: var(--s4); background: var(--card); }
+.top { padding-block: var(--s4); }
+.brand { font-size: 24px; letter-spacing: -.04em; }
+.top nav { display: flex; align-items: center; gap: var(--s4); }
+.top nav a { font-size: 14px; color: var(--stone); text-decoration: none; }
+.top nav a:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 4px; }
+.hero { display: block; padding-block: var(--s5); }
+.hero-copy { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--s5); align-items: end; margin-bottom: var(--s5); }
+.hero h1 { font-size: clamp(40px, 6vw, 80px); line-height: 1.2; letter-spacing: -.05em; }
+.hero .lead { margin: 0; font-size: 18px; line-height: 30px; color: var(--stone); }
+.hero .cta-row { flex-direction: row; align-items: center; gap: var(--s3); }
+.btn-hero { font-size: 16px; line-height: 24px; min-height: 48px; padding: 12px var(--s4); }
+.btn { transition: background-color .2s, border-color .2s; }
+.btn .arrow { transition: transform .2s; }
+.btn:hover .arrow { transform: translateX(4px); }
+.atlas { margin: 0; border: 1px solid var(--rule); background: var(--paper); }
+.atlas-head { display: flex; align-items: center; justify-content: space-between; gap: var(--s3); flex-wrap: wrap; padding: var(--s4); border-bottom: 1px solid var(--rule); }
+.atlas-head h2 { font-size: 20px; line-height: 28px; }
+.atlas-head p { font-size: 12px; line-height: 18px; color: var(--stone); margin-top: var(--s1); }
+.atlas-grid { display: grid; grid-template-columns: minmax(0, 1fr) 240px; }
+.atlas-world { min-width: 0; padding: var(--s3); align-self: center; }
+.atlas .map-svg { aspect-ratio: 960 / 470; }
+.atlas .map-svg .hit { transition: fill .5s, opacity .25s; }
+.atlas .map-svg .hit:hover { opacity: .75; }
+.atlas .map-svg.map-enter .hit { animation: map-appear 1.2s both; animation-delay: var(--delay, 0s); }
+.atlas-side { border-left: 1px solid var(--rule); padding: var(--s4); display: flex; flex-direction: column; gap: var(--s3); }
+.atlas-side h3 { font-size: 16px; line-height: 24px; }
+.atlas-side .rank li { grid-template-columns: 16px minmax(0, 1fr) 56px; font-size: 14px; }
+.atlas-side .caption { margin-top: auto; }
+.atlas-foot { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--s4); padding: var(--s4); border-top: 1px solid var(--rule); }
+.atlas-foot .legend small, .atlas-foot .caption { font-size: 12px; line-height: 18px; }
+.atlas-status { padding: var(--s4); color: var(--stone); }
+#hero-readout { margin-top: var(--s2); font-size: 12px; line-height: 18px; color: var(--stone); min-height: 36px; }
+section.block { padding: var(--s5) var(--s4); }
+.section-head { align-items: start; margin-bottom: var(--s5); }
+.section-head h2 { font-size: 28px; line-height: 40px; }
+.section-head p { max-width: 32em; }
+.feature { padding: var(--s4); gap: var(--s3); transition: background-color .25s, border-color .25s; }
+.feature:hover { background: var(--paper); }
+.feature .tag { font-variant-numeric: tabular-nums; }
+.feature p { color: var(--stone); }
+.feature .glyph { align-items: center; }
+.feature .glyph svg { width: 40px; height: 40px; stroke: var(--ink); fill: none; stroke-width: 1.3; }
+.use-section { background: var(--paper); border-radius: var(--r-md); margin-block: var(--s5); }
+.use-card { padding: var(--s4); background: var(--card); border: 1px solid var(--rule); border-radius: var(--r-md); display: grid; gap: var(--s3); }
+.use-card h3 { font-size: 20px; line-height: 28px; }
+.use-card p { font-size: 15px; line-height: 24px; color: var(--stone); }
+.use-card .tag { font-size: 12px; line-height: 18px; color: var(--stone); }
+.final { min-height: 200px; }
+.final .caption { margin-top: var(--s2); }
+footer { padding: var(--s4); font-size: 12px; line-height: 18px; }
+[data-view]:not([hidden]) { animation: view-appear .45s ease-out; }
+.motion-ready .reveal { opacity: 0; transform: translateY(16px); transition: opacity .7s ease, transform .7s ease; }
+.motion-ready .reveal.is-visible { opacity: 1; transform: none; }
+@keyframes view-appear { from { opacity: 0; } to { opacity: 1; } }
+@keyframes map-appear { from { opacity: .15; } to { opacity: 1; } }
+@media (max-width: 900px) { .atlas-grid { grid-template-columns: minmax(0, 1fr); } .atlas-side { border-left: 0; border-top: 1px solid var(--rule); } .atlas-side .rank { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s3) var(--s4); } }
+@media (max-width: 760px) {
+  .wrap { padding-inline: var(--s3); } .top { flex-wrap: wrap; } .top nav { gap: var(--s3); } .top .proto-tag { display: none; }
+  .hero-copy { grid-template-columns: minmax(0, 1fr); gap: var(--s4); } .hero .cta-row { flex-wrap: wrap; align-items: start; } .hero .btn-hero { width: auto; }
+  .hero .lead { font-size: 16px; line-height: 26px; } .atlas-head, .atlas-side, .atlas-foot { padding: var(--s3); }
+  .atlas-foot { grid-template-columns: minmax(0, 1fr); gap: var(--s3); } .atlas-side .rank { grid-template-columns: minmax(0, 1fr); }
+  section.block { padding: var(--s5) 0; } .use-section { padding: var(--s4) var(--s3) !important; } .section-head { gap: var(--s3); margin-bottom: var(--s4); }
+  .section-head h2 { font-size: 24px; line-height: 32px; } .atlas-world { padding: var(--s2); } .final { gap: var(--s4); }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+  .motion-ready .reveal { opacity: 1; transform: none; }
+}
 </style>
 
+</head>
+<body>
 <div class="wrap">
   <header class="top">
-    <a class="brand" href="#" data-go="">Tradeweave</a>
+    <a class="brand" href="#" data-go="">Trade weave</a>
+    <nav aria-label="주 메뉴"><a href="#features-title">주요 기능</a><a href="#proof-title">활용 분야</a><a class="btn btn-secondary" href="#pick">국가 선택 <span aria-hidden="true">↗</span></a></nav>
     <span class="proto-tag">기준연도 2024 · CEPII BACI</span>
   </header>
 
   <!-- 첫 화면 -->
   <main id="view-home" data-view="">
     <div class="hero">
-      <div>
-        <p class="eyebrow">Tradeweave · 나라별 교역 상대국 지도</p>
-        <h1>나라 하나를 고르면,<br>교역 상대국이 지도에 칠해집니다</h1>
-        <p class="lead">어느 나라와 얼마나 거래하는지, 한 나라에 얼마나 몰려 있는지 한눈에 봅니다.</p>
-        <div class="cta-row">
-          <a class="btn btn-primary btn-hero" href="#pick" id="hero-cta">나라 하나 고르기 <span class="arrow" aria-hidden="true">→</span></a>
-          <span class="cta-note">회원가입 없이 바로 씁니다. 개인정보를 받지 않습니다.</span>
+      <div class="hero-copy">
+        <div><p class="eyebrow">세계 교역의 연결을 읽다</p><h1>Trade weave</h1></div>
+        <div><p class="lead">국가 간 교역의 흐름을 한눈에.<br>교역 상대국과 거래 비중을 지도와 데이터로 살펴봅니다.</p>
+          <div class="cta-row"><a class="btn btn-primary btn-hero" href="#pick" id="hero-cta">국가 선택 <span class="arrow" aria-hidden="true">→</span></a><span class="cta-note">회원가입 없이 이용</span></div>
         </div>
       </div>
-      <figure class="plate" style="margin:0" aria-label="지도 색 단계 견본">
-        <div class="plate-title">교역 비중을 파랑 다섯 단계로</div>
-        <div class="plate-map" aria-hidden="true" id="plate-map"></div>
-        <div class="legend" aria-hidden="true">
-          <div><i style="background:var(--map-1)"></i><small>1% 미만</small></div>
-          <div><i style="background:var(--map-2)"></i><small>1~5%</small></div>
-          <div><i style="background:var(--map-3)"></i><small>5~10%</small></div>
-          <div><i style="background:var(--map-4)"></i><small>10~20%</small></div>
-          <div><i style="background:var(--map-5)"></i><small>20% 이상</small></div>
+      <figure class="atlas" aria-labelledby="hero-map-title">
+        <div class="atlas-head"><div><h2 id="hero-map-title">대한민국의 수출 상대국</h2><p>기준연도 2024 · 상품 전체 · 교역 비중</p></div>
+          <div class="toggle" role="group" aria-label="지도 미리보기 수출·수입 선택"><button type="button" data-hflow="export" aria-pressed="true">수출</button><button type="button" data-hflow="import" aria-pressed="false">수입</button></div>
         </div>
-        <figcaption class="caption"><span class="badge">가상</span> 실제 나라가 아닌 색 견본입니다. <span class="sel-key" aria-hidden="true"></span>테두리 칸이 고른 나라입니다. 구간은 초안입니다.</figcaption>
+        <p class="atlas-status" id="hero-status" role="status">교역 지도를 불러오는 중입니다.</p>
+        <div class="atlas-grid" id="hero-map-body" hidden>
+          <div class="atlas-world"><svg class="map-svg" id="hero-map" role="img" aria-labelledby="hero-map-desc"><desc id="hero-map-desc">대한민국의 교역 상대국 지도</desc></svg><p id="hero-readout" aria-live="polite">국가에 마우스를 올리거나 선택하면 교역 비중과 금액을 확인할 수 있습니다.</p></div>
+          <div class="atlas-side"><h3 id="hero-rank-title">상위 5개 수출 상대국</h3><ol class="rank" id="hero-rank"></ol><a class="btn btn-text" href="#see/KOR/export" id="hero-detail">전체 데이터 보기 →</a><p class="caption"><span class="sel-key" aria-hidden="true"></span>선택 국가: 대한민국</p></div>
+        </div>
+        <figcaption class="atlas-foot"><div class="legend" aria-label="전체 교역에서 차지하는 비중"><div><i style="background:var(--map-1)"></i><small>1% 미만</small></div><div><i style="background:var(--map-2)"></i><small>1~5%</small></div><div><i style="background:var(--map-3)"></i><small>5~10%</small></div><div><i style="background:var(--map-4)"></i><small>10~20%</small></div><div><i style="background:var(--map-5)"></i><small>20% 이상</small></div></div><div><p class="caption">출처: CEPII BACI (Gaulier &amp; Zignago, 2010), UN Comtrade 기반 · 기준연도 2024 · 지도: Natural Earth</p><p class="caption">바탕색 육지: 교역 없음·자료 없음</p></div></figcaption>
       </figure>
     </div>
 
     <section class="block" aria-labelledby="features-title">
       <div class="section-head">
-        <h2 id="features-title">할 수 있는 일 세 가지</h2>
-        <p>카드를 누르면 자세한 설명을 봅니다.</p>
+        <h2 id="features-title">교역 구조를 이해하는 세 가지 관점</h2>
+        <p>지도, 집중도, 출처를 함께 확인합니다.</p>
       </div>
       <div class="features">
         <button class="feature" type="button" data-go="map">
-          <span class="glyph" aria-hidden="true">
-            <i style="width:14px;height:40px;background:var(--map-5)"></i><i style="width:14px;height:30px;background:var(--map-4)"></i><i style="width:14px;height:22px;background:var(--map-3)"></i><i style="width:14px;height:14px;background:var(--map-2)"></i><i style="width:14px;height:8px;background:var(--map-1)"></i>
-          </span>
+          <span class="glyph-done" aria-hidden="true"><svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M5 10l10-4 10 4 10-4v25l-10 4-10-4-10 4zM15 6v25M25 10v25"/></svg></span>
           <span class="tag">기능 1</span>
           <h3>교역 상대국 지도</h3>
-          <p>고른 나라의 주요 교역 상대국을 지도와 상위 5개 목록으로 봅니다. 수출과 수입은 버튼으로 바꿉니다.</p>
+          <p>국가별 교역 상대국과 상위 5개국의 비중을 확인합니다. 수출과 수입을 전환해 비교할 수 있습니다.</p>
           <span class="more">자세히 보기 →</span>
         </button>
         <button class="feature" type="button" data-go="share">
-          <span class="glyph" aria-hidden="true">
-            <i style="width:56px;height:16px;background:var(--map-5)"></i><i style="width:24px;height:16px;background:var(--map-2)"></i><i style="width:28px;height:16px;background:var(--land)"></i>
-          </span>
+          <span class="glyph-done" aria-hidden="true"><svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M5 33h30M10 28V17h5v11M20 28V7h5v21M30 28V12h5v16"/></svg></span>
           <span class="tag">기능 2</span>
-          <h3>쏠림 정도 보기</h3>
-          <p>1위 상대국이 전체 교역에서 차지하는 비중과, 상위 몇 나라에 얼마나 몰려 있는지를 쉬운 말로 설명합니다.</p>
+          <h3>교역 집중도</h3>
+          <p>1위 및 상위 3·5개 상대국의 비중으로 교역이 특정 국가에 집중된 정도를 살펴봅니다.</p>
           <span class="more">자세히 보기 →</span>
         </button>
         <button class="feature" type="button" data-go="source">
-          <span class="glyph" aria-hidden="true">
-            <i style="width:48px;height:4px;background:var(--stone)"></i><i style="width:32px;height:4px;background:var(--rule)"></i><i style="width:24px;height:4px;background:var(--rule)"></i>
-          </span>
+          <span class="glyph-done" aria-hidden="true"><svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M10 4h14l7 7v25H10zM24 4v8h7M15 19h11M15 24h11M15 29h7"/></svg></span>
           <span class="tag">기능 3</span>
-          <h3>출처·기준연도 표시와 내려받기</h3>
-          <p>모든 숫자 옆에 출처와 기준연도를 붙이고, 데이터를 CSV 파일로 내려받을 수 있습니다.</p>
+          <h3>데이터 출처와 다운로드</h3>
+          <p>기준연도와 원자료 출처를 함께 제공합니다. 상대국별 데이터는 CSV로 내려받을 수 있습니다.</p>
           <span class="more">자세히 보기 →</span>
         </button>
       </div>
     </section>
 
-    <section class="block" aria-labelledby="proof-title">
-      <div class="section-head">
-        <h2 id="proof-title">쓰는 사람들</h2>
-        <p><span class="badge">가상 예시</span> 이 구역의 후기·숫자·로고는 화면 구성을 보여 주는 가상 예시이며 실제 사용자·기관이 아닙니다.</p>
-      </div>
+    <section class="block use-section" aria-labelledby="proof-title">
+      <div class="section-head"><h2 id="proof-title">데이터에서 판단의 근거로</h2><p>시장 조사부터 연구와 보고서까지.<br>목적에 맞는 교역 데이터를 확인합니다.</p></div>
       <div class="slots">
-        <figure class="quote">
-          <span class="badge">가상 예시</span>
-          <blockquote>"베트남 시장을 새로 맡고 첫 주에 제일 먼저 열었어요. 어디서 사 오고 어디에 파는지가 지도 한 장으로 보이니까 보고서 첫 장이 바로 나왔습니다."</blockquote>
-          <figcaption><span class="who-mark" aria-hidden="true">P</span><span><strong>박○○</strong><span class="who-role">해외영업 1년차 · 소비재 수출 기업</span></span></figcaption>
-        </figure>
-        <figure class="quote">
-          <span class="badge">가상 예시</span>
-          <blockquote>"과제에서 한 나라의 대중국 의존도를 써야 했는데, 출처와 기준연도가 같이 붙어 있어서 CSV를 그대로 각주에 옮겼어요."</blockquote>
-          <figcaption><span class="who-mark" aria-hidden="true">L</span><span><strong>이○○</strong><span class="who-role">국제통상 전공 대학원생</span></span></figcaption>
-        </figure>
-        <div class="stat">
-          <span class="badge">가상 예시</span>
-          <span class="stat-label">지난 30일 동안 지도를 연 사람</span>
-          <span class="stat-figure num">1,240명</span>
-          <span class="stat-row"><span class="num">186</span>개 나라 조회 · CSV 내려받기 <span class="num">312</span>회</span>
-        </div>
-      </div>
-      <p class="logos-title">이런 곳에서 써 보고 있습니다 <span class="badge">가상 예시</span></p>
-      <div class="logos" aria-label="가상 예시 기관 로고">
-        <div class="logo"><svg viewBox="0 0 28 28" aria-hidden="true"><circle cx="14" cy="14" r="11" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M3 14h22M14 3c4 3 6 7 6 11s-2 8-6 11c-4-3-6-7-6-11s2-8 6-11z" fill="none" stroke="currentColor" stroke-width="1.6"/></svg><span>Meridian Desk</span></div>
-        <div class="logo"><svg viewBox="0 0 28 28" aria-hidden="true"><rect x="4" y="4" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M4 18l7-7 5 5 8-8" fill="none" stroke="currentColor" stroke-width="2.4"/></svg><span class="serif">한결통상연구회</span></div>
-        <div class="logo"><svg viewBox="0 0 28 28" aria-hidden="true"><path d="M4 22h20M7 22V10l7-5 7 5v12" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M12 22v-6h4v6" fill="none" stroke="currentColor" stroke-width="2"/></svg><span>Harbor Lane Exports</span></div>
-        <div class="logo"><svg viewBox="0 0 28 28" aria-hidden="true"><path d="M14 3l10 6v10l-10 6-10-6V9z" fill="none" stroke="currentColor" stroke-width="2.4"/><circle cx="14" cy="14" r="3" fill="currentColor"/></svg><span class="serif">Atlas Nine</span></div>
+        <article class="use-card"><span class="tag">01 / 시장 조사</span><h3>해외 시장의 교역 구조</h3><p>관심 국가의 주요 수출입 상대국을 확인하고, 시장 조사의 기초 자료로 활용합니다.</p><a class="btn btn-text" href="#pick">국가별 지도 보기 →</a></article>
+        <article class="use-card"><span class="tag">02 / 조사·연구</span><h3>국가별 교역 집중도</h3><p>상위 상대국의 비중을 비교해 특정 국가에 교역이 집중된 정도를 살펴봅니다.</p><a class="btn btn-text" href="#share">집중도 지표 보기 →</a></article>
+        <article class="use-card"><span class="tag">03 / 보고서 작성</span><h3>출처가 명확한 데이터</h3><p>출처와 기준연도를 확인하고, 상대국별 교역 데이터를 CSV로 내려받습니다.</p><a class="btn btn-text" href="#source">데이터 출처 보기 →</a></article>
       </div>
     </section>
 
     <section class="block final">
-      <h2>궁금한 나라가 있나요?</h2>
-      <a class="btn btn-primary btn-hero" href="#pick">나라 하나 고르기 <span class="arrow" aria-hidden="true">→</span></a>
+      <div><p class="eyebrow">교역 데이터 탐색</p><h2>국가 간 연결을 살펴보세요</h2><p class="caption">국가와 수출입 방향을 선택하면 지도가 시작됩니다.</p></div>
+      <a class="btn btn-primary btn-hero" href="#pick">국가 선택 <span class="arrow" aria-hidden="true">→</span></a>
     </section>
   </main>
 
@@ -354,15 +396,15 @@ select:focus-visible { outline: 3px solid var(--ochre); outline-offset: 1px; }
         <div>
           <p class="eyebrow">기능 1</p>
           <h1>교역 상대국 지도</h1>
-          <p class="lead">나라 하나를 고르면 그 나라와 거래하는 나라들이 지도 위에 파랑 단계로 칠해지고, 옆에 상위 5개 상대국이 숫자와 함께 나옵니다.</p>
+          <p class="lead">선택 국가의 교역 상대국을 비중에 따라 파랑 5단계로 표시합니다. 상위 5개 상대국의 비중과 금액을 함께 제공합니다.</p>
           <ul>
-            <li>색이 진할수록 그 나라와의 교역 비중이 큽니다. 고른 나라는 황토색으로 표시합니다.</li>
-            <li>수출과 수입은 같은 색 단계를 쓰고 버튼으로 바꿔 봅니다.</li>
-            <li>색만으로 값을 읽지 않도록 목록에 숫자를 함께 적습니다.</li>
+            <li>색이 진할수록 교역 비중이 높습니다. 선택 국가는 황토색으로 표시합니다.</li>
+            <li>수출과 수입은 같은 색 단계로 표시하며, 버튼으로 전환합니다.</li>
+            <li>상대국 목록에서 교역 비중과 금액을 함께 확인할 수 있습니다.</li>
           </ul>
           <div class="actions">
-            <a class="btn btn-primary" href="#pick">나라 하나 고르기</a>
-            <button class="btn btn-secondary" type="button" data-go="share">다음 기능: 쏠림 정도 →</button>
+            <a class="btn btn-primary" href="#pick">국가 선택</a>
+            <button class="btn btn-secondary" type="button" data-go="share">다음 기능: 교역 집중도 →</button>
           </div>
         </div>
         <div class="panel">
@@ -374,7 +416,7 @@ select:focus-visible { outline: 3px solid var(--ochre); outline-offset: 1px; }
             </div>
           </div>
           <ol class="rank" id="rank"></ol>
-          <p class="caption"><span class="badge">가상</span> 가상국과 지어낸 숫자로 만든 화면 견본입니다. 나라를 고르면 CEPII BACI 2024 실제 값으로 지도와 목록을 봅니다.</p>
+          <p class="caption"><span class="badge">가상</span> 설명용 가상 데이터입니다. 국가 선택 후 실제 CEPII BACI 2024 데이터를 확인할 수 있습니다.</p>
         </div>
       </div>
     </div>
@@ -387,20 +429,20 @@ select:focus-visible { outline: 3px solid var(--ochre); outline-offset: 1px; }
       <div class="detail">
         <div>
           <p class="eyebrow">기능 2</p>
-          <h1>쏠림 정도 보기</h1>
-          <p class="lead">한 나라의 교역이 특정 상대국에 얼마나 몰려 있는지를 두 숫자와 쉬운 문장으로 보여 줍니다.</p>
+          <h1>교역 집중도</h1>
+          <p class="lead">교역 집중도는 특정 상대국이 전체 교역에서 차지하는 비중입니다. 1위 및 상위 3·5개 상대국의 합계 비중으로 확인합니다.</p>
           <ul>
-            <li><b>1위 상대국 비중</b>: 가장 많이 거래하는 나라가 전체 교역에서 차지하는 몫입니다.</li>
-            <li><b>상위 몇 나라 합계</b>: 상위 3개, 5개 나라를 합치면 전체의 얼마인지 보여 줍니다.</li>
-            <li>숫자가 왜 그렇게 되었는지는 단정하지 않습니다. 화면에는 "이렇게 몰려 있다"만 적습니다.</li>
+            <li><b>1위 상대국 비중</b>: 가장 큰 교역 상대국이 전체 교역에서 차지하는 비중입니다.</li>
+            <li><b>상위 상대국 합계 비중</b>: 상위 3개 및 5개 상대국의 비중을 합산합니다.</li>
+            <li>비중은 교역 구조를 보여 주는 지표이며, 집중의 원인을 설명하지 않습니다.</li>
           </ul>
           <div class="actions">
-            <a class="btn btn-primary" href="#pick">나라 하나 고르기</a>
+            <a class="btn btn-primary" href="#pick">국가 선택</a>
             <button class="btn btn-secondary" type="button" data-go="source">다음 기능: 출처·내려받기 →</button>
           </div>
         </div>
         <div class="panel">
-          <div class="panel-head"><h2>가상국 A의 수출 쏠림</h2></div>
+          <div class="panel-head"><h2>가상국 A의 수출 집중도</h2></div>
           <div class="meter">
             <span class="caption">1위 상대국 비중</span>
             <span class="big">24.0%</span>
@@ -409,8 +451,8 @@ select:focus-visible { outline: 3px solid var(--ochre); outline-offset: 1px; }
             <div class="meter-track" aria-hidden="true"><span style="width:24%"></span><span style="width:31%"></span></div>
             <span class="caption">진한 파랑: 1위 상대국 · 옅은 파랑: 2~5위 · 바탕: 나머지 나라</span>
           </div>
-          <p>가상국 A는 수출의 약 4분의 1을 한 나라에 팔고, 상위 5개 나라에 절반 남짓(55.0%)을 팝니다.</p>
-          <p class="caption"><span class="badge">가상</span> 가상국과 지어낸 숫자입니다. 어떤 지표로 쏠림을 보여 줄지는 아직 정하지 않았습니다.</p>
+          <p>가상국 A의 1위 수출 상대국 비중은 24.0%, 상위 5개 상대국의 합계 비중은 55.0%입니다.</p>
+          <p class="caption"><span class="badge">가상</span> 설명용 가상 데이터입니다. 실제 결과에서는 1위 및 상위 3·5개 상대국의 비중을 제공합니다.</p>
         </div>
       </div>
     </div>
@@ -423,15 +465,15 @@ select:focus-visible { outline: 3px solid var(--ochre); outline-offset: 1px; }
       <div class="detail">
         <div>
           <p class="eyebrow">기능 3</p>
-          <h1>출처·기준연도 표시와 내려받기</h1>
-          <p class="lead">화면의 모든 숫자에는 어디서 온 자료인지, 몇 년 기준인지가 붙습니다. 보고서에 그대로 옮겨 써도 근거를 밝힐 수 있습니다.</p>
+          <h1>데이터 출처와 다운로드</h1>
+          <p class="lead">출처와 기준연도를 함께 제공해 데이터의 근거를 확인할 수 있습니다. 상대국별 교역액과 비중은 CSV로 제공합니다.</p>
           <ul>
-            <li>무역 통계는 보통 1~2년 늦게 나오므로 "최신" 대신 "기준연도"를 적습니다.</li>
-            <li>보고 있는 나라의 상대국별 값을 CSV 파일로 내려받습니다.</li>
-            <li>각국 정부가 발표한 통계와 차이가 있을 수 있다는 점도 함께 적습니다.</li>
+            <li>통계가 집계된 기준연도와 데이터 버전을 명시합니다.</li>
+            <li>선택 국가의 상대국별 교역액과 비중을 CSV로 내려받습니다.</li>
+            <li>BACI의 조정 방식에 따라 각국 발표 통계와 차이가 있을 수 있습니다.</li>
           </ul>
           <div class="actions">
-            <a class="btn btn-primary" href="#pick">나라 하나 고르기</a>
+            <a class="btn btn-primary" href="#pick">국가 선택</a>
             <button class="btn btn-secondary" type="button" data-go="map">처음 기능: 상대국 지도 →</button>
           </div>
         </div>
@@ -451,7 +493,7 @@ select:focus-visible { outline: 3px solid var(--ochre); outline-offset: 1px; }
             </table>
           </div>
           <p class="caption">출처: CEPII BACI (Gaulier &amp; Zignago, 2010), UN Comtrade 기반 · 기준연도 2024</p>
-          <p class="caption"><span class="badge">가상</span> 표의 나라와 숫자는 지어낸 견본입니다. 나라를 고른 뒤 결과 화면에서 실제 값을 CSV로 내려받습니다.</p>
+          <p class="caption"><span class="badge">가상</span> 설명용 가상 데이터입니다. 국가 선택 후 실제 데이터를 CSV로 내려받을 수 있습니다.</p>
         </div>
       </div>
     </div>
@@ -463,24 +505,24 @@ select:focus-visible { outline: 3px solid var(--ochre); outline-offset: 1px; }
       <button class="btn btn-text back" type="button" data-go="">← 처음으로</button>
       <div class="form-wrap">
         <p class="eyebrow">시작하기</p>
-        <h1>어느 나라가 궁금한가요?</h1>
-        <p class="lead">나라 하나와 보고 싶은 방향만 고르면 됩니다.</p>
+        <h1>국가 선택</h1>
+        <p class="lead">국가와 수출입 방향을 선택합니다.</p>
         <form id="pick-form" novalidate>
           <fieldset>
-            <label class="label" for="country">나라</label>
+            <label class="label" for="country">국가</label>
             <select id="country" name="country" aria-describedby="country-error">
-              <option value="">나라 목록을 불러오는 중…</option>
+              <option value="">국가 목록을 불러오는 중…</option>
             </select>
-            <p class="error" id="country-error" hidden><span aria-hidden="true">⚠</span> 나라를 하나 골라 주세요.</p>
+            <p class="error" id="country-error" hidden><span aria-hidden="true">⚠</span> 국가를 선택해 주세요.</p>
           </fieldset>
           <fieldset>
-            <legend>무엇을 볼까요?</legend>
+            <legend>교역 방향</legend>
             <div class="choices">
-              <label class="choice"><input type="radio" name="flow" value="수출" id="flow-export" checked><span>수출 (그 나라가 파는 곳)</span></label>
-              <label class="choice"><input type="radio" name="flow" value="수입" id="flow-import"><span>수입 (그 나라가 사 오는 곳)</span></label>
+              <label class="choice"><input type="radio" name="flow" value="수출" id="flow-export" checked><span>수출 · 해외로 판매</span></label>
+              <label class="choice"><input type="radio" name="flow" value="수입" id="flow-import"><span>수입 · 해외에서 구매</span></label>
             </div>
           </fieldset>
-          <p class="privacy">이름, 이메일, 연락처는 받지 않습니다. 고른 나라는 어디에도 보내거나 저장하지 않고, 이 화면 안에서만 지도를 그립니다.</p>
+          <p class="privacy">개인정보 입력 없이 이용할 수 있습니다. 국가 선택 내역은 서버로 전송하거나 저장하지 않습니다.</p>
           <div class="form-actions">
             <button class="btn btn-primary btn-hero" type="submit" id="submit-btn">지도 보기 <span class="arrow" aria-hidden="true">→</span></button>
           </div>
@@ -492,7 +534,7 @@ select:focus-visible { outline: 3px solid var(--ochre); outline-offset: 1px; }
   <!-- 결과: 실제 지도 -->
   <main id="view-see" data-view="see" hidden>
     <div class="result">
-      <div><a class="btn btn-text back" href="#pick">← 다른 나라 고르기</a></div>
+      <div><a class="btn btn-text back" href="#pick">← 다른 국가 선택</a></div>
       <div class="result-head">
         <div>
           <p class="eyebrow" id="r-eyebrow">기준연도 2024 · 상품 전체</p>
@@ -508,7 +550,7 @@ select:focus-visible { outline: 3px solid var(--ochre); outline-offset: 1px; }
       <div class="result-grid" id="r-body" hidden>
         <div class="panel map-panel">
           <svg class="map-svg" id="r-map" role="img" aria-labelledby="r-map-desc"><desc id="r-map-desc"></desc></svg>
-          <p class="readout" id="r-readout" aria-live="polite">지도의 나라를 누르거나 마우스를 올리면 값이 나옵니다.</p>
+          <p class="readout" id="r-readout" aria-live="polite">국가를 선택하거나 마우스를 올리면 교역 비중과 금액을 확인할 수 있습니다.</p>
           <div class="legend" aria-hidden="true">
             <div><i style="background:var(--map-1)"></i><small>1% 미만</small></div>
             <div><i style="background:var(--map-2)"></i><small>1~5%</small></div>
@@ -516,7 +558,7 @@ select:focus-visible { outline: 3px solid var(--ochre); outline-offset: 1px; }
             <div><i style="background:var(--map-4)"></i><small>10~20%</small></div>
             <div><i style="background:var(--map-5)"></i><small>20% 이상</small></div>
           </div>
-          <div class="legend-keys"><span><i class="sel-key"></i>고른 나라</span><span><i style="background:var(--land);outline:1px solid var(--rule)"></i>교역 없음 · 자료 없음</span><span id="r-legend-title"></span></div>
+          <div class="legend-keys"><span><i class="sel-key"></i>선택 국가</span><span><i style="background:var(--land);outline:1px solid var(--rule)"></i>교역 없음 · 자료 없음</span><span id="r-legend-title"></span></div>
         </div>
         <div class="panel">
           <div class="panel-head"><h2 id="r-rank-title">상위 5개 상대국</h2></div>
@@ -530,7 +572,7 @@ select:focus-visible { outline: 3px solid var(--ochre); outline-offset: 1px; }
           <button class="btn btn-secondary" type="button" id="r-csv">상대국 전체 CSV 내려받기</button>
           <div class="notes">
             <p class="caption">출처: CEPII BACI (Gaulier &amp; Zignago, 2010), UN Comtrade 기반 · HS22 V202601 · 기준연도 2024 · 단위 천 미국 달러(경상) · Etalab Open Licence 2.0</p>
-            <p class="caption">BACI는 수출국과 수입국이 신고한 값을 맞춘 자료라 각국 정부 발표 통계와 다를 수 있습니다. 대만 값은 BACI의 "Other Asia, nes" 항목입니다. 비중은 상품 전체 교역액 기준이며, 왜 이렇게 몰렸는지는 이 화면에서 판단하지 않습니다.</p>
+            <p class="caption">BACI는 수출국과 수입국의 신고값을 조정한 자료로, 각국 발표 통계와 다를 수 있습니다. 대만 값은 BACI의 "Other Asia, nes" 항목입니다. 비중은 상품 전체 교역액 기준이며, 교역 집중의 원인을 설명하지 않습니다.</p>
           </div>
         </div>
       </div>
@@ -539,7 +581,7 @@ select:focus-visible { outline: 3px solid var(--ochre); outline-offset: 1px; }
   </main>
 
   <footer>
-    <span>Tradeweave · 지도 결과는 CEPII BACI 실제 값입니다. "가상"·"가상 예시" 표시가 붙은 견본, 후기, 이용자 수, 로고는 지어낸 예시입니다.</span>
+    <span>Trade weave · 국가별 교역 상대국 지도. 지도 데이터는 CEPII BACI 기준이며, 기능 설명의 가상 견본은 실제 통계와 구분해 표시합니다.</span>
     <span>자료: CEPII BACI (Gaulier &amp; Zignago, 2010), UN Comtrade 기반 · 기준연도 2024 · Etalab Open Licence 2.0 · 지도: Natural Earth</span>
   </footer>
 </div>
@@ -565,13 +607,13 @@ select:focus-visible { outline: 3px solid var(--ochre); outline-offset: 1px; }
     if (!loadP) loadP = Promise.all([
       fetch("data/trade-2024.json").then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); }),
       fetch("data/world-map.json").then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
-    ]).then(function (a) { TRADE = a[0]; MAP = a[1]; fillSelect(); return a; });
+    ]).then(function (a) { TRADE = a[0]; MAP = a[1]; fillSelect(); return a; }).catch(function (error) { loadP = null; throw error; });
     return loadP;
   }
   function nameOf(iso) { var c = TRADE && TRADE.countries[iso]; return c ? c.ko : iso; }
   function fillSelect() {
     var keep = sel.value;
-    sel.innerHTML = '<option value="">나라를 고르세요</option>';
+    sel.innerHTML = '<option value="">국가를 선택하세요</option>';
     var used = {};
     Object.keys(regions).forEach(function (r) {
       var g = document.createElement("optgroup"); g.label = r;
@@ -584,26 +626,11 @@ select:focus-visible { outline: 3px solid var(--ochre); outline-offset: 1px; }
     });
     var rest = Object.keys(TRADE.countries).filter(function (k) { return !used[k]; })
       .sort(function (a, b) { return nameOf(a).localeCompare(nameOf(b), "ko"); });
-    var g = document.createElement("optgroup"); g.label = "그 밖의 나라 (가나다순)";
+    var g = document.createElement("optgroup"); g.label = "기타 국가 (가나다순)";
     rest.forEach(function (iso) { var o = document.createElement("option"); o.value = iso; o.textContent = nameOf(iso); g.appendChild(o); });
     sel.appendChild(g);
     if (keep) sel.value = keep;
   }
-
-  // 첫 화면 색 견본 (추상 칸, 실제 나라 아님)
-  var pattern = [
-    "s s 1 2 2 s s s",
-    "s 1 3 4 2 1 s s",
-    "1 2 5 X 4 2 1 s",
-    "s 1 3 4 3 1 s s",
-    "s s 1 2 s s 1 s"
-  ];
-  var plate = document.getElementById("plate-map");
-  pattern.join(" ").split(" ").forEach(function (k) {
-    var span = document.createElement("span");
-    span.className = k === "s" ? "sea" : k === "X" ? "sel" : "m" + k;
-    plate.appendChild(span);
-  });
 
   // 기능 1: 수출/수입 토글 (가상 숫자)
   var data = {
@@ -637,7 +664,7 @@ select:focus-visible { outline: 3px solid var(--ochre); outline-offset: 1px; }
     clearTimeout(tTimer); tTimer = setTimeout(function () { toast.hidden = true; }, 3200);
   }
   document.getElementById("csv-btn").addEventListener("click", function () {
-    say("이 표는 가상 견본입니다. 나라를 고른 뒤 결과 화면에서 실제 값을 CSV로 내려받을 수 있습니다.");
+    say("설명용 가상 데이터입니다. 국가 선택 후 결과 화면에서 실제 CSV를 내려받을 수 있습니다.");
   });
 
   // 화면 전환 (#해시)
@@ -652,7 +679,13 @@ select:focus-visible { outline: 3px solid var(--ochre); outline-offset: 1px; }
     if (!found) { views.forEach(function (v) { v.hidden = v.dataset.view !== ""; }); }
     window.scrollTo(0, 0);
   }
-  function route() { show((location.hash || "").replace(/^#/, "")); }
+  function route() {
+    var name = (location.hash || "").replace(/^#/, "");
+    if (name === "features-title" || name === "proof-title") {
+      show(""); document.getElementById(name).scrollIntoView(); return;
+    }
+    show(name);
+  }
   function go(name) {
     if (("#" + name) === location.hash || (name === "" && !location.hash)) { show(name); return; }
     location.hash = name;
@@ -685,7 +718,7 @@ select:focus-visible { outline: 3px solid var(--ochre); outline-offset: 1px; }
         .catch(function () { loading.hidden = true; errBox.hidden = false; });
       return;
     }
-    if (!TRADE.countries[iso]) { loading.hidden = true; body.hidden = true; errBox.hidden = false; document.getElementById("r-error-text").textContent = "자료에 없는 나라 코드입니다. 다른 나라를 골라 주세요."; return; }
+    if (!TRADE.countries[iso]) { loading.hidden = true; body.hidden = true; errBox.hidden = false; document.getElementById("r-error-text").textContent = "지원하지 않는 국가 코드입니다. 다른 국가를 선택해 주세요."; return; }
     loading.hidden = true; errBox.hidden = true; body.hidden = false;
     var me = nameOf(iso), word = flow === "export" ? "수출" : "수입", d = rows(iso, flow);
     document.title = me + "의 " + word + " 상대국 · Tradeweave";
@@ -711,7 +744,7 @@ select:focus-visible { outline: 3px solid var(--ochre); outline-offset: 1px; }
     document.getElementById("r-cr3").textContent = top.length ? fmtPct(cr(3)) : "—";
     document.getElementById("r-cr5").textContent = top.length ? fmtPct(cr(5)) : "—";
     document.getElementById("r-sentence").textContent = top.length
-      ? me + "의 2024년 " + word + "에서 1위 상대국 " + nameOf(top[0].iso) + "의 비중은 " + fmtPct(cr(1)) + "이고, 상위 5개 나라를 합하면 " + fmtPct(cr(5)) + "입니다."
+      ? me + "의 2024년 " + word + "에서 1위 상대국 " + nameOf(top[0].iso) + "의 비중은 " + fmtPct(cr(1)) + "이고, 상위 5개 상대국의 합계는 " + fmtPct(cr(5)) + "입니다."
       : "";
     drawMap(iso, d, word);
   }
@@ -723,7 +756,7 @@ select:focus-visible { outline: 3px solid var(--ochre); outline-offset: 1px; }
     var readout = document.getElementById("r-readout");
     function tip(code) {
       if (!code) return "자료 없음";
-      if (code === iso) return nameOf(iso) + " (고른 나라)";
+      if (code === iso) return nameOf(iso) + " (선택 국가)";
       var r = share[code];
       return nameOf(code) + ": " + (r ? fmtPct(r.p) + " · " + fmtUsd(r.v) : "교역 기록 없음");
     }
@@ -751,11 +784,11 @@ select:focus-visible { outline: 3px solid var(--ochre); outline-offset: 1px; }
       if (k === "me") c.style.fill = "var(--ochre)";
       bind(c, s[0]); svg.appendChild(c);
     });
-    // 고른 나라를 맨 위로
+    // 선택 국가를 맨 위로
     svg.querySelectorAll(".me").forEach(function (x) { svg.appendChild(x); });
     var top = d.list.slice(0, 5).map(function (r) { return nameOf(r.iso) + " " + fmtPct(r.p); }).join(", ");
     document.getElementById("r-map-desc").textContent = nameOf(iso) + "의 " + word + " 상대국 지도. 상위 5개: " + top;
-    readout.textContent = "지도의 나라를 누르거나 마우스를 올리면 값이 나옵니다.";
+    readout.textContent = "국가를 선택하거나 마우스를 올리면 교역 비중과 금액을 확인할 수 있습니다.";
   }
   document.querySelectorAll("[data-rflow]").forEach(function (b) {
     b.addEventListener("click", function () { if (cur.iso) go("see/" + cur.iso + "/" + b.dataset.rflow); });
@@ -775,6 +808,66 @@ select:focus-visible { outline: 3px solid var(--ochre); outline-offset: 1px; }
     say("CSV 파일을 내려받았습니다. 상대국 " + d.list.length + "곳");
   });
 
+  // Landing uses the same BACI dataset and bins as the result view.
+  var heroFlow = "export";
+  function renderHero(flow) {
+    heroFlow = flow;
+    var d = rows("KOR", flow), word = flow === "export" ? "수출" : "수입";
+    var svg = document.getElementById("hero-map");
+    svg.setAttribute("viewBox", "0 0 " + MAP.w + " " + MAP.h);
+    svg.querySelectorAll("path, circle").forEach(function (el) { el.remove(); });
+    var shares = {}; d.list.forEach(function (r) { shares[r.iso] = r; });
+    function add(tag, shape, i) {
+      var el = document.createElementNS(SVGNS, tag), code = shape[0], row = shares[code];
+      if (tag === "path") el.setAttribute("d", shape[1]);
+      else { el.setAttribute("cx", shape[1]); el.setAttribute("cy", shape[2]); el.setAttribute("r", 2.6); }
+      var cls = code === "KOR" ? "me" : row ? "c" + step(row.p) : "";
+      el.setAttribute("class", "hit " + cls);
+      if (tag === "circle" && cls) el.style.fill = code === "KOR" ? "var(--ochre)" : "var(--map-" + step(row.p) + ")";
+      el.style.setProperty("--delay", (i % 8 * .05) + "s");
+      var text = nameOf(code) + (code === "KOR" ? " · 선택 국가" : row ? " · " + fmtPct(row.p) + " · " + fmtUsd(row.v) : " · 교역 없음·자료 없음");
+      var title = document.createElementNS(SVGNS, "title"); title.textContent = text; el.appendChild(title);
+      function read() { document.getElementById("hero-readout").textContent = text; }
+      el.addEventListener("mouseenter", read); el.addEventListener("click", read);
+      svg.appendChild(el);
+    }
+    MAP.shapes.forEach(function (shape, i) { add("path", shape, i); });
+    MAP.dots.forEach(function (shape, i) { add("circle", shape, i); });
+    svg.querySelectorAll(".me").forEach(function (el) { svg.appendChild(el); });
+    var rank = document.getElementById("hero-rank"); rank.textContent = "";
+    d.list.slice(0, 5).forEach(function (r, i) {
+      var li = document.createElement("li");
+      var pos = document.createElement("span"); pos.className = "pos num"; pos.textContent = i + 1;
+      var country = document.createElement("span"); country.textContent = nameOf(r.iso);
+      var val = document.createElement("span"); val.className = "val"; val.textContent = fmtPct(r.p);
+      li.append(pos, country, val); rank.appendChild(li);
+    });
+    document.getElementById("hero-map-title").textContent = "대한민국의 " + word + " 상대국";
+    document.getElementById("hero-rank-title").textContent = "상위 5개 " + word + " 상대국";
+    document.getElementById("hero-map-desc").textContent = "대한민국의 2024년 " + word + " 상대국 지도. " + d.list.slice(0, 5).map(function (r) { return nameOf(r.iso) + " " + fmtPct(r.p); }).join(", ");
+    document.getElementById("hero-detail").href = "#see/KOR/" + flow;
+    document.getElementById("hero-readout").textContent = "국가에 마우스를 올리거나 선택하면 교역 비중과 금액을 확인할 수 있습니다.";
+    document.querySelectorAll("[data-hflow]").forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.hflow === flow ? "true" : "false"); });
+    document.getElementById("hero-status").hidden = true;
+    document.getElementById("hero-map-body").hidden = false;
+    svg.classList.remove("map-enter"); void svg.getBoundingClientRect(); svg.classList.add("map-enter");
+  }
+  document.querySelectorAll("[data-hflow]").forEach(function (b) {
+    b.addEventListener("click", function () { heroFlow = b.dataset.hflow; if (TRADE && MAP) renderHero(heroFlow); else loadHero(); });
+  });
+  function loadHero() {
+    var status = document.getElementById("hero-status"); status.hidden = false; status.textContent = "교역 지도를 불러오는 중입니다.";
+    load().then(function () { renderHero(heroFlow); }).catch(function () { status.textContent = "지도를 불러오지 못했습니다. 수출·수입 버튼을 선택하면 다시 시도합니다."; });
+  }
+  loadHero();
+  if ("IntersectionObserver" in window && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    document.documentElement.classList.add("motion-ready");
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) { if (entry.isIntersecting) { entry.target.classList.add("is-visible"); observer.unobserve(entry.target); } });
+    }, { threshold: .08 });
+    document.querySelectorAll("#view-home section, #view-home .hero-copy, #view-home .atlas").forEach(function (el) { el.classList.add("reveal"); observer.observe(el); });
+  }
+
   window.addEventListener("hashchange", route);
   route();
 
@@ -790,4 +883,5 @@ select:focus-visible { outline: 3px solid var(--ochre); outline-offset: 1px; }
 })();
 </script>
 
+</body>
 </html>
