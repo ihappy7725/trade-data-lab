@@ -469,13 +469,14 @@ function choose(i){
 $("#go").addEventListener("click", () => { const i = REPORTS.findIndex(r => r.real); choose(i < 0 ? 0 : i); });
 
 /* ---------- 보고서 작업 영역 ---------- */
+const fmtU = (ind, v) => ind.unit === "%" ? `${v}%` : `$${v}`;
 function cmpTable(ind, repId){
   const rows = ind.series.flatMap(sr => sr.points.map(p => ({org:sr.org, def:sr["def_"+lang], p})))
     .sort((a,b) => a.p.date.localeCompare(b.p.date));
   const basisTxt = p => p.basis==="source" ? `p. ${p.page}` : t("basisPress");
   return `<p style="margin:0 0 10px;color:var(--ink-2);font-size:14px">${ind[lang]} · ${t("cmpHint")}</p>
     <table class="tr-table"><tr><th>${t("trDate")}</th><th>${t("trOrg")}</th><th>${t("trVal")}</th><th>${t("trDef")}</th><th>${t("trBasis")}</th></tr>
-    ${rows.map(r => `<tr style="${r.p.report===repId?"background:var(--surface-2);font-weight:600":""}"><td>${r.p.date}</td><td>${r.org}</td><td>${r.p.value}%</td><td>${r.def}</td><td><span class="basis basis--${r.p.basis==="source"?"source":"press"}">${basisTxt(r.p)}</span></td></tr>`).join("")}
+    ${rows.map(r => `<tr style="${r.p.report===repId?"background:var(--surface-2);font-weight:600":""}"><td>${r.p.date}</td><td>${r.org}</td><td>${fmtU(ind, r.p.value)}</td><td>${r.def}</td><td><span class="basis basis--${r.p.basis==="source"?"source":"press"}">${basisTxt(r.p)}</span></td></tr>`).join("")}
     </table>
     <p class="tr-note"><button class="fc-chip" data-open-tracker="${ind.id}">${t("cmpOpen")} →</button></p>`;
 }
@@ -497,7 +498,7 @@ function renderReal(r){
   const fcs = fcOf(R.id); const cmpOn = true;
   const panes = {
     summary:`<div class="digest">${col("claim")}${col("evidence")}${col("limit")}</div>`,
-    compare: fcs.length ? cmpTable(fcs[0].ind, R.id) : `<p class="rq-empty">${t("cmpNone")}</p>`,
+    compare: fcs.length ? [...new Map(fcs.map(f => [f.ind.id, f.ind])).values()].map(ind => cmpTable(ind, R.id)).join('<div style="height:18px"></div>') : `<p class="rq-empty">${t("cmpNone")}</p>`,
     check:`<ul class="check">${R.checks.map(c=>`<li><span>${t(c.q)}<br><small style="color:var(--ink-3)">${esc(c[lang])}</small></span><span class="verdict verdict--${c.verdict}">${t(c.verdict)}${c.page?` · p. ${c.page}`:""}</span></li>`).join("")}</ul>`
   };
   work.innerHTML = `
@@ -505,7 +506,7 @@ function renderReal(r){
       <div class="head__txt"><div class="head__org">${R.org} · ${R.published} · ${R.scope[lang]}</div><h2 class="head__title">${R.title[lang]}</h2>
         <div class="head__meta">${R.reviewed?`<span class="badge badge--reviewed">${t("reviewed")}</span>`:`<span class="badge badge--auto">${t("draftBadge")}</span>`}<span>${t("pages",r.pages)} · ${t("items",R.items.length)}</span></div>
         <p style="margin:10px 0 0;font-size:14.5px;color:var(--ink-2);max-width:70ch">${esc(R.gist[lang])}</p>
-        ${fcOf(R.id).length?`<div class="fc-chips"><small style="color:var(--ink-3);align-self:center">${t("fcHere")}</small>${fcOf(R.id).map(f=>`<button class="fc-chip" data-fc="${f.key}">${f.ind[lang]} · ${f.p.value}%</button>`).join("")}</div>`:""}</div>
+        ${fcOf(R.id).length?`<div class="fc-chips"><small style="color:var(--ink-3);align-self:center">${t("fcHere")}</small>${fcOf(R.id).map(f=>`<button class="fc-chip" data-fc="${f.key}">${f.ind[lang]} · ${fmtU(f.ind, f.p.value)}</button>`).join("")}</div>`:""}</div>
       <a class="btn btn--white" href="${R.url}" target="_blank" rel="noopener">${t("pdf")}</a><button class="btn btn--white" id="copy">${t("copy")}</button>${libBtn(r)}
     </div>
     <div class="tabs" role="tablist">
@@ -601,23 +602,23 @@ function drawTracker(){
   const W = 720, H = 300, L = 44, Rr = 16, T = 16, B = 34;
   const x = tt => L + (tt - t0) / (t1 - t0) * (W - L - Rr), y = v => T + (vMax - v) / (vMax - vMin) * (H - T - B);
   let g = "";
-  for (let v = Math.ceil(vMin); v <= vMax; v++) g += `<line x1="${L}" x2="${W-Rr}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)" /><text x="${L-8}" y="${y(v)+4}" text-anchor="end" font-size="11" fill="var(--ink-3)">${v}%</text>`;
+  const stp = (vMax - vMin) > 20 ? 10 : 1; for (let v = Math.ceil(vMin / stp) * stp; v <= vMax; v += stp) g += `<line x1="${L}" x2="${W-Rr}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)" /><text x="${L-8}" y="${y(v)+4}" text-anchor="end" font-size="11" fill="var(--ink-3)">${fmtU(ind, v)}</text>`;
   for (let tt = Math.ceil(t0); tt <= t1; tt += 3){ const yy = Math.floor(tt/12), mm = tt%12+1; g += `<text x="${x(tt)}" y="${H-12}" text-anchor="middle" font-size="11" fill="var(--ink-3)">${yy}.${String(mm).padStart(2,"0")}</text>`; }
   if (ind.actual) g += `<line x1="${L}" x2="${W-Rr}" y1="${y(ind.actual.value)}" y2="${y(ind.actual.value)}" stroke="var(--ink-3)" stroke-dasharray="2 4"/><text x="${W-Rr}" y="${y(ind.actual.value)-6}" text-anchor="end" font-size="11" fill="var(--ink-3)">${t("actual")} 2025 ${ind.actual.value}%</text>`;
   ind.series.forEach((s, si) => {
     const c = ORG_C[s.org] || "#555", pts = s.points.map(p => [x(toT(p.date)), y(p.value)]);
     if (pts.length > 1) g += `<polyline fill="none" stroke="${c}" stroke-width="2" ${s.def==="goods"?"":'stroke-dasharray="6 5"'} points="${pts.map(q=>q.join(",")).join(" ")}"/>`;
     s.points.forEach((p, pi) => { const key = `${ind.id}|${si}|${pi}`, on = key === trKey;
-      g += `<g class="pt" tabindex="0" role="button" data-key="${key}" aria-label="${s.org} ${p.date} ${p.value}%"><circle cx="${pts[pi][0]}" cy="${pts[pi][1]}" r="${on?7:5}" fill="${p.basis==="source"?c:"var(--surface)"}" stroke="${c}" stroke-width="2" ${p.basis==="sub"?'stroke-dasharray="2 2"':""}/>
+      g += `<g class="pt" tabindex="0" role="button" data-key="${key}" aria-label="${s.org} ${p.date} ${fmtU(ind, p.value)}"><circle cx="${pts[pi][0]}" cy="${pts[pi][1]}" r="${on?7:5}" fill="${p.basis==="source"?c:"var(--surface)"}" stroke="${c}" stroke-width="2" ${p.basis==="sub"?'stroke-dasharray="2 2"':""}/>
         <text x="${pts[pi][0]}" y="${pts[pi][1]-11}" text-anchor="middle" font-size="12" font-weight="600" fill="var(--ink)">${p.value}</text></g>`; });
   });
   $("#tr-chart").innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${ind[lang]}">${g}</svg>`;
   const rows = ind.series.flatMap((s, si) => s.points.map((p, pi) => ({s, p, key:`${ind.id}|${si}|${pi}`}))).sort((a,b) => a.p.date.localeCompare(b.p.date));
   const basis = p => p.basis==="source" ? `<span class="basis basis--source">p. ${p.page}</span>` : p.basis==="sub" ? `<span class="basis basis--sub">${t("basisSub")}</span>` : `<span class="basis basis--press">${t("basisPress")}</span>`;
   $("#tr-table").innerHTML = `<tr><th>${t("trDate")}</th><th>${t("trOrg")}</th><th>${t("trVal")}</th><th>${t("trDef")}</th><th>${t("trBasis")}</th></tr>` +
-    rows.map(r => `<tr data-key="${r.key}" style="cursor:pointer"><td>${r.p.date}</td><td>${r.s.org}</td><td><b>${r.p.value}%</b></td><td>${r.s["def_"+lang]}</td><td>${basis(r.p)}</td></tr>`).join("");
+    rows.map(r => `<tr data-key="${r.key}" style="cursor:pointer"><td>${r.p.date}</td><td>${r.s.org}</td><td><b>${fmtU(ind, r.p.value)}</b></td><td>${r.s["def_"+lang]}</td><td>${basis(r.p)}</td></tr>`).join("");
   const sel = rows.find(r => r.key === trKey);
-  $("#tr-detail").innerHTML = sel ? `<b>${sel.s.org} · ${sel.p.date} · ${sel.p.value}%</b> (${sel.s["def_"+lang]}) — ${lang==="ko"?(sel.p.note_ko||""):""}
+  $("#tr-detail").innerHTML = sel ? `<b>${sel.s.org} · ${sel.p.date} · ${fmtU(ind, sel.p.value)}</b> (${sel.s["def_"+lang]}) — ${lang==="ko"?(sel.p.note_ko||""):""}
      ${sel.p.quote?`<br>“${sel.p.quote}” (p. ${sel.p.page})`:""}
      ${sel.p.report?` <button class="fc-chip" data-open="${sel.p.report}">${t("openRep")}</button>`:sel.p.source?` <a class="fc-chip" href="${sel.p.source}" target="_blank" rel="noopener">${t("openSrc")} ↗</a>`:""}` : "";
   $("#tr-note").textContent = lang==="ko" ? (ind.missing_ko || "") : "";
