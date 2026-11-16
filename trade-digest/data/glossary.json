@@ -1,0 +1,65 @@
+{
+  "_note": "용어 사전. 풀이는 원문 문장을 쉽게 풀어 쓴 것이고, 근거 구절과 쪽은 원문에서 확인한 것만 넣는다.",
+  "terms": [
+    {
+      "id": "trade-volume",
+      "ko": "교역량 (물량)",
+      "en": "Trade volume",
+      "def_ko": "가격 변화를 뺀 교역의 양이다. 수출과 수입 물량을 평균해서 잰다. 금액(달러)으로 잰 교역과 다르다.",
+      "def_en": "The quantity of trade with price changes removed. It is the average of export and import volumes, unlike trade measured in dollar value.",
+      "src": {
+        "report": "wb-gep-2026-06",
+        "page": "36",
+        "quote": "Trade is measured as the average of export and import volumes"
+      }
+    },
+    {
+      "id": "front-loading",
+      "ko": "밀어내기 (앞당긴 수요)",
+      "en": "Front-loading",
+      "def_ko": "관세가 오르기 전에 미리 수입·수출을 몰아서 하는 것이다. 이후 교역이 줄어드는 원인이 된다.",
+      "def_en": "Shipping goods early to beat expected tariff increases. It is followed by a drop in trade.",
+      "src": {
+        "report": "wb-gep-2026-06",
+        "page": "36",
+        "quote": "reversal of the earlier front-loading activity in anticipation of higher trade barriers"
+      }
+    },
+    {
+      "id": "export-restriction",
+      "ko": "수출제한",
+      "en": "Export restriction",
+      "def_ko": "나라가 원자재 등의 수출을 세금·허가·금지 등으로 제한하는 것이다. 가장 흔한 방법은 수출세와 허가 요건이다.",
+      "def_en": "A government limiting exports of raw materials through taxes, licences or bans. Export taxes and licensing are the most common.",
+      "src": {
+        "report": "oecd-crm-export-restrictions-2026",
+        "page": "6",
+        "quote": "Export taxes and licensing requirements remain the most widely used export restriction instruments"
+      }
+    },
+    {
+      "id": "ieepa",
+      "ko": "IEEPA (국제비상경제권한법)",
+      "en": "IEEPA",
+      "def_ko": "KIEP 보고서에서 미국 관세의 법적 근거로 언급된 법이다. 이 법에 기반한 관세는 위법 판결을 받았다.",
+      "def_en": "A US law cited by KIEP as the legal basis for tariffs. Tariffs based on it were ruled unlawful.",
+      "src": {
+        "report": "kiep-weo-2026-05",
+        "page": "8",
+        "quote": "IEEPA"
+      }
+    },
+    {
+      "id": "ppp",
+      "ko": "구매력 기준 (PPP)",
+      "en": "PPP (purchasing power parity)",
+      "def_ko": "나라마다 물가 차이를 반영해 환산한 방식이다. 시장환율 기준과 숫자가 다르므로 직접 비교하지 않는다.",
+      "def_en": "Converts GDP using price-level differences between countries. Not directly comparable with market-exchange-rate figures.",
+      "src": {
+        "report": "oecd-eo-2026-09",
+        "page": "11",
+        "quote": "PPP-weighted"
+      }
+    }
+  ]
+}
