@@ -166,6 +166,14 @@ button{font:inherit;color:inherit;cursor:pointer}
 .sub-h{font-family:var(--font-head);font-weight:400;font-size:26px;letter-spacing:-.02em;margin:36px 0 8px}
 #tracker .rq-form{max-width:720px}
 .basis--sub{background:#EDEEEF;color:var(--ink-2)}
+.lib{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px;margin-bottom:18px}
+.lib-card{position:relative;aspect-ratio:1/1.414;border-radius:4px;background:var(--c);color:#fff;padding:12px;display:flex;flex-direction:column;gap:6px;box-shadow:0 12px 28px -14px rgba(0,0,0,.5);text-decoration:none}
+.lib-card small{font-size:10.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;opacity:.85}
+.lib-card b{font-family:var(--font-display);font-weight:400;font-size:14.5px;line-height:1.3}
+.lib-card .lib-x{position:absolute;right:6px;bottom:6px;border:0;border-radius:6px;background:rgba(255,255,255,.2);color:#fff;font-size:12px;padding:3px 8px}
+.lib-card .lib-x:hover{background:rgba(255,255,255,.35)}
+.lib-empty{grid-column:1/-1;color:var(--ink-3);font-size:14px;padding:18px;border:1px dashed var(--line-2);border-radius:12px;text-align:center}
+.lib-form{max-width:720px} .lib-form b{font-size:15px}
 .tr-box{background:var(--surface);border-radius:12px;padding:20px}
 .tr-head{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:baseline;margin-bottom:8px}
 .tr-head b{font-size:17px}
@@ -241,6 +249,8 @@ button{font:inherit;color:inherit;cursor:pointer}
     <nav class="nav">
       <a href="#" data-t="nav.shelf"></a>
       <a href="#tracker" data-t="nav.tracker"></a>
+      <a href="#add" data-t="nav.add"></a>
+      <a href="#library" data-t="nav.library"></a>
       <a aria-disabled="true"><span data-t="nav.glossary"></span><small data-t="soon"></small></a>
       <a aria-disabled="true"><span data-t="nav.calendar"></span><small data-t="soon"></small></a>
     </nav>
@@ -281,25 +291,41 @@ button{font:inherit;color:inherit;cursor:pointer}
       <table class="tr-table" id="tr-table"></table>
       <p class="tr-note" id="tr-note"></p>
     </div>
-    <h3 class="sub-h" data-t="sb.title"></h3>
-    <p class="rq-lede" data-t="sb.lede"></p>
-    <form class="rq-form" id="sb-form" novalidate>
+  </section>
+
+  <section class="up" id="add">
+    <h2 data-t="ad.title"></h2>
+    <p class="rq-lede" data-t="ad.lede"></p>
+    <form class="rq-form" id="ad-form" novalidate>
+      <label><span data-t="ad.f.title"></span><input name="title" maxlength="200" required></label>
       <div class="rq-2">
-        <label><span data-t="sb.org"></span><select name="org"><option>WTO</option><option>IMF</option><option>OECD</option><option>World Bank</option><option>UNCTAD</option><option>KIEP</option><option>KITA</option><option value="기타" data-t="rq.etc"></option></select></label>
-        <label><span data-t="sb.date"></span><input name="released_on" type="date" required></label>
+        <label><span data-t="ad.f.org"></span><select name="org"><option>WTO</option><option>IMF</option><option>OECD</option><option>World Bank</option><option>UNCTAD</option><option>KIEP</option><option>KITA</option><option>KOTRA</option><option value="기타" data-t="rq.etc"></option></select></label>
+        <label><span data-t="ad.f.cat"></span><select name="category" id="ad-cat"></select></label>
       </div>
       <div class="rq-2">
-        <label><span data-t="sb.value"></span><input name="value" type="number" step="0.1" min="-50" max="50" required></label>
-        <label><span data-t="sb.basis"></span><select name="basis"><option value="goods" data-t="sb.goods"></option><option value="goods+services" data-t="sb.gs"></option></select></label>
+        <label><span data-t="ad.f.pub"></span><input name="published" placeholder="2026-10" maxlength="10" required></label>
+        <label><span data-t="ad.f.url"></span><input name="url" type="url" maxlength="500" placeholder="https://" required></label>
       </div>
-      <label><span data-t="sb.url"></span><input name="source_url" type="url" maxlength="500" placeholder="https://" required></label>
+      <button class="btn btn--primary" type="submit" id="ad-send" data-t="ad.send"></button>
+      <p class="rq-msg" id="ad-msg" role="status"></p>
+      <small class="rq-note" data-t="ad.note"></small>
+    </form>
+  </section>
+
+  <section class="up" id="library">
+    <h2 data-t="lb.title"></h2>
+    <p class="rq-lede" data-t="lb.lede"></p>
+    <div class="lib" id="lib-list"></div>
+    <form class="rq-form lib-form" id="lb-form" novalidate>
+      <b data-t="lb.ext"></b>
       <div class="rq-2">
-        <label><span data-t="sb.page"></span><input name="page" maxlength="10"></label>
-        <label><span data-t="sb.note"></span><input name="note" maxlength="200"></label>
+        <label><span data-t="ad.f.title"></span><input name="title" maxlength="200" required></label>
+        <label><span data-t="ad.f.org"></span><input name="org" maxlength="40"></label>
       </div>
-      <button class="btn btn--primary" type="submit" id="sb-send" data-t="sb.send"></button>
-      <p class="rq-msg" id="sb-msg" role="status"></p>
-      <small class="rq-note" data-t="sb.privacy"></small>
+      <label><span data-t="ad.f.url"></span><input name="url" type="url" maxlength="500" placeholder="https://" required></label>
+      <button class="btn btn--primary" type="submit" id="lb-send" data-t="lb.send"></button>
+      <p class="rq-msg" id="lb-msg" role="status"></p>
+      <small class="rq-note" data-t="lb.note"></small>
     </form>
   </section>
 
@@ -323,7 +349,7 @@ const T = {
     lede:["국제기구 · KITA · KOTRA 보고서를 쉬운 말로.","표지를 누르면 주장 · 근거 · 한계를 원문 쪽수와 함께 보여 줍니다."],
     "cta.open":"보고서 열어 보기","cta.upload":"내 PDF 요약",
     "t.summary":"한 장 요약","t.check":"한계 점검표","t.compare":"다른 기관은?",
-    claim:"주장",evidence:"근거",limit:"한계",pdf:"원문 PDF ↗",copy:"요약 복사",copied:"복사됨",reviewed:"✓ 검수 완료",fake:"가상",draftTag:"검수 전",pending:"요약 준비 중","nav.tracker":"전망 추적","sb.title":"전망치 제보","sb.lede":"빠진 전망치를 알려 주세요. 제보는 그래프에 '확인 전'으로 바로 보이고, 원문과 대조한 뒤 확정합니다. (지표: 2026년 세계 교역량 증가율)","sb.org":"기관","sb.date":"발표일","sb.value":"전망치 (%)","sb.basis":"기준","sb.goods":"상품만","sb.gs":"상품+서비스","sb.url":"원문 또는 보도 링크","sb.page":"원문 쪽 (선택)","sb.note":"한 줄 메모 (선택)","sb.send":"제보 보내기","sb.sending":"보내는 중…","sb.ok":"제보가 저장됐습니다. 그래프에 '확인 전'으로 표시됩니다.","sb.bad":"입력을 확인해 주세요: ","sb.fail":"저장하지 못했습니다. 잠시 뒤 다시 시도해 주세요.","sb.privacy":"이름 · 이메일은 받지 않습니다. 제보는 누구나 볼 수 있습니다.",basisSub:"제보 · 확인 전",sbf:{org:"기관",released_on:"발표일(2024년 이후, 오늘까지)",value:"전망치(-50~50)",basis:"기준",source_url:"링크(https://)",page:"쪽(10자 이내)",note:"메모(200자 이내)"},"tr.title":"전망 추적","tr.lede":"같은 지표에 대해 기관마다, 발표할 때마다 전망이 어떻게 달라졌는지 봅니다. 점을 누르면 근거가 나옵니다.",fcHere:"이 보고서의 전망치",basisSource:"원문 확인 (쪽수)",basisPress:"보도 인용 · 원문 확인 필요",trOrg:"기관",trDate:"발표",trVal:"전망",trDef:"기준",trBasis:"근거",solid:"실선 = 상품만",dashed:"점선 = 상품+서비스 (직접 비교 주의) · 채운 점 = 원문 확인, 빈 점 = 보도 인용",actual:"참고 실제치",openRep:"보고서 요약 보기",openSrc:"보도 보기",srcBtn:"원문 보기",all:"전체",allOrg:"모든 기관",search:"보고서 · 기관 검색",count:(n,m)=>`${n} / ${m}권`,empty:"맞는 보고서가 없습니다. 조건을 바꿔 보세요.",pendMsg:"이 보고서는 아직 요약하지 않았습니다. 원문은 아래 링크로 볼 수 있습니다.",askSum:"이 보고서 요약 요청하기",linkNote:"링크 확인 필요",draftBadge:"초안 · 사람이 검수하기 전",noLink:"연결 주소 준비 중",source:"출처",
+    claim:"주장",evidence:"근거",limit:"한계",pdf:"원문 PDF ↗",copy:"요약 복사",copied:"복사됨",reviewed:"✓ 검수 완료",fake:"가상",draftTag:"검수 전",pending:"요약 준비 중","nav.tracker":"전망 추적","nav.add":"보고서 추가","nav.library":"내 서재","ad.title":"서가에 보고서 추가","ad.lede":"함께 보면 좋을 보고서를 추가하면 메인 표지 벽에 바로 꽂힙니다. 요약은 없이 원문 링크와 기본 정보만 보입니다.","ad.f.title":"보고서 이름","ad.f.org":"기관","ad.f.cat":"카테고리","ad.f.pub":"발간 (예: 2026 · 2026-10 · 2026-10-08)","ad.f.url":"원문 링크","ad.send":"서가에 추가","ad.ok":"서가에 추가했습니다. 표지 벽을 확인해 보세요.","ad.dup":"이미 서가에 있는 링크입니다.","ad.note":"이름 · 이메일은 받지 않습니다. 추가한 보고서는 누구나 볼 수 있고, 확인 뒤 정리될 수 있습니다.","lb.title":"내 서재","lb.lede":"서가 보고서는 보고서 화면의 '내 서재에 담기'로, 외부 보고서는 아래에서 담습니다. 이 브라우저에서만 보입니다.","lb.ext":"외부 보고서 담기","lb.send":"내 서재에 담기","lb.ok":"내 서재에 담았습니다.","lb.dup":"이미 내 서재에 있습니다.","lb.note":"로그인 없이 이 브라우저의 익명 번호로만 구분합니다. 다른 기기에서는 보이지 않습니다.","lb.empty":"아직 담은 보고서가 없습니다.","lb.add":"내 서재에 담기","lb.added":"내 서재에 담김 ✓","lb.remove":"빼기","lb.offline":"내 서재를 불러오지 못했습니다. (배포된 사이트에서만 동작)",visitor:"방문자 추가 · 확인 전",fld:{title:"보고서 이름(2~200자)",org:"기관",category:"카테고리",published:"발간(2026 / 2026-10 / 2026-10-08)",url:"링크(https://)",key:"브라우저 번호"},"sb.title":"전망치 제보","sb.lede":"빠진 전망치를 알려 주세요. 제보는 그래프에 '확인 전'으로 바로 보이고, 원문과 대조한 뒤 확정합니다. (지표: 2026년 세계 교역량 증가율)","sb.org":"기관","sb.date":"발표일","sb.value":"전망치 (%)","sb.basis":"기준","sb.goods":"상품만","sb.gs":"상품+서비스","sb.url":"원문 또는 보도 링크","sb.page":"원문 쪽 (선택)","sb.note":"한 줄 메모 (선택)","sb.send":"제보 보내기","sb.sending":"보내는 중…","sb.ok":"제보가 저장됐습니다. 그래프에 '확인 전'으로 표시됩니다.","sb.bad":"입력을 확인해 주세요: ","sb.fail":"저장하지 못했습니다. 잠시 뒤 다시 시도해 주세요.","sb.privacy":"이름 · 이메일은 받지 않습니다. 제보는 누구나 볼 수 있습니다.",basisSub:"제보 · 확인 전",sbf:{org:"기관",released_on:"발표일(2024년 이후, 오늘까지)",value:"전망치(-50~50)",basis:"기준",source_url:"링크(https://)",page:"쪽(10자 이내)",note:"메모(200자 이내)"},"tr.title":"전망 추적","tr.lede":"같은 지표에 대해 기관마다, 발표할 때마다 전망이 어떻게 달라졌는지 봅니다. 점을 누르면 근거가 나옵니다.",fcHere:"이 보고서의 전망치",basisSource:"원문 확인 (쪽수)",basisPress:"보도 인용 · 원문 확인 필요",trOrg:"기관",trDate:"발표",trVal:"전망",trDef:"기준",trBasis:"근거",solid:"실선 = 상품만",dashed:"점선 = 상품+서비스 (직접 비교 주의) · 채운 점 = 원문 확인, 빈 점 = 보도 인용",actual:"참고 실제치",openRep:"보고서 요약 보기",openSrc:"보도 보기",srcBtn:"원문 보기",all:"전체",allOrg:"모든 기관",search:"보고서 · 기관 검색",count:(n,m)=>`${n} / ${m}권`,empty:"맞는 보고서가 없습니다. 조건을 바꿔 보세요.",pendMsg:"이 보고서는 아직 요약하지 않았습니다. 원문은 아래 링크로 볼 수 있습니다.",askSum:"이 보고서 요약 요청하기",linkNote:"링크 확인 필요",draftBadge:"초안 · 사람이 검수하기 전",noLink:"연결 주소 준비 중",source:"출처",
     pages:n=>`${n}쪽`,items:n=>`문장 ${n}개`,
     ok:"원문에서 확인됨",miss:"확인 못 함",quote:"원문 구절",missMsg:"이 쪽에서 구절을 찾지 못했습니다. 원문에서 직접 확인하세요.",
     data:"데이터로 보기 →",dataMsg:"Policyline에서 같은 품목의 월별 교역 그래프를 엽니다.",open:"열기 →",
@@ -336,7 +362,7 @@ const T = {
     lede:["Trade reports from international bodies, KITA and KOTRA, in plain words.","Tap a cover to see its claims, evidence and limits — with page numbers."],
     "cta.open":"Open a report","cta.upload":"Summarize my PDF",
     "t.summary":"One-page summary","t.check":"Limits check","t.compare":"Other institutions",
-    claim:"Claim",evidence:"Evidence",limit:"Limit",pdf:"Original PDF ↗",copy:"Copy summary",copied:"Copied",reviewed:"✓ Reviewed",fake:"Fictional",draftTag:"Not reviewed",pending:"Summary coming","nav.tracker":"Forecast tracker","sb.title":"Submit a forecast","sb.lede":"Tell us a missing forecast. It appears on the chart as 'unchecked' right away and is confirmed after checking the source. (Indicator: world trade volume growth, 2026)","sb.org":"Institution","sb.date":"Release date","sb.value":"Forecast (%)","sb.basis":"Basis","sb.goods":"Goods only","sb.gs":"Goods & services","sb.url":"Link to source or press","sb.page":"Source page (optional)","sb.note":"Note (optional)","sb.send":"Submit","sb.sending":"Sending…","sb.ok":"Saved. It now shows on the chart as unchecked.","sb.bad":"Please check: ","sb.fail":"Could not save. Please try again shortly.","sb.privacy":"No names or emails collected. Submissions are public.",basisSub:"Submitted · unchecked",sbf:{org:"institution",released_on:"release date (2024 to today)",value:"forecast (-50 to 50)",basis:"basis",source_url:"link (https://)",page:"page (≤10 chars)",note:"note (≤200 chars)"},"tr.title":"Forecast tracker","tr.lede":"See how each institution's forecast for the same indicator changed with each release. Tap a point for its source.",fcHere:"Forecasts in this report",basisSource:"Checked in source (page)",basisPress:"From press · source not yet checked",trOrg:"Institution",trDate:"Released",trVal:"Forecast",trDef:"Basis",trBasis:"Evidence",solid:"Solid = goods only",dashed:"Dashed = goods & services (compare with care) · filled = checked in source, hollow = press",actual:"Reference actual",openRep:"Open report summary",openSrc:"Open press source",srcBtn:"See source",all:"All",allOrg:"All institutions",search:"Search reports · institutions",count:(n,m)=>`${n} / ${m} reports`,empty:"No matching reports. Try other filters.",pendMsg:"This report has not been summarized yet. Read the original via the link below.",askSum:"Request a summary of this report",linkNote:"link to be checked",draftBadge:"Draft · not yet reviewed by a person",noLink:"link coming soon",source:"Source",
+    claim:"Claim",evidence:"Evidence",limit:"Limit",pdf:"Original PDF ↗",copy:"Copy summary",copied:"Copied",reviewed:"✓ Reviewed",fake:"Fictional",draftTag:"Not reviewed",pending:"Summary coming","nav.tracker":"Forecast tracker","nav.add":"Add a report","nav.library":"My library","ad.title":"Add a report to the shelf","ad.lede":"Add a report worth reading and it goes straight onto the cover wall. Only the link and basic details are shown, no summary.","ad.f.title":"Report title","ad.f.org":"Institution","ad.f.cat":"Category","ad.f.pub":"Published (e.g. 2026 · 2026-10 · 2026-10-08)","ad.f.url":"Link to original","ad.send":"Add to shelf","ad.ok":"Added to the shelf. Check the cover wall.","ad.dup":"That link is already on the shelf.","ad.note":"No names or emails collected. Added reports are public and may be tidied after review.","lb.title":"My library","lb.lede":"Save shelf reports with 'Save to my library' on the report view, or add any outside report below. Visible only in this browser.","lb.ext":"Save an outside report","lb.send":"Save to my library","lb.ok":"Saved to your library.","lb.dup":"Already in your library.","lb.note":"No login — only an anonymous browser number is used. Not visible on other devices.","lb.empty":"Nothing saved yet.","lb.add":"Save to my library","lb.added":"In my library ✓","lb.remove":"Remove","lb.offline":"Could not load your library. (Works on the deployed site only)",visitor:"Added by visitor · unchecked",fld:{title:"title (2–200 chars)",org:"institution",category:"category",published:"published (2026 / 2026-10 / 2026-10-08)",url:"link (https://)",key:"browser number"},"sb.title":"Submit a forecast","sb.lede":"Tell us a missing forecast. It appears on the chart as 'unchecked' right away and is confirmed after checking the source. (Indicator: world trade volume growth, 2026)","sb.org":"Institution","sb.date":"Release date","sb.value":"Forecast (%)","sb.basis":"Basis","sb.goods":"Goods only","sb.gs":"Goods & services","sb.url":"Link to source or press","sb.page":"Source page (optional)","sb.note":"Note (optional)","sb.send":"Submit","sb.sending":"Sending…","sb.ok":"Saved. It now shows on the chart as unchecked.","sb.bad":"Please check: ","sb.fail":"Could not save. Please try again shortly.","sb.privacy":"No names or emails collected. Submissions are public.",basisSub:"Submitted · unchecked",sbf:{org:"institution",released_on:"release date (2024 to today)",value:"forecast (-50 to 50)",basis:"basis",source_url:"link (https://)",page:"page (≤10 chars)",note:"note (≤200 chars)"},"tr.title":"Forecast tracker","tr.lede":"See how each institution's forecast for the same indicator changed with each release. Tap a point for its source.",fcHere:"Forecasts in this report",basisSource:"Checked in source (page)",basisPress:"From press · source not yet checked",trOrg:"Institution",trDate:"Released",trVal:"Forecast",trDef:"Basis",trBasis:"Evidence",solid:"Solid = goods only",dashed:"Dashed = goods & services (compare with care) · filled = checked in source, hollow = press",actual:"Reference actual",openRep:"Open report summary",openSrc:"Open press source",srcBtn:"See source",all:"All",allOrg:"All institutions",search:"Search reports · institutions",count:(n,m)=>`${n} / ${m} reports`,empty:"No matching reports. Try other filters.",pendMsg:"This report has not been summarized yet. Read the original via the link below.",askSum:"Request a summary of this report",linkNote:"link to be checked",draftBadge:"Draft · not yet reviewed by a person",noLink:"link coming soon",source:"Source",
     pages:n=>`${n} pp.`,items:n=>`${n} sentences`,
     ok:"Page verified",miss:"Not found",quote:"Source passage",missMsg:"The passage was not found on this page. Check the original.",
     data:"See the data →",dataMsg:"Opens the monthly trade chart for the same product in Policyline.",open:"Open →",
@@ -358,7 +384,8 @@ const ALL = CAT.reports.map((x, i) => ({
   category:x.category, url:x.url, link_check:x.link_check, c:CAT_COLOR[x.category] || "#2A2420", art:ARTS[i % ARTS.length],
   real: x.summary ? SUMS.find(r => r.id === x.id) : null, pages: 46 }));
 let REPORTS = ALL.slice();
-const tagOf = r => r.real ? (r.real.reviewed ? t("reviewed") : t("draftTag")) : t("pending");
+function addShelf(rows){ rows.forEach((x, i) => { if (ALL.some(r => r.url === x.url)) return; ALL.push({id:"v"+x.id, org:x.org, ko:x.title, en:x.title, year:x.published.slice(0,4), published:x.published, category:x.category_id, url:x.url, link_check:"verify", c:CAT_COLOR[x.category_id]||"#6E8F7A", art:ARTS[(i+3)%ARTS.length], real:null, added:true}); }); }
+const tagOf = r => r.added ? t("visitor") : r.real ? (r.real.reviewed ? t("reviewed") : t("draftTag")) : t("pending");
 let fCat = "all", fOrg = "all", fQ = "";
 /* 레퍼런스 화면에서 잰 자리 (화면 폭 기준 비율): 가운데에서 양옆으로 갈수록 크고 많이 꺾임 */
 const SLOTS = (() => {      // 모든 표지 A4 비율 (1:1.414). 가운데가 가장 작고 바깥으로 갈수록 크고 많이 꺾임
@@ -455,7 +482,7 @@ function renderReal(r){
         <div class="head__meta">${R.reviewed?`<span class="badge badge--reviewed">${t("reviewed")}</span>`:`<span class="badge badge--auto">${t("draftBadge")}</span>`}<span>${t("pages",r.pages)} · ${t("items",R.items.length)}</span></div>
         <p style="margin:10px 0 0;font-size:14.5px;color:var(--ink-2);max-width:70ch">${esc(R.gist[lang])}</p>
         ${fcOf(R.id).length?`<div class="fc-chips"><small style="color:var(--ink-3);align-self:center">${t("fcHere")}</small>${fcOf(R.id).map(f=>`<button class="fc-chip" data-fc="${f.key}">${f.ind[lang]} · ${f.p.value}%</button>`).join("")}</div>`:""}</div>
-      <a class="btn btn--white" href="${R.url}" target="_blank" rel="noopener">${t("pdf")}</a><button class="btn btn--white" id="copy">${t("copy")}</button>
+      <a class="btn btn--white" href="${R.url}" target="_blank" rel="noopener">${t("pdf")}</a><button class="btn btn--white" id="copy">${t("copy")}</button>${libBtn(r)}
     </div>
     <div class="tabs" role="tablist">
       ${["summary","check"].map(k=>`<button role="tab" data-tab="${k}" aria-selected="${tab===k}">${t("t."+k)}</button>`).join("")}
@@ -475,7 +502,7 @@ function renderWork(){
   const catName = (CAT.categories.find(c => c.id === r.category) || {})[lang] || "";
   work.innerHTML = `<div class="head"><div class="head__txt"><div class="head__org">${r.org} · ${r.published} · ${catName}</div>
       <h2 class="head__title">${r[lang]}</h2><div class="head__meta"><span class="badge badge--auto">${t("pending")}</span>${r.link_check!=="ok"?`<span>${t("linkNote")}</span>`:""}</div></div>
-      <a class="btn btn--white" href="${r.url}" target="_blank" rel="noopener">${t("pdf")}</a></div>
+      <a class="btn btn--white" href="${r.url}" target="_blank" rel="noopener">${t("pdf")}</a>${libBtn(r)}</div>
     <div class="pending" style="margin-top:14px"><p>${t("pendMsg")}</p></div>`;
   return;
   const text = s => s[lang].replace("TERM", `<button class="term" data-pop="t">${TERM[lang].w}</button>`);
@@ -508,6 +535,7 @@ work.addEventListener("click", e => {
   const tb = e.target.closest("[data-tab]"); if (tb){ tab = tb.dataset.tab; pop = null; renderWork(); return; }
   const pp = e.target.closest("[data-pop]"); if (pp){ pop = pop === pp.dataset.pop ? null : pp.dataset.pop; renderWork(); return; }
   const fc = e.target.closest("[data-fc]"); if (fc){ trSelect(fc.dataset.fc); $("#tracker").scrollIntoView({behavior:"smooth"}); return; }
+  if (e.target.closest("[data-lib]")){ const r = REPORTS[pick]; libAdd({ref_id:r.id, title:r[lang], org:r.org, url:r.url}); return; }
   if (e.target.id === "copy"){ const r = REPORTS[pick];
     if (r && r.real && navigator.clipboard) navigator.clipboard.writeText(copyText(r)).catch(()=>{});
     e.target.textContent = t("copied"); }
@@ -535,22 +563,7 @@ function withSubs(ind){
   series.forEach(s => s.points.sort((a,b) => a.date.localeCompare(b.date)));
   return {...ind, series};
 }
-async function loadSubs(){ try{ const r = await fetch("/api/forecasts"); const j = await r.json(); if (j.ok){ SUBS = j.submissions; drawTracker(); } }catch(e){} }
-loadSubs();
-const sbForm = $("#sb-form"), sbMsg = $("#sb-msg"), sbSend = $("#sb-send"); let sbBusy = false;
-sbForm.addEventListener("submit", async e => {
-  e.preventDefault(); if (sbBusy) return;            // 빠르게 두 번 눌러도 한 번만
-  sbBusy = true; sbSend.disabled = true; sbSend.textContent = t("sb.sending"); sbMsg.className = "rq-msg"; sbMsg.textContent = "";
-  const body = {...Object.fromEntries(new FormData(sbForm)), indicator:"world-trade-2026"};
-  try {
-    const r = await fetch("/api/forecasts", {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(body)});
-    const j = await r.json().catch(() => ({}));
-    if (r.status === 201){ sbMsg.className = "rq-msg ok"; sbMsg.textContent = t("sb.ok"); sbForm.reset(); loadSubs(); }
-    else if (r.status === 400){ sbMsg.className = "rq-msg err"; sbMsg.textContent = t("sb.bad") + (j.fields||[]).map(f => T[lang].sbf[f] || f).join(", "); }
-    else throw 0;
-  } catch(err){ sbMsg.className = "rq-msg err"; sbMsg.textContent = t("sb.fail"); }
-  sbBusy = false; sbSend.disabled = false; sbSend.textContent = t("sb.send");
-});
+
 function trSelect(key){ trKey = key; drawTracker(); }
 function drawTracker(){
   const ind0 = FC.indicators[0]; if (!ind0) return; const ind = withSubs(ind0);
@@ -591,6 +604,49 @@ $("#tracker").addEventListener("click", e => {
 });
 $("#tracker").addEventListener("keydown", e => { const k = e.target.closest("[data-key]"); if (k && (e.key==="Enter"||e.key===" ")){ e.preventDefault(); trSelect(k.dataset.key); } });
 
+/* ---------- 모두의 서가 · 내 서재 (Neon) ---------- */
+const post = (u, body, method="POST") => fetch(u, {method, headers:{"Content-Type":"application/json"}, body: body ? JSON.stringify(body) : undefined});
+const fieldMsg = j => (j.fields||[]).map(f => T[lang].fld[f] || f).join(", ");
+let KEY = null; try{ KEY = localStorage.getItem("td-key"); if (!KEY){ KEY = crypto.randomUUID(); localStorage.setItem("td-key", KEY); } }catch(e){ KEY = crypto.randomUUID(); }
+let LIB = null, libFailed = false;
+const libBtn = r => `<button class="btn btn--white" data-lib>${LIB && LIB.some(x => x.url === r.url) ? t("lb.added") : t("lb.add")}</button>`;
+async function loadShelf(){ try{ const r = await fetch("/api/shelf"); const j = await r.json(); if (j.ok){ addShelf(j.reports); buildWall(); wall.classList.add("is-open","is-settled"); $("#shelf-count").textContent = t("count", REPORTS.length, ALL.length); drawFilters(); } }catch(e){} }
+async function loadLib(){ try{ const r = await fetch("/api/library?key=" + KEY); const j = await r.json(); if (!j.ok) throw 0; LIB = j.items; libFailed = false; }catch(e){ libFailed = true; } drawLib(); renderWork(); }
+function drawLib(){
+  const box = $("#lib-list");
+  if (libFailed){ box.innerHTML = `<p class="lib-empty">${t("lb.offline")}</p>`; return; }
+  if (!LIB) return;
+  if (!LIB.length){ box.innerHTML = `<p class="lib-empty">${t("lb.empty")}</p>`; return; }
+  box.innerHTML = LIB.map(x => { const ref = ALL.find(r => r.id === x.ref_id);
+    return `<a class="lib-card" href="${escH(x.url)}" target="_blank" rel="noopener" style="--c:${ref ? ref.c : "#6E6A60"}"><small>${escH(x.org || "")}</small><b>${escH(ref ? ref[lang] : x.title)}</b><button class="lib-x" data-del="${x.id}">${t("lb.remove")}</button></a>`; }).join("");
+}
+const escH = x => String(x ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+async function libAdd(item, msgEl){
+  try{ const r = await post("/api/library", {...item, key:KEY}); const j = await r.json().catch(() => ({}));
+    if (r.status === 201){ if (msgEl){ msgEl.className = "rq-msg ok"; msgEl.textContent = t("lb.ok"); } await loadLib(); return true; }
+    if (r.status === 409){ if (msgEl){ msgEl.className = "rq-msg err"; msgEl.textContent = t("lb.dup"); } return false; }
+    if (r.status === 400){ if (msgEl){ msgEl.className = "rq-msg err"; msgEl.textContent = t("sb.bad") + fieldMsg(j); } return false; }
+    throw 0;
+  }catch(e){ if (msgEl){ msgEl.className = "rq-msg err"; msgEl.textContent = t("sb.fail"); } return false; }
+}
+$("#lib-list").addEventListener("click", async e => { const d = e.target.closest("[data-del]"); if (!d) return; e.preventDefault();
+  try{ await fetch(`/api/library?key=${KEY}&id=${d.dataset.del}`, {method:"DELETE"}); }catch(_){} loadLib(); });
+function guard(form, btn, label, fn){ let busy = false;           // 빠르게 두 번 눌러도 한 번만
+  form.addEventListener("submit", async e => { e.preventDefault(); if (busy) return; busy = true; btn.disabled = true; btn.textContent = t("sb.sending");
+    await fn(); busy = false; btn.disabled = false; btn.textContent = t(label); }); }
+guard($("#lb-form"), $("#lb-send"), "lb.send", async () => { const f = $("#lb-form"); const ok = await libAdd(Object.fromEntries(new FormData(f)), $("#lb-msg")); if (ok) f.reset(); });
+guard($("#ad-form"), $("#ad-send"), "ad.send", async () => {
+  const f = $("#ad-form"), m = $("#ad-msg"); m.className = "rq-msg"; m.textContent = "";
+  try{ const r = await post("/api/shelf", Object.fromEntries(new FormData(f))); const j = await r.json().catch(() => ({}));
+    if (r.status === 201){ m.className = "rq-msg ok"; m.textContent = t("ad.ok"); f.reset(); await loadShelf(); }
+    else if (r.status === 409){ m.className = "rq-msg err"; m.textContent = t("ad.dup"); }
+    else if (r.status === 400){ m.className = "rq-msg err"; m.textContent = t("sb.bad") + fieldMsg(j); }
+    else throw 0;
+  }catch(e){ m.className = "rq-msg err"; m.textContent = t("sb.fail"); }
+});
+function drawAddCats(){ $("#ad-cat").innerHTML = CAT.categories.map(c => `<option value="${c.id}">${c[lang]}</option>`).join(""); }
+loadShelf(); loadLib();
+
 /* ---------- 서가 필터 ---------- */
 const chips = $("#chips"), fOrgSel = $("#f-org"), fQIn = $("#f-q");
 function drawFilters(){
@@ -610,7 +666,7 @@ function applyLang(){
   document.querySelectorAll("[data-t]").forEach(el => el.textContent = t(el.dataset.t));
   $("#lang").textContent = t("lang");
   [...wall.children].forEach((el, i) => { el.querySelector(".cv__title").textContent = REPORTS[i][lang]; el.querySelector(".cv__tag").textContent = tagOf(REPORTS[i]); });
-  drawTracker(); drawFilters(); $("#shelf-count").textContent = t("count", REPORTS.length, ALL.length);
+  drawTracker(); drawFilters(); drawAddCats(); drawLib(); $("#shelf-count").textContent = t("count", REPORTS.length, ALL.length);
   renderWork();
 }
 $("#lang").addEventListener("click", () => { lang = lang === "ko" ? "en" : "ko"; try{ localStorage.setItem("td-lang", lang); }catch(e){} applyLang(); });
