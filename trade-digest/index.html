@@ -1,0 +1,628 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trade Digest</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Hahmlet:wght@300;400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=general-sans@500,600&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+:root{
+  /* 서재 · 서가: 종이 바탕, 딥그린 가죽, 호두나무, 황동 */
+  --ground:#ECE7DC; --dot:rgba(70,52,28,.10);
+  --surface:#FBF9F4; --surface-2:#F4F0E7;
+  --ink:#1D1B17; --ink-2:#4A453C; --ink-3:#6A6458;
+  --line:#DDD6C8; --line-2:#C8BFAE;
+  --green:#1E3A2F; --green-2:#2C5243; --green-soft:#DDE6DF;
+  --slab:var(--green); --slab-ink:#F3EFE5;
+  --walnut:#5A3E2B; --brass:#B08A3E;
+  --night:#0B1A14; --night-2:#13291F; --brass-soft:#EFE3C8;
+  --white:#F6F3EC; --white-hover:#FFFFFF; --on-white:#13291F;
+  --claim:#33507E; --claim-bg:#E5EAF1;
+  --evidence:#2C5243; --evidence-bg:#E0EAE3;
+  --limit:#86601F; --limit-bg:#F2E9D7;
+  --font-head:"Newsreader", "Hahmlet", serif;
+  --font-mark:"General Sans", "Pretendard Variable", sans-serif;
+  --font-display:"Hahmlet", serif;
+  --font-ui:"Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", sans-serif;
+  --ease-out:cubic-bezier(.16,1,.3,1); --ease-in-out:cubic-bezier(.65,0,.35,1);
+}
+*{box-sizing:border-box}
+html{background:var(--ground);color:var(--ink);scrollbar-color:var(--line-2) transparent}
+body{margin:0;font-family:var(--font-ui);font-size:16px;line-height:1.55;word-break:keep-all;overflow-wrap:break-word;overflow-x:hidden;
+  background-color:var(--ground);background-image:radial-gradient(var(--dot) 1px,transparent 1.2px);background-size:20px 20px;background-attachment:fixed}
+::selection{background:var(--brass-soft);color:var(--ink)}
+:focus-visible{outline:2px solid var(--green-2);outline-offset:3px;border-radius:4px}
+a{color:inherit}
+button{font:inherit;color:inherit;cursor:pointer}
+
+/* ===== 위쪽 메뉴 줄 ===== */
+.top{position:sticky;top:0;z-index:40;background:rgba(11,26,20,.72);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-bottom:1px solid rgba(243,239,229,.08)}
+.bar{color:var(--slab-ink);height:60px;display:flex;align-items:center;gap:28px;padding:0 2.4vw}
+.logo{display:flex;align-items:center;gap:8px;text-decoration:none;font-family:var(--font-mark);font-weight:600;font-size:18px;letter-spacing:-.02em}
+.nav{display:flex;gap:26px;margin-right:auto;font-size:15px}
+.nav a{text-decoration:none;color:var(--slab-ink);opacity:.92}
+.nav a[aria-disabled]{opacity:.45;cursor:default}
+.nav small{font-size:11px;margin-left:4px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:6px;text-decoration:none;font-weight:500;white-space:nowrap;
+  transition:background 160ms var(--ease-out),transform 160ms var(--ease-out),box-shadow 160ms}
+.btn:active{transform:translateY(1px)}
+.bar .btn{height:38px;padding:0 16px;font-size:14.5px}
+.btn--line{background:rgba(243,239,229,.06);color:var(--slab-ink);box-shadow:inset 0 0 0 1px rgba(243,239,229,.28)}
+.btn--line:hover{background:rgba(243,239,229,.14)}
+.btn--green{background:var(--green);color:var(--slab-ink)}
+.btn--green:hover{background:var(--green-2)}
+.btn--primary{background:var(--white);color:var(--on-white);font-weight:600}
+.btn--primary:hover{background:var(--white-hover)}
+.up .btn--primary,.head .btn--primary{background:var(--surface);border:1px solid var(--line-2);color:var(--ink)}
+.btn--white{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(60,45,25,.10)}
+.btn--white:hover{box-shadow:0 2px 8px rgba(0,0,0,.10)}
+
+/* ===== 첫 화면 ===== */
+.hero{position:relative;height:max(760px,70vw);max-height:1120px;margin-top:-61px;padding-top:61px;overflow:hidden;color:var(--slab-ink);
+  background:radial-gradient(120% 90% at 50% 100%, #24503F 0%, var(--night-2) 45%, var(--night) 100%)}
+.hero::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:clamp(240px,24vw,380px);background:radial-gradient(var(--dot) 1px,transparent 1.2px) 0 0/20px 20px fixed,linear-gradient(to bottom,rgba(236,231,220,0) 0%,rgba(236,231,220,0.02) 14%,rgba(236,231,220,0.07) 26%,rgba(236,231,220,0.16) 38%,rgba(236,231,220,0.3) 50%,rgba(236,231,220,0.46) 61%,rgba(236,231,220,0.63) 72%,rgba(236,231,220,0.79) 82%,rgba(236,231,220,0.92) 91%,rgba(236,231,220,1) 100%);z-index:6;pointer-events:none}
+.globe{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;opacity:.85}
+.hero::before{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;background:radial-gradient(60% 45% at 50% 30%,rgba(11,26,20,.75),transparent 70%)}
+.headline{position:absolute;left:0;right:0;top:calc(61px + 4.6vw);margin:0;text-align:center;z-index:5;pointer-events:none;
+  font-family:var(--font-mark);font-weight:600;font-size:clamp(52px,8.2vw,132px);line-height:.92;letter-spacing:-.055em;}
+.wall{position:absolute;left:0;right:0;top:calc(61px + 33vw);height:0;z-index:4}
+.slot{position:absolute;left:50%;top:0;width:var(--w);height:var(--h);border:0;padding:0;background:var(--c);color:#fff;border-radius:3px;overflow:hidden;text-align:left;
+  transform:translate(-50%,-50%) translateX(0) perspective(900px) rotateY(0deg) scale(.22);opacity:0;
+  transition:transform 520ms var(--ease-in-out),opacity 300ms,filter 300ms,box-shadow 300ms;
+  box-shadow:0 18px 40px -18px rgba(0,0,0,.6)}
+.wall.is-open .slot{opacity:1;transform:translate(-50%,-50%) translateX(var(--x)) perspective(900px) rotateY(var(--ry)) scale(1);
+  transition:transform 1500ms var(--ease-out) var(--d),opacity 500ms var(--ease-out) var(--d),filter 300ms,box-shadow 300ms}
+.wall.is-open.is-settled .slot{transition:transform 420ms var(--ease-out),opacity 300ms,filter 300ms,box-shadow 300ms}
+.wall.is-open .slot:hover{transform:translate(-50%,-50%) translateX(var(--x)) perspective(900px) rotateY(var(--ry)) scale(1.04)}
+.wall.has-pick .slot:not([aria-pressed="true"]){filter:saturate(.5) brightness(.8)}
+.slot[aria-pressed="true"]{box-shadow:0 0 0 3px var(--white),0 24px 48px -20px rgba(0,0,0,.6)}
+/* 표지 안 */
+.cv{position:absolute;inset:0;display:flex;flex-direction:column;padding:9% 10%}
+.cv__org{font-size:clamp(7px,.62vw,11px);font-weight:600;letter-spacing:.08em;text-transform:uppercase;opacity:.85}
+.cv__title{font-family:var(--font-display);font-weight:300;font-size:calc(var(--w) * .1);line-height:1.15;margin-top:10%;max-width:12ch}
+.cv__year{margin-top:auto;font-family:var(--font-head);font-size:calc(var(--w) * .2);line-height:.9;letter-spacing:-.03em}
+.cv__art{position:absolute;inset:0;pointer-events:none}
+.cv__tag{position:absolute;right:6%;bottom:4%;font-size:9px;font-weight:600;background:rgba(255,255,255,.2);padding:1px 5px;border-radius:3px}
+
+.lede{position:absolute;left:0;right:0;top:calc(61px + 4.6vw + clamp(52px,8.2vw,132px) + 14px);text-align:center;margin:0;font-size:clamp(13px,1.1vw,17px);line-height:1.55;color:rgba(243,239,229,.74);padding:0 16px;z-index:5;pointer-events:none}
+.cta{position:absolute;left:0;right:0;top:calc(61px + 47vw);z-index:7;display:flex;justify-content:center;gap:14px;padding:0 16px}
+.cta .btn{height:clamp(46px,3.6vw,58px);padding:0 clamp(20px,1.9vw,30px);font-size:clamp(15px,1.1vw,18px)}
+
+/* ===== 보고서 작업 영역 ===== */
+.work{max-width:1120px;margin:0 auto;padding:24px 20px 80px;scroll-margin-top:110px}
+.work[hidden]{display:none}
+.head{display:flex;gap:16px;align-items:center;flex-wrap:wrap;background:var(--surface);border-radius:12px;padding:18px 20px}
+.head__txt{flex:1;min-width:220px}
+.head__org{font-size:12.5px;color:var(--ink-3)}
+.head__title{font-family:var(--font-display);font-weight:400;font-size:24px;line-height:1.3;margin:2px 0 8px}
+.head__meta{display:flex;gap:8px;flex-wrap:wrap;align-items:center;font-size:12.5px;color:var(--ink-3)}
+.head .btn{height:40px;padding:0 15px;font-size:14px;border:1px solid var(--line-2)}
+.badge{display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 8px;border-radius:5px;font-size:12px;font-weight:500}
+.badge--reviewed{background:var(--slab);color:#fff}
+.badge--auto{border:1px dashed var(--line-2);color:var(--ink-2)}
+.cite{margin:14px 2px 0;font-size:12.5px;color:var(--ink-3)}
+.badge--fake{background:var(--brass-soft);color:#5E4A1E}
+.tabs{display:flex;gap:4px;margin:22px 0 14px;border-bottom:1px solid var(--line-2);overflow-x:auto}
+.tabs button{border:0;background:transparent;padding:10px 14px;font-size:15px;color:var(--ink-3);border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap}
+.tabs button:hover{color:var(--ink)}
+.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--green);font-weight:600}
+.tabs button[aria-disabled="true"]{cursor:default;color:#9A9DA3}
+.tabs small{font-size:11px;margin-left:5px;font-weight:400}
+.pane{animation:in 380ms var(--ease-out)}
+@keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.digest{display:grid;grid-template-columns:repeat(3,1fr);background:var(--surface);border-radius:12px;overflow:hidden}
+.digest section{padding:16px 18px 18px;border-left:1px solid var(--line)}
+.digest section:first-child{border-left:0}
+.digest h3{margin:0 0 12px}
+.digest ol{list-style:none;margin:0;padding:0;display:grid;gap:16px}
+.digest li{font-size:15px;line-height:1.55}
+.row{display:flex;gap:8px;margin-top:6px;flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;height:24px;padding:0 10px;border-radius:999px;font-size:12.5px;font-weight:600}
+.chip--claim{color:var(--claim);background:var(--claim-bg)}
+.chip--evidence{color:var(--evidence);background:var(--evidence-bg)}
+.chip--limit{color:var(--limit);background:var(--limit-bg)}
+.pg,.data{display:inline-flex;align-items:center;gap:4px;height:26px;padding:0 9px;border-radius:5px;font-size:12.5px;font-weight:500;border:1px solid var(--line-2);background:var(--surface)}
+.pg:hover{border-color:var(--ink-3)}
+.pg[aria-expanded="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.pg .ok{color:var(--evidence)} .pg .miss{color:var(--limit)}
+.pg[aria-expanded="true"] span{color:inherit}
+.data{background:var(--evidence-bg);color:var(--evidence);border-color:transparent;font-weight:600}
+.data:hover,.data[aria-expanded="true"]{border-color:var(--evidence)}
+.term{border:0;background:none;padding:0;border-bottom:1px dashed var(--claim);font:inherit;color:inherit}
+.pop{margin-top:8px;padding:10px 12px;border-radius:8px;background:var(--surface-2);font-size:13.5px;color:var(--ink-2);animation:in 260ms var(--ease-out)}
+.pop b{color:var(--ink);font-weight:600}
+.check{list-style:none;margin:0;padding:0;background:var(--surface);border-radius:12px}
+.check li{display:flex;justify-content:space-between;gap:16px;padding:14px 18px;border-top:1px solid var(--line);align-items:center}
+.check li:first-child{border-top:0}
+.verdict{font-size:12.5px;font-weight:600;padding:3px 9px;border-radius:5px;white-space:nowrap}
+.verdict--yes{background:var(--evidence-bg);color:var(--evidence)}
+.verdict--no{background:var(--limit-bg);color:var(--limit)}
+.verdict--hard{background:var(--surface-2);color:var(--ink-2)}
+
+/* ===== 내 PDF ===== */
+.up{max-width:1120px;margin:0 auto;padding:0 20px 96px;scroll-margin-top:110px}
+.up h2{font-family:var(--font-head);font-weight:400;font-size:clamp(30px,3vw,44px);letter-spacing:-.03em;margin:0 0 14px}
+.drop{position:relative;display:block;border:1.5px dashed var(--line-2);border-radius:12px;background:var(--surface);padding:30px 20px;text-align:center;cursor:pointer}
+.drop.is-over,.drop:hover{border-color:var(--ink-3)}
+.drop p{margin:8px 0 14px;font-size:15px}
+.drop .btn{height:42px;padding:0 18px}
+.drop small{display:block;margin-top:12px;color:var(--ink-3);font-size:12.5px}
+.shelfbar{position:absolute;left:0;right:0;top:calc(61px + 4.6vw + clamp(52px,8.2vw,132px) + 74px);z-index:8;display:grid;justify-items:center;gap:10px;padding:0 16px}
+.chips{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.chips button{border:0;border-radius:999px;padding:7px 13px;font-size:13.5px;background:rgba(243,239,229,.08);color:rgba(243,239,229,.82);box-shadow:inset 0 0 0 1px rgba(243,239,229,.18)}
+.chips button:hover{background:rgba(243,239,229,.14)}
+.chips button[aria-pressed="true"]{background:var(--white);color:var(--on-white);box-shadow:none;font-weight:600}
+.shelf-tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:center}
+.shelf-tools select,.shelf-tools input{font:inherit;font-size:13.5px;height:34px;border-radius:8px;border:1px solid rgba(243,239,229,.22);background:rgba(11,26,20,.55);color:var(--slab-ink);padding:0 10px}
+.shelf-tools input{width:min(260px,60vw)} .shelf-tools input::placeholder{color:rgba(243,239,229,.5)}
+#shelf-count{font-size:12.5px;color:rgba(243,239,229,.6)}
+#shelf-empty{margin:4px 0 0;font-size:14px;color:rgba(243,239,229,.8)}
+.pending{background:var(--surface);border-radius:12px;padding:22px;display:grid;gap:12px;justify-items:start}
+.pending p{margin:0;color:var(--ink-2)}
+.rq-lede{margin:-6px 0 18px;color:var(--ink-2)}
+.rq{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:20px;align-items:start}
+.rq-form{background:var(--surface);border-radius:12px;padding:20px;display:grid;gap:12px}
+.rq-form label{display:grid;gap:5px;font-size:13px;color:var(--ink-2)}
+.rq-form input,.rq-form select{font:inherit;font-size:15px;color:var(--ink);background:var(--surface-2);border:1px solid var(--line-2);border-radius:8px;height:42px;padding:0 12px}
+.rq-form input:focus,.rq-form select:focus{outline:2px solid var(--green-2);outline-offset:1px}
+.rq-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.rq-form .btn{height:44px;justify-self:start;padding:0 20px}
+.rq-msg{margin:0;font-size:14px;min-height:1.4em}
+.rq-msg.ok{color:var(--evidence)} .rq-msg.err{color:#8A2E1F}
+.rq-note{color:var(--ink-3);font-size:12.5px}
+.rq-list{display:grid;gap:10px}
+.rq-card{background:var(--surface);border-radius:12px;padding:14px 16px;display:grid;grid-template-columns:1fr auto;gap:4px 14px;align-items:center}
+.rq-card b{font-weight:600;font-size:15px}
+.rq-card small{color:var(--ink-3);font-size:12.5px}
+.rq-card p{grid-column:1;margin:2px 0 0;font-size:13.5px;color:var(--ink-2)}
+.rq-vote{grid-row:1 / span 3;grid-column:2;display:grid;justify-items:center;gap:2px;border:1px solid var(--line-2);background:var(--surface-2);border-radius:10px;padding:8px 12px;min-width:64px}
+.rq-vote:hover{border-color:var(--ink-3)} .rq-vote[disabled]{opacity:.6;cursor:default}
+.rq-vote strong{font-size:18px} .rq-vote span{font-size:11.5px;color:var(--ink-3)}
+.rq-empty{color:var(--ink-3);font-size:14px;padding:16px;border:1px dashed var(--line-2);border-radius:12px;text-align:center}
+@media (max-width:760px){.rq{grid-template-columns:1fr}.rq-2{grid-template-columns:1fr}}
+.drop input{position:absolute;width:1px;height:1px;opacity:0}
+
+@media (max-width:760px){
+  .nav{display:none}
+  .bar{gap:10px;padding:0 12px}
+  .bar .btn--primary{display:none}
+  #lang{margin-left:auto}
+  .cv__org{display:none}
+  .hero{height:auto;max-height:none;padding-bottom:60px}
+    .headline{position:relative;top:auto;padding-top:18px}
+  .wall{position:relative;top:auto;height:62vw;margin-top:2vw}
+  .wall .slot{top:50%}
+  .lede{position:relative;top:auto;margin-top:10px}
+  .shelfbar{position:relative;top:auto;margin-top:16px}
+  .chips{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;width:100%;padding-bottom:4px}
+  .chips button{flex:none}
+  .cta{position:relative;top:auto;margin-top:22px;flex-wrap:wrap}
+  .digest{grid-template-columns:1fr}
+  .digest section{border-left:0;border-top:1px solid var(--line)}
+  .digest section:first-child{border-top:0}
+}
+@media (prefers-reduced-motion:reduce){ .slot,.wall.is-open .slot,.pane,.pop{transition:none!important;animation:none!important} }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <header class="bar">
+    <a class="logo" href="#">
+      <svg width="22" height="16" viewBox="0 0 22 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M1.5 2.5c3-1.2 6.2-1 9.5 1v11c-3.3-2-6.5-2.2-9.5-1v-11Z"/><path d="M20.5 2.5c-3-1.2-6.2-1-9.5 1v11c3.3-2 6.5-2.2 9.5-1v-11Z"/></svg>
+      Trade Digest
+    </a>
+    <nav class="nav">
+      <a href="#" data-t="nav.shelf"></a>
+      <a href="#request" data-t="nav.request"></a>
+      <a aria-disabled="true"><span data-t="nav.glossary"></span><small data-t="soon"></small></a>
+      <a aria-disabled="true"><span data-t="nav.calendar"></span><small data-t="soon"></small></a>
+    </nav>
+    <button class="btn btn--line" id="lang" aria-label="Language"></button>
+    <a class="btn btn--primary" href="#upload"><span data-t="upload"></span></a>
+  </header>
+</div>
+
+<main>
+  <section class="hero">
+    <canvas class="globe" id="globe" aria-hidden="true"></canvas>
+    <h1 class="headline">Trade Digest</h1>
+    <p class="lede" id="lede"></p>
+    <div class="shelfbar" role="search">
+      <div class="chips" id="chips"></div>
+      <div class="shelf-tools">
+        <select id="f-org" aria-label="Institution"></select>
+        <input id="f-q" type="search" data-tp="search">
+        <span id="shelf-count"></span>
+      </div>
+      <p id="shelf-empty" hidden data-t="empty"></p>
+    </div>
+    <div class="wall" id="wall"></div>
+    <div class="cta">
+      <button class="btn btn--primary" id="go" data-t="cta.open"></button>
+      <a class="btn btn--line" href="#upload" data-t="cta.upload"></a>
+    </div>
+  </section>
+
+  <section class="work" id="work" hidden aria-live="polite"></section>
+
+  <section class="up" id="request">
+    <h2 data-t="rq.title"></h2>
+    <p class="rq-lede" data-t="rq.lede"></p>
+    <div class="rq">
+      <form class="rq-form" id="rq-form" novalidate>
+        <label><span data-t="rq.f.title"></span><input name="title" maxlength="200" required></label>
+        <div class="rq-2">
+          <label><span data-t="rq.f.org"></span><select name="org" required><option>WTO</option><option>IMF</option><option>OECD</option><option>World Bank</option><option>KITA</option><option>KOTRA</option><option value="기타" data-t="rq.etc"></option></select></label>
+          <label><span data-t="rq.f.purpose"></span><select name="purpose" required><option value="과제" data-t="rq.p1"></option><option value="스터디" data-t="rq.p2"></option><option value="업무" data-t="rq.p3"></option><option value="기타" data-t="rq.etc"></option></select></label>
+        </div>
+        <label><span data-t="rq.f.url"></span><input name="url" type="url" maxlength="500" placeholder="https://"></label>
+        <label><span data-t="rq.f.reason"></span><input name="reason" maxlength="200"></label>
+        <button class="btn btn--primary" type="submit" id="rq-send" data-t="rq.send"></button>
+        <p class="rq-msg" id="rq-msg" role="status"></p>
+        <small class="rq-note" data-t="rq.note"></small>
+      </form>
+      <div class="rq-list" id="rq-list" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <section class="up" id="upload">
+    <h2 data-t="up.title"></h2>
+    <label class="drop" id="drop">
+      <p id="drop-msg" data-t="up.body"></p>
+      <span class="btn btn--primary" data-t="up.btn"></span>
+      <input type="file" accept="application/pdf" id="file">
+      <small data-t="up.note"></small>
+    </label>
+  </section>
+</main>
+
+<script src="data/reports.js"></script>
+<script>
+/* ---------- 글자 (한 / EN) ---------- */
+const T = {
+  ko:{ "nav.shelf":"보고서 서가","nav.request":"보고서 요청","rq.title":"보고서 요청","rq.lede":"요약해 줬으면 하는 보고서를 알려 주세요. 많이 원한 보고서부터 서가에 올립니다.","rq.f.title":"보고서 이름","rq.f.org":"기관","rq.f.purpose":"어디에 쓰나요","rq.f.url":"원문 링크 (선택)","rq.f.reason":"왜 필요한지 한 줄 (선택)","rq.p1":"과제","rq.p2":"스터디","rq.p3":"업무","rq.etc":"기타","rq.send":"요청 보내기","rq.sending":"보내는 중…","rq.note":"이름 · 이메일은 받지 않습니다. 요청은 누구나 볼 수 있습니다.","rq.ok":"요청이 접수됐습니다.","rq.bad":"입력을 확인해 주세요: ","rq.fail":"저장하지 못했습니다. 잠시 뒤 다시 시도해 주세요.","rq.empty":"아직 요청이 없습니다. 첫 요청을 남겨 보세요.","rq.offline":"요청 목록을 불러오지 못했습니다. (배포된 사이트에서만 동작)","rq.want":"나도 원해요",rqf:{title:"보고서 이름(2~200자)",org:"기관",url:"링크(https://)",reason:"한 줄(200자 이내)",purpose:"쓰는 곳"},"nav.glossary":"용어 사전","nav.calendar":"보고서 달력",soon:"준비 중",upload:"내 PDF 요약",lang:"EN",
+    strip:"시안 · 표지와 내용은 모두 가상","strip.try":"내 PDF 요약 써 보기",
+    lede:["국제기구 · KITA · KOTRA 보고서를 쉬운 말로.","표지를 누르면 주장 · 근거 · 한계를 원문 쪽수와 함께 보여 줍니다."],
+    "cta.open":"보고서 열어 보기","cta.upload":"내 PDF 요약",
+    "t.summary":"한 장 요약","t.check":"한계 점검표","t.compare":"다른 기관은?",
+    claim:"주장",evidence:"근거",limit:"한계",pdf:"원문 PDF ↗",copy:"요약 복사",copied:"복사됨",reviewed:"✓ 검수 완료",fake:"가상",draftTag:"검수 전",pending:"요약 준비 중",srcBtn:"원문 보기",all:"전체",allOrg:"모든 기관",search:"보고서 · 기관 검색",count:(n,m)=>`${n} / ${m}권`,empty:"맞는 보고서가 없습니다. 조건을 바꿔 보세요.",pendMsg:"이 보고서는 아직 요약하지 않았습니다. 원문은 아래 링크로 볼 수 있습니다.",askSum:"이 보고서 요약 요청하기",linkNote:"링크 확인 필요",draftBadge:"초안 · 사람이 검수하기 전",noLink:"연결 주소 준비 중",source:"출처",
+    pages:n=>`${n}쪽`,items:n=>`문장 ${n}개`,
+    ok:"원문에서 확인됨",miss:"확인 못 함",quote:"원문 구절",missMsg:"이 쪽에서 구절을 찾지 못했습니다. 원문에서 직접 확인하세요.",
+    data:"데이터로 보기 →",dataMsg:"Policyline에서 같은 품목의 월별 교역 그래프를 엽니다.",open:"열기 →",
+    yes:"적혀 있음",no:"보고서에 없음",hard:"판단 어려움",
+    c1:"기준 기간 · 자료 시점이 적혀 있나?",c2:"전망의 가정이 적혀 있나?",c3:"다루지 않은 나라 · 품목이 있나?",c4:"숫자가 추정치인지 확정치인지?",
+    "up.title":"내 PDF 요약","up.body":"PDF를 끌어다 놓거나 골라 주세요","up.btn":"PDF 고르기","up.note":"파일과 요약은 저장하지 않습니다 · 결과에는 ‘자동 요약 · 검수 전’ 표시",
+    picked:f=>`${f} · 시안이라 요약은 아직 연결되지 않았습니다` },
+  en:{ "nav.shelf":"Shelf","nav.request":"Request a report","rq.title":"Request a report","rq.lede":"Tell us which report you want summarized. The most requested go on the shelf first.","rq.f.title":"Report title","rq.f.org":"Institution","rq.f.purpose":"What it is for","rq.f.url":"Link to original (optional)","rq.f.reason":"Why you need it (optional)","rq.p1":"Assignment","rq.p2":"Study group","rq.p3":"Work","rq.etc":"Other","rq.send":"Send request","rq.sending":"Sending…","rq.note":"No names or emails collected. Requests are public.","rq.ok":"Request received.","rq.bad":"Please check: ","rq.fail":"Could not save. Please try again shortly.","rq.empty":"No requests yet. Be the first.","rq.offline":"Could not load requests. (Works on the deployed site only)","rq.want":"Me too",rqf:{title:"title (2–200 chars)",org:"institution",url:"link (https://)",reason:"reason (≤200 chars)",purpose:"purpose"},"nav.glossary":"Glossary","nav.calendar":"Calendar",soon:"soon",upload:"Summarize my PDF",lang:"한국어",
+    strip:"Draft · covers and content are fictional","strip.try":"Try my PDF",
+    lede:["Trade reports from international bodies, KITA and KOTRA, in plain words.","Tap a cover to see its claims, evidence and limits — with page numbers."],
+    "cta.open":"Open a report","cta.upload":"Summarize my PDF",
+    "t.summary":"One-page summary","t.check":"Limits check","t.compare":"Other institutions",
+    claim:"Claim",evidence:"Evidence",limit:"Limit",pdf:"Original PDF ↗",copy:"Copy summary",copied:"Copied",reviewed:"✓ Reviewed",fake:"Fictional",draftTag:"Not reviewed",pending:"Summary coming",srcBtn:"See source",all:"All",allOrg:"All institutions",search:"Search reports · institutions",count:(n,m)=>`${n} / ${m} reports`,empty:"No matching reports. Try other filters.",pendMsg:"This report has not been summarized yet. Read the original via the link below.",askSum:"Request a summary of this report",linkNote:"link to be checked",draftBadge:"Draft · not yet reviewed by a person",noLink:"link coming soon",source:"Source",
+    pages:n=>`${n} pp.`,items:n=>`${n} sentences`,
+    ok:"Page verified",miss:"Not found",quote:"Source passage",missMsg:"The passage was not found on this page. Check the original.",
+    data:"See the data →",dataMsg:"Opens the monthly trade chart for the same product in Policyline.",open:"Open →",
+    yes:"Stated",no:"Not in report",hard:"Unclear",
+    c1:"Is the reference period stated?",c2:"Are the forecast assumptions stated?",c3:"Are any countries or products left out?",c4:"Are figures estimates or final?",
+    "up.title":"Summarize my PDF","up.body":"Drop a PDF here or choose one","up.btn":"Choose PDF","up.note":"Files and summaries are not stored · results are marked ‘auto summary · not reviewed’",
+    picked:f=>`${f} · draft only, summarizing is not connected yet` }
+};
+const TERM = { ko:{w:"교역 물량",d:"가격 변화를 뺀 교역의 양. 금액이 아니라 실제로 오간 양을 본다."}, en:{w:"trade volume",d:"The quantity of trade with price changes removed — what moved, not what it cost."} };
+
+/* ---------- 표지 ---------- */
+/* 실제 보고서 목록 (data/catalog.json → data/reports.js) */
+const CAT = (window.TD_CATALOG || {categories:[], reports:[]});
+const SUMS = ((window.TD_REPORTS && window.TD_REPORTS.reports) || []);
+const CAT_COLOR = {outlook:"#23344F", policy:"#6B2A2A", supply:"#3F5E57", digital:"#1F2E44", energy:"#8A6A2C", korea:"#1E3A2F"};
+const ARTS = ["line","rings","grid","bars","wave","dots","rays"];
+const ALL = CAT.reports.map((x, i) => ({
+  id:x.id, org:x.org, ko:x.title.ko, en:x.title.en, year:x.published.slice(0,4), published:x.published,
+  category:x.category, url:x.url, link_check:x.link_check, c:CAT_COLOR[x.category] || "#2A2420", art:ARTS[i % ARTS.length],
+  real: x.summary ? SUMS.find(r => r.id === x.id) : null, pages: 46 }));
+let REPORTS = ALL.slice();
+const tagOf = r => r.real ? (r.real.reviewed ? t("reviewed") : t("draftTag")) : t("pending");
+let fCat = "all", fOrg = "all", fQ = "";
+/* 레퍼런스 화면에서 잰 자리 (화면 폭 기준 비율): 가운데에서 양옆으로 갈수록 크고 많이 꺾임 */
+const SLOTS = (() => {      // 모든 표지 A4 비율 (1:1.414). 가운데가 가장 작고 바깥으로 갈수록 크고 많이 꺾임
+  const side = [{x:.079,h:.115,ry:8},{x:.164,h:.13,ry:16},{x:.258,h:.155,ry:24},{x:.365,h:.19,ry:32},{x:.488,h:.24,ry:39}];
+  return [...side.slice().reverse().map(s => ({...s, x:-s.x})), {x:0,h:.11,ry:0}, ...side.map(s => ({...s, ry:-s.ry}))];
+})();
+const ART = {
+  rings:`<svg class="cv__art" viewBox="0 0 100 140" preserveAspectRatio="xMidYMid slice"><g fill="none" stroke="#fff" stroke-opacity=".22"><circle cx="85" cy="75" r="22"/><circle cx="85" cy="75" r="34"/><circle cx="85" cy="75" r="46"/></g></svg>`,
+  rays:`<svg class="cv__art" viewBox="0 0 100 140" preserveAspectRatio="xMidYMid slice"><g stroke="#fff" stroke-opacity=".18">${Array.from({length:14},(_,i)=>`<line x1="100" y1="140" x2="${i*8-10}" y2="40"/>`).join("")}</g></svg>`,
+  wave:`<svg class="cv__art" viewBox="0 0 100 140" preserveAspectRatio="xMidYMid slice"><g fill="none" stroke="#fff" stroke-opacity=".22">${[70,80,90,100].map(y=>`<path d="M0 ${y} C25 ${y-12} 50 ${y+12} 100 ${y-4}"/>`).join("")}</g></svg>`,
+  grid:`<svg class="cv__art" viewBox="0 0 100 140" preserveAspectRatio="xMidYMid slice"><g stroke="#fff" stroke-opacity=".14">${Array.from({length:8},(_,i)=>`<line x1="${i*14}" y1="60" x2="${i*14}" y2="140"/><line x1="0" y1="${60+i*12}" x2="100" y2="${60+i*12}"/>`).join("")}</g></svg>`,
+  bars:`<svg class="cv__art" viewBox="0 0 100 140" preserveAspectRatio="xMidYMid slice"><g fill="#fff" fill-opacity=".16">${[40,58,30,72,50,84].map((h,i)=>`<rect x="${42+i*9}" y="${130-h}" width="6" height="${h}"/>`).join("")}</g></svg>`,
+  line:`<svg class="cv__art" viewBox="0 0 100 140" preserveAspectRatio="xMidYMid slice"><polyline fill="none" stroke="#F3EFE5" stroke-opacity=".5" stroke-width="1.2" points="0,120 12,112 24,115 36,100 48,104 60,88 72,92 84,76 100,70"/></svg>`,
+  dots:`<svg class="cv__art" viewBox="0 0 100 140" preserveAspectRatio="xMidYMid slice"><g fill="#fff" fill-opacity=".22">${Array.from({length:36},(_,i)=>`<circle cx="${50+(i%6)*9}" cy="${70+Math.floor(i/6)*10}" r="2"/>`).join("")}</g></svg>`
+};
+const BASE = [
+  {r:"claim",f:.06,ko:"보고서는 올해 상품 교역 증가 폭을 지난 전망보다 높게 본다.",en:"The report expects goods trade to grow faster this year than previously forecast."},
+  {r:"claim",f:.1,ko:"내년에는 증가세가 조금 둔해진다고 본다.",en:"It expects growth to slow slightly next year."},
+  {r:"evidence",f:.2,ko:"특정 품목 수입이 증가분의 큰 몫을 차지했다는 수치를 든다.",en:"It cites figures showing a few products account for much of the increase.",data:true},
+  {r:"evidence",f:.3,ko:"지역별 수출 물량을 표로 비교한다.",en:"It compares export volumes by region in a table.",miss:true},
+  {r:"limit",f:.44,ko:"TERM 기준이라 금액 변화는 따로 봐야 한다.",en:"Figures are in TERM, so changes in value need a separate look.",term:true},
+  {r:"limit",f:.46,ko:"에너지 가격 가정이 바뀌면 전망도 달라진다고 밝힌다.",en:"It notes the outlook changes if energy price assumptions change."}
+];
+const CHECKS = [["c1","yes",.04],["c2","yes",.12],["c3","no"],["c4","hard"]];
+
+/* ---------- 상태 ---------- */
+let lang = "ko"; try{ lang = localStorage.getItem("td-lang") || "ko"; }catch(e){}
+let pick = null, tab = "summary", pop = null;
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const $ = s => document.querySelector(s);
+const wall = $("#wall"), work = $("#work");
+const t = (k, ...a) => { const v = T[lang][k]; return typeof v === "function" ? v(...a) : v; };
+const pageOf = (r, f) => Math.max(1, Math.round(r.pages * f));
+
+/* ---------- 표지 벽 ---------- */
+function buildWall(){
+  const vw = innerWidth, k = vw < 760 ? 1.9 : 1;     // 좁은 화면에서는 표지를 키우고 바깥은 화면 밖으로
+  wall.innerHTML = "";
+  const ORDER = [5,6,4,7,3,8,2,9,1,10,0];
+  REPORTS = ALL.filter(r => (fCat==="all"||r.category===fCat) && (fOrg==="all"||r.org.includes(fOrg)) &&
+      (!fQ || (r.ko+" "+r.en+" "+r.org).toLowerCase().includes(fQ.toLowerCase())))
+    .sort((a,b) => (b.real?1:0)-(a.real?1:0) || b.published.localeCompare(a.published)).slice(0, 11);
+  $("#shelf-count").textContent = t("count", REPORTS.length, ALL.length);
+  $("#shelf-empty").hidden = REPORTS.length > 0;
+  REPORTS.forEach((r, i) => {
+    const s = SLOTS[ORDER[i]], b = document.createElement("button");
+    b.className = "slot";
+        b.style.zIndex = String(Math.round(Math.abs(s.x) * 100));
+    b.style.cssText += `;--x:${s.x*vw*k}px;--w:${s.h/1.414*vw*k}px;--h:${s.h*vw*k}px;--ry:${s.ry}deg;--c:${r.c};--d:${reduce?0:i*45}ms`;
+    b.setAttribute("aria-pressed", String(i === pick));
+    b.innerHTML = `${ART[r.art]}<span class="cv"><span class="cv__org">${r.org}</span><span class="cv__title">${r[lang]}</span><span class="cv__year">${r.year}</span></span><span class="cv__tag">${tagOf(r)}</span>`;
+    b.setAttribute("aria-label", `${r[lang]} ${r.year}`);
+    b.addEventListener("click", () => choose(i));
+    wall.appendChild(b);
+  });
+}
+function unfold(){
+  if (reduce){ wall.classList.add("is-open","is-settled"); return; }
+  void wall.offsetWidth; wall.classList.add("is-open");
+  setTimeout(() => wall.classList.add("is-settled"), 2400);
+}
+function choose(i){
+  pick = i; tab = "summary"; pop = null;
+  [...wall.children].forEach((el, k) => el.setAttribute("aria-pressed", String(k === i)));
+  wall.classList.add("has-pick");
+  renderWork(); work.hidden = false;
+  setTimeout(() => work.scrollIntoView({behavior: reduce ? "auto" : "smooth"}), 200);
+}
+$("#go").addEventListener("click", () => { const i = REPORTS.findIndex(r => r.real); choose(i < 0 ? 0 : i); });
+
+/* ---------- 보고서 작업 영역 ---------- */
+function renderReal(r){
+  const R = r.real, esc = x => String(x).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  const withTerm = it => { let h = esc(it[lang]);
+    (R.terms||[]).forEach((tm,ti) => { const m = tm["match_"+lang]; if (m && h.includes(m)) h = h.replace(m, `<button class="term" data-pop="t${ti}-${it.id}">${m}</button>`); });
+    return h; };
+  const col = role => `<section><h3><span class="chip chip--${role}">${t(role)}</span></h3><ol>${R.items.filter(i=>i.role===role).map(it => {
+    const ok = it.verified !== false;
+    const termPop = (R.terms||[]).map((tm,ti) => pop===`t${ti}-${it.id}` ? `<div class="pop"><b>${tm[lang]}</b> · ${esc(tm["def_"+lang])}</div>` : "").join("");
+    return `<li>${withTerm(it)}
+      <div class="row"><button class="pg" data-pop="p${it.id}" aria-expanded="${pop==="p"+it.id}">${t("srcBtn")} · p. ${it.page} ${ok?`<span class="ok">✓</span>`:`<span class="miss">!</span>`}</button>
+      ${it.link?`<button class="data" data-pop="d${it.id}" aria-expanded="${pop==="d"+it.id}">${t("data")}</button>`:""}</div>
+      ${pop==="p"+it.id?`<div class="pop">${ok?`<b>${t("ok")}</b> · ${t("quote")} (p. ${it.page}): “${esc(it.quote)}”`:`<b>${t("miss")}</b> · ${t("missMsg")}`}</div>`:""}
+      ${pop==="d"+it.id?`<div class="pop">${esc(it.link.note)} <a href="${it.link.service==="policyline"?"https://policy-line-eight.vercel.app/":"https://trade-data-lab.vercel.app/"}#${encodeURIComponent(it.link.target)}" target="_blank" rel="noopener">${it.link.service==="policyline"?"Policyline":"Tradeweave"} ${t("open")}</a></div>`:""}
+      ${termPop}
+    </li>`;}).join("")}</ol></section>`;
+  const panes = {
+    summary:`<div class="digest">${col("claim")}${col("evidence")}${col("limit")}</div>`,
+    check:`<ul class="check">${R.checks.map(c=>`<li><span>${t(c.q)}<br><small style="color:var(--ink-3)">${esc(c[lang])}</small></span><span class="verdict verdict--${c.verdict}">${t(c.verdict)}${c.page?` · p. ${c.page}`:""}</span></li>`).join("")}</ul>`
+  };
+  work.innerHTML = `
+    <div class="head">
+      <div class="head__txt"><div class="head__org">${R.org} · ${R.published} · ${R.scope[lang]}</div><h2 class="head__title">${R.title[lang]}</h2>
+        <div class="head__meta">${R.reviewed?`<span class="badge badge--reviewed">${t("reviewed")}</span>`:`<span class="badge badge--auto">${t("draftBadge")}</span>`}<span>${t("pages",r.pages)} · ${t("items",R.items.length)}</span></div>
+        <p style="margin:10px 0 0;font-size:14.5px;color:var(--ink-2);max-width:70ch">${esc(R.gist[lang])}</p></div>
+      <a class="btn btn--white" href="${R.url}" target="_blank" rel="noopener">${t("pdf")}</a><button class="btn btn--white" id="copy">${t("copy")}</button>
+    </div>
+    <div class="tabs" role="tablist">
+      ${["summary","check"].map(k=>`<button role="tab" data-tab="${k}" aria-selected="${tab===k}">${t("t."+k)}</button>`).join("")}
+      <button role="tab" aria-disabled="true" aria-selected="false">${t("t.compare")}<small>${t("soon")}</small></button>
+    </div>
+    <div class="pane" role="tabpanel">${panes[tab]}</div>
+    <p class="cite">${t("source")}: ${esc(R.citation)}</p>`;
+}
+function copyText(r){
+  const R = r.real; const role = {claim:t("claim"),evidence:t("evidence"),limit:t("limit")};
+  return [R.title[lang], ...R.items.map(i=>`[${role[i.role]}] ${i[lang]} (p. ${i.page})`), `${t("source")}: ${R.citation}`, R.url].join("\n");
+}
+function renderWork(){
+  if (pick === null) return;
+  const r = REPORTS[pick];
+  if (r.real) return renderReal(r);
+  const catName = (CAT.categories.find(c => c.id === r.category) || {})[lang] || "";
+  work.innerHTML = `<div class="head"><div class="head__txt"><div class="head__org">${r.org} · ${r.published} · ${catName}</div>
+      <h2 class="head__title">${r[lang]}</h2><div class="head__meta"><span class="badge badge--auto">${t("pending")}</span>${r.link_check!=="ok"?`<span>${t("linkNote")}</span>`:""}</div></div>
+      <a class="btn btn--white" href="${r.url}" target="_blank" rel="noopener">${t("pdf")}</a></div>
+    <div class="pending" style="margin-top:14px"><p>${t("pendMsg")}</p><button class="btn btn--primary" id="ask-sum">${t("askSum")}</button></div>`;
+  return;
+  const text = s => s[lang].replace("TERM", `<button class="term" data-pop="t">${TERM[lang].w}</button>`);
+  const col = role => `<section><h3><span class="chip chip--${role}">${t(role)}</span></h3><ol>${BASE.map((s,k)=>({...s,k})).filter(s=>s.r===role).map(s => {
+    const p = pageOf(r, s.f);
+    return `<li>${text(s)}
+      <div class="row"><button class="pg" data-pop="p${s.k}" aria-expanded="${pop==="p"+s.k}">p. ${p} ${s.miss?`<span class="miss">!</span>`:`<span class="ok">✓</span>`}</button>
+      ${s.data?`<button class="data" data-pop="d${s.k}" aria-expanded="${pop==="d"+s.k}">${t("data")}</button>`:""}</div>
+      ${pop==="p"+s.k?`<div class="pop">${s.miss?`<b>${t("miss")}</b> · ${t("missMsg")}`:`<b>${t("ok")}</b> · ${t("quote")} (p. ${p}): “${lang==="ko"?"가상 구절":"fictional passage"} …”`}</div>`:""}
+      ${pop==="d"+s.k?`<div class="pop">${t("dataMsg")} <a href="#">${t("open")}</a></div>`:""}
+      ${pop==="t"&&s.term?`<div class="pop"><b>${TERM[lang].w}</b> · ${TERM[lang].d}</div>`:""}
+    </li>`;}).join("")}</ol></section>`;
+  const panes = {
+    summary:`<div class="digest">${col("claim")}${col("evidence")}${col("limit")}</div>`,
+    check:`<ul class="check">${CHECKS.map(([k,v,f])=>`<li><span>${t(k)}</span><span class="verdict verdict--${v}">${t(v)}${f?` · p. ${pageOf(r,f)}`:""}</span></li>`).join("")}</ul>`
+  };
+  work.innerHTML = `
+    <div class="head">
+      <div class="head__txt"><div class="head__org">${r.org} · ${r.year}</div><h2 class="head__title">${r[lang]}</h2>
+        <div class="head__meta"><span class="badge badge--reviewed">${t("reviewed")}</span><span>${t("pages",r.pages)} · ${t("items",BASE.length)}</span><span class="badge badge--fake">${t("fake")}</span></div></div>
+      <a class="btn btn--white" href="#">${t("pdf")}</a><button class="btn btn--white" id="copy">${t("copy")}</button>
+    </div>
+    <div class="tabs" role="tablist">
+      ${["summary","check"].map(k=>`<button role="tab" data-tab="${k}" aria-selected="${tab===k}">${t("t."+k)}</button>`).join("")}
+      <button role="tab" aria-disabled="true" aria-selected="false">${t("t.compare")}<small>${t("soon")}</small></button>
+    </div>
+    <div class="pane" role="tabpanel">${panes[tab]}</div>`;
+}
+work.addEventListener("click", e => {
+  const tb = e.target.closest("[data-tab]"); if (tb){ tab = tb.dataset.tab; pop = null; renderWork(); return; }
+  const pp = e.target.closest("[data-pop]"); if (pp){ pop = pop === pp.dataset.pop ? null : pp.dataset.pop; renderWork(); return; }
+  if (e.target.id === "ask-sum"){ const r = REPORTS[pick]; rqForm.title.value = r.ko; 
+    const orgSel = rqForm.org; orgSel.value = [...orgSel.options].some(o => o.value === r.org) ? r.org : "기타";
+    document.getElementById("request").scrollIntoView({behavior:"smooth"}); return; }
+  if (e.target.id === "copy"){ const r = REPORTS[pick];
+    if (r && r.real && navigator.clipboard) navigator.clipboard.writeText(copyText(r)).catch(()=>{});
+    e.target.textContent = t("copied"); }
+});
+
+/* ---------- 내 PDF ---------- */
+const drop = $("#drop"), file = $("#file");
+["dragenter","dragover"].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add("is-over"); }));
+["dragleave","drop"].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove("is-over"); }));
+drop.addEventListener("drop", e => { const f = e.dataTransfer.files[0]; if (f) $("#drop-msg").textContent = t("picked", f.name); });
+file.addEventListener("change", () => { if (file.files[0]) $("#drop-msg").textContent = t("picked", file.files[0].name); });
+
+/* ---------- 보고서 요청 (Neon) ---------- */
+const rqForm = $("#rq-form"), rqMsg = $("#rq-msg"), rqList = $("#rq-list"), rqSend = $("#rq-send");
+let rqRows = null, rqFailed = false;
+const voted = new Set(JSON.parse((()=>{ try{ return localStorage.getItem("td-voted") || "[]"; }catch(e){ return "[]"; } })()));
+const escH = x => String(x ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const purposeLabel = v => ({"과제":t("rq.p1"),"스터디":t("rq.p2"),"업무":t("rq.p3"),"기타":t("rq.etc")})[v] || v;
+function drawRequests(){
+  if (rqFailed) { rqList.innerHTML = `<p class="rq-empty">${t("rq.offline")}</p>`; return; }
+  if (!rqRows) return;
+  if (!rqRows.length) { rqList.innerHTML = `<p class="rq-empty">${t("rq.empty")}</p>`; return; }
+  rqList.innerHTML = rqRows.map(r => `<article class="rq-card">
+    <b>${r.url ? `<a href="${escH(r.url)}" target="_blank" rel="noopener">${escH(r.title)}</a>` : escH(r.title)}</b>
+    <button class="rq-vote" data-vote="${r.id}" ${voted.has(r.id) ? "disabled" : ""}><strong>${r.votes}</strong><span>${t("rq.want")}</span></button>
+    <small>${escH(r.org === "기타" ? t("rq.etc") : r.org)} · ${escH(purposeLabel(r.purpose))} · ${escH(r.status)} · ${new Date(r.created_at).toLocaleDateString(lang === "ko" ? "ko-KR" : "en-US")}</small>
+    ${r.reason ? `<p>${escH(r.reason)}</p>` : ""}
+  </article>`).join("");
+}
+async function loadRequests(){
+  try { const r = await fetch("/api/requests"); const j = await r.json(); if (!j.ok) throw 0; rqRows = j.requests; rqFailed = false; }
+  catch(e){ rqFailed = true; }
+  drawRequests();
+}
+let rqBusy = false;
+rqForm.addEventListener("submit", async e => {
+  e.preventDefault(); if (rqBusy) return;          // 빠르게 두 번 눌러도 한 번만
+  rqBusy = true; rqSend.disabled = true; rqSend.textContent = t("rq.sending"); rqMsg.className = "rq-msg"; rqMsg.textContent = "";
+  const body = Object.fromEntries(new FormData(rqForm));
+  try {
+    const r = await fetch("/api/requests", {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(body)});
+    const j = await r.json().catch(() => ({}));
+    if (r.status === 201){ rqMsg.className = "rq-msg ok"; rqMsg.textContent = t("rq.ok"); rqForm.reset(); loadRequests(); }
+    else if (r.status === 400){ rqMsg.className = "rq-msg err"; rqMsg.textContent = t("rq.bad") + (j.fields||[]).map(f => T[lang].rqf[f] || f).join(", "); }
+    else throw 0;
+  } catch(err){ rqMsg.className = "rq-msg err"; rqMsg.textContent = t("rq.fail"); }
+  rqBusy = false; rqSend.disabled = false; rqSend.textContent = t("rq.send");
+});
+rqList.addEventListener("click", async e => {
+  const b = e.target.closest("[data-vote]"); if (!b || b.disabled) return;
+  const id = Number(b.dataset.vote); b.disabled = true;
+  try { const r = await fetch("/api/vote", {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({id})});
+    const j = await r.json(); if (r.status !== 201) throw 0;
+    voted.add(id); try{ localStorage.setItem("td-voted", JSON.stringify([...voted])); }catch(_){}
+    const row = rqRows.find(x => x.id === id); if (row) row.votes = j.votes; drawRequests();
+  } catch(err){ b.disabled = false; }
+});
+loadRequests();
+
+/* ---------- 서가 필터 ---------- */
+const chips = $("#chips"), fOrgSel = $("#f-org"), fQIn = $("#f-q");
+function drawFilters(){
+  chips.innerHTML = [{id:"all", ko:t("all"), en:t("all")}, ...CAT.categories].map(c => `<button data-cat="${c.id}" aria-pressed="${fCat===c.id}">${c[lang]}</button>`).join("");
+  const orgs = [...new Set(ALL.flatMap(r => r.org.split(" · ")))].sort();
+  fOrgSel.innerHTML = `<option value="all">${t("allOrg")}</option>` + orgs.map(o => `<option ${fOrg===o?"selected":""}>${o}</option>`).join("");
+  fQIn.placeholder = t("search");
+}
+function refilter(){ pick = null; work.hidden = true; wall.classList.remove("has-pick","is-open","is-settled"); buildWall(); unfold(); }
+chips.addEventListener("click", e => { const b = e.target.closest("[data-cat]"); if (!b) return; fCat = b.dataset.cat; drawFilters(); refilter(); });
+fOrgSel.addEventListener("change", () => { fOrg = fOrgSel.value; refilter(); });
+let qT; fQIn.addEventListener("input", () => { clearTimeout(qT); qT = setTimeout(() => { fQ = fQIn.value.trim(); refilter(); }, 250); });
+
+/* ---------- 언어 ---------- */
+function applyLang(){
+  document.documentElement.lang = lang;
+  document.querySelectorAll("[data-t]").forEach(el => el.textContent = t(el.dataset.t));
+  $("#lang").textContent = t("lang");
+  $("#lede").innerHTML = t("lede").join("<br>");
+  [...wall.children].forEach((el, i) => { el.querySelector(".cv__title").textContent = REPORTS[i][lang]; el.querySelector(".cv__tag").textContent = tagOf(REPORTS[i]); });
+  drawFilters(); $("#shelf-count").textContent = t("count", REPORTS.length, ALL.length);
+  renderWork(); if (typeof drawRequests === "function") drawRequests();
+}
+$("#lang").addEventListener("click", () => { lang = lang === "ko" ? "en" : "ko"; try{ localStorage.setItem("td-lang", lang); }catch(e){} applyLang(); });
+
+buildWall(); applyLang();
+setTimeout(unfold, 250);
+let rz; addEventListener("resize", () => { clearTimeout(rz); rz = setTimeout(() => { buildWall(); applyLang(); wall.classList.add("is-open","is-settled"); }, 200); });
+</script>
+<script type="module">
+/* 3D 점 지구본 + 교역 항로 (장식용 그림. 항로는 예시이며 교역량을 뜻하지 않음) */
+import * as d3 from "https://cdn.jsdelivr.net/npm/d3-geo@3.1.1/+esm";
+import * as topojson from "https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/+esm";
+const cv = document.getElementById("globe"), ctx = cv.getContext("2d"), hero = cv.parentElement;
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const PORTS = { busan:[129.04,35.1], shanghai:[121.5,31.2], singapore:[103.8,1.29], rotterdam:[4.48,51.92], hamburg:[9.99,53.55], la:[-118.26,33.74],
+  ny:[-74.0,40.7], santos:[-46.33,-23.96], dubai:[55.03,25.0], mumbai:[72.87,18.95], durban:[31.03,-29.87], sydney:[151.2,-33.86], tokyo:[139.77,35.62], vancouver:[-123.1,49.28] };
+const ROUTES = [["busan","rotterdam"],["shanghai","la"],["singapore","hamburg"],["tokyo","vancouver"],["santos","shanghai"],["dubai","mumbai"],["ny","rotterdam"],["durban","singapore"],["sydney","busan"],["la","busan"],["mumbai","rotterdam"],["shanghai","dubai"]];
+let W=0,H=0,dpr=1, dots=[], landGeo=null, rot=[-100,-18], t0=performance.now(), running=true;
+const proj = d3.geoOrthographic().clipAngle(90), path = d3.geoPath(proj, ctx);
+function size(){
+  dpr = Math.min(2, devicePixelRatio || 1); W = hero.clientWidth; H = hero.clientHeight;
+  cv.width = W*dpr; cv.height = H*dpr; ctx.setTransform(dpr,0,0,dpr,0,0);
+  const r = Math.min(W*0.46, H*0.82); proj.scale(r).translate([W/2, H*0.86]);
+}
+function land(){
+  return fetch("https://cdn.jsdelivr.net/npm/world-atlas@2.0.2/land-110m.json").then(r=>r.json()).then(topo=>{
+    const l = topojson.feature(topo, topo.objects.land); landGeo = l; const out=[];
+    for (let lat=-58; lat<=78; lat+=0.8){ const step = 0.8/Math.max(.25,Math.cos(lat*Math.PI/180));
+      for (let lon=-180; lon<180; lon+=step){ if (d3.geoContains(l,[lon,lat])){ // 물줄기처럼 보이는 짧은 선: 방향은 부드러운 흐름장, 색은 두 가지
+        const a = Math.sin(lon*.09)*1.6 + Math.cos(lat*.13)*1.3 + Math.sin((lon+lat)*.05);
+        out.push([lon,lat, lon+Math.cos(a)*1.0, lat+Math.sin(a)*0.8, (Math.sin(lon*.31)*Math.cos(lat*.27) > .35) ? 1 : 0]); } } }
+    dots = out;
+  }).catch(()=>{ dots = []; });
+}
+const arcs = ROUTES.map(([a,b],i)=>({a:PORTS[a],b:PORTS[b],ip:d3.geoInterpolate(PORTS[a],PORTS[b]),off:i*0.37}));
+function frame(now){
+  const T = (now - t0)/1000;
+  if (!reduce) rot[0] = -100 + T*4;
+  proj.rotate(rot);
+  ctx.clearRect(0,0,W,H);
+  const [cx,cy] = proj.translate(), r = proj.scale();
+  // 대륙: 바다는 비우고, 육지를 미세한 점으로 채운다 (가장자리로 갈수록 옅게)
+  const lam0 = -rot[0]*Math.PI/180, phi0 = -rot[1]*Math.PI/180, sp0=Math.sin(phi0), cp0=Math.cos(phi0);
+  for (const d of dots){
+    const lam=d[0]*Math.PI/180, phi=d[1]*Math.PI/180;
+    const c = sp0*Math.sin(phi)+cp0*Math.cos(phi)*Math.cos(lam-lam0);
+    if (c <= 0.02) continue;
+    const p = proj([d[0],d[1]]), z = 0.8 + 0.6*c;
+    ctx.fillStyle = `rgba(214,232,222,${0.12+0.5*c})`; ctx.fillRect(p[0]-z/2, p[1]-z/2, z, z);
+  }
+  // 항로
+  ctx.lineCap = "round";
+  for (const a of arcs){
+    ctx.strokeStyle = "rgba(243,239,229,.08)"; ctx.lineWidth = 1; ctx.beginPath(); path({type:"LineString",coordinates:[a.a,a.b]}); ctx.stroke();
+    const k = ((T*0.22 + a.off) % 1.3); const h = Math.min(1,k), tail = Math.max(0,k-0.3);
+    if (h > tail){ const pts=[]; for(let i=0;i<=24;i++) pts.push(a.ip(tail+(h-tail)*i/24));
+      ctx.strokeStyle = "rgba(243,239,229,.45)"; ctx.lineWidth = 1.2;
+      ctx.beginPath(); path({type:"LineString",coordinates:pts}); ctx.stroke(); ctx.shadowBlur = 0; }
+    for (const q of [a.a,a.b]){ const lam=q[0]*Math.PI/180, phi=q[1]*Math.PI/180;
+      if (sp0*Math.sin(phi)+cp0*Math.cos(phi)*Math.cos(lam-lam0) > 0){ const p=proj(q); ctx.fillStyle="rgba(243,239,229,.5)"; ctx.beginPath(); ctx.arc(p[0],p[1],1.4,0,Math.PI*2); ctx.fill(); } }
+  }
+  if (running && !reduce) requestAnimationFrame(frame);
+}
+size(); addEventListener("resize", () => { size(); if (reduce) frame(performance.now()); });
+new IntersectionObserver(([e]) => { const was = running; running = e.isIntersecting; if (running && !was && !reduce) requestAnimationFrame(frame); }).observe(hero);
+land().then(() => requestAnimationFrame(frame));
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>

@@ -31,6 +31,8 @@ for rep in data["reports"]:
 
 src.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 out = ROOT / "data" / "reports.js"
+catalog = json.loads((ROOT / "data" / "catalog.json").read_text(encoding="utf-8"))
 out.write_text("// scripts/build_data.py 가 만든 파일 — 직접 고치지 않는다\nwindow.TD_REPORTS = "
-               + json.dumps(data, ensure_ascii=False) + ";\n", encoding="utf-8")
+               + json.dumps(data, ensure_ascii=False) + ";\nwindow.TD_CATALOG = "
+               + json.dumps(catalog, ensure_ascii=False) + ";\n", encoding="utf-8")
 print(f"→ {out.relative_to(ROOT)}")
