@@ -1,5 +1,7 @@
 # 뉴스 속 무역 공부방
 
+> 2026-11-16부터 `trade-data-lab` 저장소의 `trade-news-room/` 폴더에서 관리합니다. 배포 주소: https://trade-news-room.vercel.app/
+
 세계 무역 뉴스를 고르고, 그래프를 직접 움직여 보고, 퀴즈를 풀며 무역 개념을 익히는 학습 웹사이트.
 
 ## 구성
