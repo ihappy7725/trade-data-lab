@@ -1,66 +1,193 @@
 {
   "_note": "실제 보고서 목록 (2026-11-16 검색). link_check: ok=링크 열림 확인, blocked=기관 사이트가 프로그램 접근을 막아 브라우저로 직접 확인 필요, verify=제목·링크를 원문 페이지에서 다시 확인해야 함. summary가 있는 보고서만 data/reports.json에 요약이 있다.",
   "categories": [
-    { "id": "outlook", "ko": "세계 교역 · 경제 전망", "en": "Trade & economic outlook" },
-    { "id": "policy", "ko": "관세 · 통상정책", "en": "Tariffs & trade policy" },
-    { "id": "supply", "ko": "공급망 · 경제안보", "en": "Supply chains & economic security" },
-    { "id": "digital", "ko": "디지털 · AI 무역", "en": "Digital & AI trade" },
-    { "id": "energy", "ko": "에너지 · 원자재", "en": "Energy & commodities" },
-    { "id": "korea", "ko": "한국 수출입", "en": "Korea's trade" }
+    {
+      "id": "outlook",
+      "ko": "세계 교역 · 경제 전망",
+      "en": "Trade & economic outlook"
+    },
+    {
+      "id": "policy",
+      "ko": "관세 · 통상정책",
+      "en": "Tariffs & trade policy"
+    },
+    {
+      "id": "supply",
+      "ko": "공급망 · 경제안보",
+      "en": "Supply chains & economic security"
+    },
+    {
+      "id": "digital",
+      "ko": "디지털 · AI 무역",
+      "en": "Digital & AI trade"
+    },
+    {
+      "id": "energy",
+      "ko": "에너지 · 원자재",
+      "en": "Energy & commodities"
+    },
+    {
+      "id": "korea",
+      "ko": "한국 수출입",
+      "en": "Korea's trade"
+    }
   ],
   "reports": [
-    { "id": "wto-gtos-2026-10", "org": "WTO", "category": "outlook", "published": "2026-10-08",
-      "title": { "ko": "세계 무역 전망과 통계 (2026년 10월 업데이트)", "en": "Global Trade Outlook and Statistics – Update: October 2026" },
-      "url": "https://www.wto.org/english/res_e/booksp_e/gtos1026_e.pdf", "link_check": "ok", "summary": true },
-    { "id": "imf-weo-2026-10", "org": "IMF", "category": "outlook", "published": "2026-10-13",
-      "title": { "ko": "세계경제전망 2026년 10월: 압박 속의 회복력, 시급한 선택", "en": "World Economic Outlook, October 2026: Resilience Under Strain, Urgent Choices" },
-      "url": "https://www.imf.org/en/publications/weo/issues/2026/10/13/world-economic-outlook-october-2026", "link_check": "blocked", "summary": false },
-    { "id": "wb-gep-2026-06", "org": "World Bank", "category": "outlook", "published": "2026-06-11",
-      "title": { "ko": "세계경제전망 (GEP) 2026년 6월", "en": "Global Economic Prospects, June 2026" },
-      "url": "https://www.worldbank.org/en/news/press-release/2026/06/11/global-economic-prospects-june-2026-press-release", "link_check": "ok", "summary": false },
-    { "id": "oecd-eo-2026-06", "org": "OECD", "category": "outlook", "published": "2026-06-03",
-      "title": { "ko": "OECD 경제전망 2026년 6월호", "en": "OECD Economic Outlook, June 2026" },
-      "url": "https://www.oecd.org/en/about/news/speech-statements/2026/06/oecd-economic-outlook-launch.html", "link_check": "verify", "summary": false },
-    { "id": "imf-esr-2026", "org": "IMF", "category": "outlook", "published": "2026-07-30",
-      "title": { "ko": "대외부문 보고서 2026: 커지는 불균형, 재균형의 필요", "en": "2026 External Sector Report: Amid Rising Imbalances, the Case for Rebalancing" },
-      "url": "https://www.imf.org/en/publications/esr/issues/2026/07/30/external-sector-report-2026", "link_check": "blocked", "summary": false },
-    { "id": "kiep-weo-2026-05", "org": "KIEP", "category": "outlook", "published": "2026-05-12",
-      "title": { "ko": "2026년 세계경제 전망 (업데이트)", "en": "2026 World Economic Outlook (Update)" },
-      "url": "https://www.kiep.go.kr", "link_check": "verify", "summary": false },
-
-    { "id": "unctad-gtu-2026-05", "org": "UNCTAD", "category": "policy", "published": "2026-05",
-      "title": { "ko": "세계 교역 업데이트 (2026년 5월): 보이지 않는 장벽 – 비관세조치의 비용", "en": "Global Trade Update (May 2026): Invisible barriers – the costs of non-tariff measures" },
-      "url": "https://unctad.org", "link_check": "verify", "summary": false },
-    { "id": "wto-g20-monitoring-2025-11", "org": "WTO", "category": "policy", "published": "2025-11",
-      "title": { "ko": "G20 무역조치 모니터링 보고서 (2025년 11월)", "en": "Report on G20 Trade Measures (November 2025)" },
-      "url": "https://www.wto.org/english/tratop_e/tpr_e/trade_monitoring_e.htm", "link_check": "verify", "summary": false },
-    { "id": "kita-usmca-2026-07", "org": "KITA", "category": "policy", "published": "2026-07-23",
-      "title": { "ko": "USMCA 검토 동향과 우리 기업 대응 (트레이드 포커스)", "en": "USMCA review and Korean firms' response (Trade Focus)" },
-      "url": "https://kita.net/researchTrade/report/tradeFocus/tradeFocusDetail.do?no=2972", "link_check": "verify", "summary": false },
-
-    { "id": "oecd-crm-export-restrictions-2026", "org": "OECD", "category": "supply", "published": "2026-04",
-      "title": { "ko": "핵심 원자재 수출제한 현황 2026", "en": "Inventory of Export Restrictions on Critical Raw Materials 2026" },
-      "url": "https://www.oecd.org/en/about/news/press-releases/2026/04/critical-raw-materials-face-rising-export-restrictions-increasing-risks-to-global-supply-chains.html", "link_check": "blocked", "summary": false },
-    { "id": "oecd-iea-traceability-2026", "org": "OECD · IEA", "category": "supply", "published": "2026-09",
-      "title": { "ko": "추적성으로 공급망 회복력 높이기 (리튬 · 니켈)", "en": "Enhancing Resilience through Traceability" },
-      "url": "https://www.oecd.org/en/about/news/announcements/2026/09/new-oecd-report-shows-how-traceability-can-help-strengthen-critical-minerals-supply-chains.html", "link_check": "blocked", "summary": false },
-
-    { "id": "wto-wtr-2025", "org": "WTO", "category": "digital", "published": "2025-09-17",
-      "title": { "ko": "세계무역보고서 2025: 무역과 AI가 함께 모두에게 이롭게", "en": "World Trade Report 2025: Making trade and AI work together to the benefit of all" },
-      "url": "https://www.wto.org/english/res_e/publications_e/wtr25_e.htm", "link_check": "ok", "summary": false },
-    { "id": "oecd-deso-2026", "org": "OECD", "category": "digital", "published": "2026-11",
-      "title": { "ko": "OECD 디지털 경제 · 사회 전망 2026", "en": "OECD Digital Economy and Society Outlook 2026" },
-      "url": "https://www.oecd.org/en/publications/2026/11/oecd-digital-economy-and-society-outlook-2026_457d074d.html", "link_check": "blocked", "summary": false },
-
-    { "id": "wb-cmo-2026-10", "org": "World Bank", "category": "energy", "published": "2026-10-28",
-      "title": { "ko": "원자재 시장 전망 2026년 10월", "en": "Commodity Markets Outlook, October 2026" },
-      "url": "https://www.worldbank.org/en/research/commodity-markets", "link_check": "verify", "summary": false },
-
-    { "id": "kita-outlook-2026", "org": "KITA", "category": "korea", "published": "2025-12-05",
-      "title": { "ko": "2025년 수출입 평가 및 2026년 전망", "en": "2025 Trade Review and 2026 Outlook" },
-      "url": "https://kita.net/researchTrade/report/tradeFocus/tradeFocusDetail.do?no=2932", "link_check": "verify", "summary": false },
-    { "id": "unctad-gtu-2026-07", "org": "UNCTAD", "category": "outlook", "published": "2026-07",
-      "title": { "ko": "세계 교역 업데이트 (2026년 7월): 첨단 품목이 이끄는 교역", "en": "Global Trade Update (July 2026)" },
-      "url": "https://unctad.org/news/high-tech-goods-power-global-trade-amid-uncertainty", "link_check": "ok", "summary": false }
+    {
+      "id": "wto-gtos-2026-10",
+      "org": "WTO",
+      "category": "outlook",
+      "published": "2026-10-08",
+      "title": {
+        "ko": "세계 무역 전망과 통계 (2026년 10월 업데이트)",
+        "en": "Global Trade Outlook and Statistics – Update: October 2026"
+      },
+      "url": "https://www.wto.org/english/res_e/booksp_e/gtos1026_e.pdf",
+      "link_check": "ok",
+      "summary": true
+    },
+    {
+      "id": "imf-weo-2026-10",
+      "org": "IMF",
+      "category": "outlook",
+      "published": "2026-10-13",
+      "title": {
+        "ko": "세계경제전망 2026년 10월: 압박 속의 회복력, 시급한 선택",
+        "en": "World Economic Outlook, October 2026: Resilience Under Strain, Urgent Choices"
+      },
+      "url": "https://www.imf.org/en/publications/weo/issues/2026/10/13/world-economic-outlook-october-2026",
+      "link_check": "ok",
+      "summary": true
+    },
+    {
+      "id": "wb-gep-2026-06",
+      "org": "World Bank",
+      "category": "outlook",
+      "published": "2026-06-11",
+      "title": {
+        "ko": "세계경제전망 (GEP) 2026년 6월",
+        "en": "Global Economic Prospects, June 2026"
+      },
+      "url": "https://www.worldbank.org/en/news/press-release/2026/06/11/global-economic-prospects-june-2026-press-release",
+      "link_check": "ok",
+      "summary": true
+    },
+    {
+      "id": "oecd-eo-2026-09",
+      "org": "OECD",
+      "category": "outlook",
+      "published": "2026-09",
+      "title": {
+        "ko": "OECD 중간 경제전망 2026년 9월: 연쇄 충격 속의 성장",
+        "en": "OECD Economic Outlook Interim Report, September 2026: Weathering Successive Shocks"
+      },
+      "url": "https://www.oecd.org/en/about/news/press-releases/2026/09/global-growth-holds-up-despite-successive-shocks-but-risks-persist.html",
+      "link_check": "ok",
+      "summary": true
+    },
+    {
+      "id": "imf-esr-2026",
+      "org": "IMF",
+      "category": "outlook",
+      "published": "2026-07-30",
+      "title": {
+        "ko": "대외부문 보고서 2026: 커지는 불균형, 재균형의 필요",
+        "en": "2026 External Sector Report: Amid Rising Imbalances, the Case for Rebalancing"
+      },
+      "url": "https://www.imf.org/en/publications/esr/issues/2026/07/30/external-sector-report-2026",
+      "link_check": "blocked",
+      "summary": false
+    },
+    {
+      "id": "kiep-weo-2026-05",
+      "org": "KIEP",
+      "category": "outlook",
+      "published": "2026-05-12",
+      "title": {
+        "ko": "2026년 세계경제 전망 (업데이트)",
+        "en": "2026 World Economic Outlook (Update)"
+      },
+      "url": "https://www.kiep.go.kr",
+      "link_check": "verify",
+      "summary": false
+    },
+    {
+      "id": "oecd-crm-export-restrictions-2026",
+      "org": "OECD",
+      "category": "supply",
+      "published": "2026-04",
+      "title": {
+        "ko": "핵심 원자재 수출제한 현황 2026",
+        "en": "Inventory of Export Restrictions on Critical Raw Materials 2026"
+      },
+      "url": "https://www.oecd.org/en/about/news/press-releases/2026/04/critical-raw-materials-face-rising-export-restrictions-increasing-risks-to-global-supply-chains.html",
+      "link_check": "blocked",
+      "summary": false
+    },
+    {
+      "id": "oecd-iea-traceability-2026",
+      "org": "OECD · IEA",
+      "category": "supply",
+      "published": "2026-09",
+      "title": {
+        "ko": "추적성으로 공급망 회복력 높이기 (리튬 · 니켈)",
+        "en": "Enhancing Resilience through Traceability"
+      },
+      "url": "https://www.oecd.org/en/about/news/announcements/2026/09/new-oecd-report-shows-how-traceability-can-help-strengthen-critical-minerals-supply-chains.html",
+      "link_check": "blocked",
+      "summary": false
+    },
+    {
+      "id": "wto-wtr-2025",
+      "org": "WTO",
+      "category": "digital",
+      "published": "2025-09-17",
+      "title": {
+        "ko": "세계무역보고서 2025: 무역과 AI가 함께 모두에게 이롭게",
+        "en": "World Trade Report 2025: Making trade and AI work together to the benefit of all"
+      },
+      "url": "https://www.wto.org/english/res_e/publications_e/wtr25_e.htm",
+      "link_check": "ok",
+      "summary": false
+    },
+    {
+      "id": "oecd-deso-2026",
+      "org": "OECD",
+      "category": "digital",
+      "published": "2026-11",
+      "title": {
+        "ko": "OECD 디지털 경제 · 사회 전망 2026",
+        "en": "OECD Digital Economy and Society Outlook 2026"
+      },
+      "url": "https://www.oecd.org/en/publications/2026/11/oecd-digital-economy-and-society-outlook-2026_457d074d.html",
+      "link_check": "blocked",
+      "summary": false
+    },
+    {
+      "id": "wb-cmo-2026-10",
+      "org": "World Bank",
+      "category": "energy",
+      "published": "2026-10-28",
+      "title": {
+        "ko": "원자재 시장 전망 2026년 10월",
+        "en": "Commodity Markets Outlook, October 2026"
+      },
+      "url": "https://www.worldbank.org/en/research/commodity-markets",
+      "link_check": "verify",
+      "summary": false
+    },
+    {
+      "id": "kita-outlook-2026",
+      "org": "KITA",
+      "category": "korea",
+      "published": "2025-12-05",
+      "title": {
+        "ko": "2025년 수출입 평가 및 2026년 전망",
+        "en": "2025 Trade Review and 2026 Outlook"
+      },
+      "url": "https://kita.net/researchTrade/report/tradeFocus/tradeFocusDetail.do?no=2932",
+      "link_check": "verify",
+      "summary": false
+    }
   ]
 }

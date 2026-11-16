@@ -285,7 +285,7 @@ button{font:inherit;color:inherit;cursor:pointer}
     <h2 data-t="tr.title"></h2>
     <p class="rq-lede" data-t="tr.lede"></p>
     <div class="tr-box">
-      <div class="tr-head"><b id="tr-ind"></b><span class="tr-legend" id="tr-legend"></span></div>
+      <div class="tr-head"><select id="tr-sel" aria-label="indicator"></select><span class="tr-legend" id="tr-legend"></span></div>
       <div id="tr-chart"></div>
       <div class="tr-detail" id="tr-detail" aria-live="polite"></div>
       <table class="tr-table" id="tr-table"></table>
@@ -552,7 +552,7 @@ file.addEventListener("change", () => { if (file.files[0]) $("#drop-msg").textCo
 const FC = (window.TD_FORECASTS || {indicators:[]});
 const ORG_C = {"WTO":"#1E3A2F","IMF":"#4F7A85","World Bank":"#B08A4E","OECD":"#A86F5A"};
 const fcOf = repId => FC.indicators.flatMap(ind => ind.series.flatMap((s,si) => s.points.map((p,pi) => ({ind, s, p, key:`${ind.id}|${si}|${pi}`})))).filter(x => x.p.report === repId);
-let trKey = null, SUBS = [];
+let trKey = null, SUBS = [], curInd = 0;
 function withSubs(ind){
   const series = ind.series.map(s => ({...s, points:[...s.points]}));
   SUBS.filter(x => x.indicator_id === ind.id).forEach(x => {
@@ -564,10 +564,10 @@ function withSubs(ind){
   return {...ind, series};
 }
 
-function trSelect(key){ trKey = key; drawTracker(); }
+function trSelect(key){ const i = FC.indicators.findIndex(x => x.id === key.split('|')[0]); if (i >= 0) curInd = i; trKey = key; drawTracker(); }
 function drawTracker(){
-  const ind0 = FC.indicators[0]; if (!ind0) return; const ind = withSubs(ind0);
-  $("#tr-ind").textContent = ind[lang];
+  const ind0 = FC.indicators[curInd]; if (!ind0) return; const ind = withSubs(ind0);
+  $("#tr-sel").innerHTML = FC.indicators.map((x,i) => `<option value="${i}" ${i===curInd?"selected":""}>${x[lang]}</option>`).join("");
   $("#tr-legend").innerHTML = ind.series.map(s => `<span><i class="${s.def==="goods"?"":"dash"}" style="--c:${ORG_C[s.org]||"#555"}"></i>${s.org}</span>`).join("") + `<span>${t("solid")} · ${t("dashed")}</span>`;
   const all = ind.series.flatMap(s => s.points); const vals = all.map(p => p.value).concat(ind.actual ? [ind.actual.value] : []);
   const toT = d => { const [y,m,dd] = d.split("-").map(Number); return y*12 + (m-1) + ((dd||15)-1)/30; };
@@ -597,6 +597,7 @@ function drawTracker(){
      ${sel.p.report?` <button class="fc-chip" data-open="${sel.p.report}">${t("openRep")}</button>`:sel.p.source?` <a class="fc-chip" href="${sel.p.source}" target="_blank" rel="noopener">${t("openSrc")} ↗</a>`:""}` : "";
   $("#tr-note").textContent = lang==="ko" ? (ind.missing_ko || "") : "";
 }
+$("#tracker").addEventListener("change", e => { if (e.target.id === "tr-sel"){ curInd = Number(e.target.value); trKey = null; drawTracker(); } });
 $("#tracker").addEventListener("click", e => {
   const k = e.target.closest("[data-key]"); if (k){ trSelect(k.dataset.key); return; }
   const o = e.target.closest("[data-open]"); if (o){ fCat = "all"; fOrg = "all"; fQ = ""; buildWall(); wall.classList.add("is-open","is-settled");

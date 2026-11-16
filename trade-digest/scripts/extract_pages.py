@@ -20,7 +20,8 @@ def extract(pdf_path: Path) -> dict:
     pages = []
     for i, page in enumerate(reader.pages):
         label = labels[i] if i < len(labels) else str(i + 1)
-        pages.append({"index": i + 1, "label": label, "text": page.extract_text() or ""})
+        text = (page.extract_text() or "").encode("utf-8", "replace").decode("utf-8")
+        pages.append({"index": i + 1, "label": label, "text": text})
     return {"file": pdf_path.name, "page_count": len(pages), "pages": pages}
 
 
