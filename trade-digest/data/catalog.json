@@ -175,19 +175,6 @@
       "url": "https://www.worldbank.org/en/research/commodity-markets",
       "link_check": "ok",
       "summary": true
-    },
-    {
-      "id": "kita-outlook-2026",
-      "org": "KITA",
-      "category": "korea",
-      "published": "2025-12-05",
-      "title": {
-        "ko": "2025년 수출입 평가 및 2026년 전망",
-        "en": "2025 Trade Review and 2026 Outlook"
-      },
-      "url": "https://kita.net/researchTrade/report/tradeFocus/tradeFocusDetail.do?no=2932",
-      "link_check": "verify",
-      "summary": false
     }
   ]
 }
