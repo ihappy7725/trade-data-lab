@@ -640,6 +640,960 @@
         }
       ],
       "terms": []
+    },
+    {
+      "id": "imf-esr-2026",
+      "org": "IMF",
+      "title": {
+        "ko": "대외부문 보고서 2026: 커지는 불균형, 재균형의 필요",
+        "en": "2026 External Sector Report: Amid Rising Imbalances, the Case for Rebalancing"
+      },
+      "published": "2026-07-30",
+      "scope": {
+        "ko": "개요 (주요 나라 30곳 평가의 요약)",
+        "en": "Overview (summary of 30-economy assessments)"
+      },
+      "url": "https://www.imf.org/en/publications/esr/issues/2026/07/30/external-sector-report-2026",
+      "pages_printed": "개요 vii–x쪽 · 서문 1쪽",
+      "citation": "IMF. 2026. 2026 External Sector Report: Amid Rising Imbalances, the Case for Rebalancing. Washington, DC: International Monetary Fund. ©IMF.",
+      "license_note": "IMF 이용 조건: 링크 자유. 인용은 한 출처 1,000단어 또는 4분의 1 중 적은 쪽, 출처 표기 필수. 원문 재배포 · 2차 저작물 금지.",
+      "reviewed": false,
+      "reviewed_on": null,
+      "gist": {
+        "ko": "2025년 세계 경상수지 불균형이 더 벌어졌다. 주로 중국의 흑자 확대가 원인이고, 미국 적자는 여전히 가장 크다. 무역장벽이 경상수지에 미친 뚜렷한 영향은 과거에 확인되지 않았다.",
+        "en": "Global current account imbalances widened again in 2025, driven mainly by China's surplus. The US deficit is still the largest. Past trade barriers have shown no clear effect on current accounts."
+      },
+      "items": [
+        {
+          "id": "c1",
+          "role": "claim",
+          "page": "ix",
+          "ko": "2025년 세계 경상수지 불균형은 다시 벌어졌다. 2000년대 중반 이후 줄던 추세가 뒤집혔다.",
+          "en": "Global current account imbalances widened again in 2025, reversing the earlier narrowing trend.",
+          "quote": "Global current account balances widened further in 2025",
+          "verified": true
+        },
+        {
+          "id": "c2",
+          "role": "claim",
+          "page": "viii",
+          "ko": "불균형은 주로 나라 안의 거시경제 불균형(저축·투자 구조)에서 나온다고 본다.",
+          "en": "The persistent imbalances mainly reflect domestic macroeconomic imbalances.",
+          "quote": "Persistent elevated current account positions reflect primarily underlying domestic macroeconomic imbalances",
+          "verified": true
+        },
+        {
+          "id": "e1",
+          "role": "evidence",
+          "page": "viii",
+          "ko": "증가분의 주된 원인은 중국의 경상수지 흑자가 25년 넘게 가장 크게 늘어난 것이다.",
+          "en": "The widening was driven mainly by China, where the surplus grew the most in two and a half decades.",
+          "quote": "This increase was driven primarily by China",
+          "verified": true
+        },
+        {
+          "id": "e2",
+          "role": "evidence",
+          "page": "viii",
+          "ko": "절대 규모로는 미국 적자가 가장 크며, 중국과 유로지역 흑자를 합친 것보다 크다.",
+          "en": "In level terms, the US deficit remains the largest, exceeding the combined surpluses of China and the euro area.",
+          "quote": "the US deficit remains by far the largest, exceeding the combined surpluses of China and the euro area",
+          "verified": true
+        },
+        {
+          "id": "e3",
+          "role": "evidence",
+          "page": "viii",
+          "ko": "이번 불균형 확대는 무역 긴장과 미국 무역정책 전환 속에서 일어났다. 2000년대 초와 다르다.",
+          "en": "The rise has occurred amid rising trade tensions and a shift in US trade policy, unlike the early 2000s.",
+          "quote": "In contrast to the early 2000s, this recent rise in global current account balances has occurred amid rising trade tensions",
+          "verified": true
+        },
+        {
+          "id": "l1",
+          "role": "limit",
+          "page": "ix",
+          "ko": "과거 무역장벽이 경상수지에 뚜렷한 영향을 준 증거는 없다고 이사회가 동의했다. 다만 새 무역장벽이 늘면 다른 결과가 나올 수 있다는 단서가 붙는다.",
+          "en": "Directors agreed that past trade barriers have not had clear effects on current accounts; the report notes increasing barriers may differ.",
+          "quote": "Directors generally concurred that, historically, trade barriers have not been associated with clear effects on current accounts",
+          "verified": true
+        },
+        {
+          "id": "l2",
+          "role": "limit",
+          "page": "vii",
+          "ko": "평가는 2026년 5월 18일 기준 외부부문 자료와 2026년 4월 세계경제전망 전망치에 기댄다.",
+          "en": "Assessments use external sector data as of May 18, 2026 and April 2026 WEO projections.",
+          "quote": "external sector data as of May 18, 2026",
+          "verified": true
+        },
+        {
+          "id": "l3",
+          "role": "limit",
+          "page": "1",
+          "ko": "이 보고서는 30개 경제의 평가만 담는다. 나머지 나라는 양자 감시에서 따로 평가한다.",
+          "en": "The report assesses 30 economies; other members are assessed in bilateral surveillance.",
+          "quote": "presents assessments for 30 economies",
+          "verified": true
+        }
+      ],
+      "checks": [
+        {
+          "q": "c1",
+          "verdict": "yes",
+          "page": "vii",
+          "quote": "external sector data as of May 18, 2026",
+          "ko": "2026년 5월 18일 자료 기준을 밝힌다.",
+          "en": "States the May 18, 2026 data cut-off.",
+          "verified": true
+        },
+        {
+          "q": "c2",
+          "verdict": "yes",
+          "page": "1",
+          "quote": "presents assessments for 30 economies",
+          "ko": "평가 대상 30개 경제를 밝힌다.",
+          "en": "States the 30 economies covered.",
+          "verified": true
+        },
+        {
+          "q": "c3",
+          "verdict": "hard",
+          "page": null,
+          "quote": null,
+          "ko": "검수 때 확인: 나라별 경상수지 수치(표 1.1)가 요약에 충분히 들어갔는지.",
+          "en": "To check in review: whether country-level current account figures (Table 1.1) are sufficiently covered."
+        },
+        {
+          "q": "c4",
+          "verdict": "yes",
+          "page": "viii",
+          "quote": "Persistent elevated current account positions reflect primarily underlying domestic macroeconomic imbalances",
+          "ko": "원인 진단을 '주로'라고 한정해 밝힌다 (단정하지 않음).",
+          "en": "Causes are stated as primarily, not as certainties.",
+          "verified": true
+        }
+      ],
+      "terms": []
+    },
+    {
+      "id": "wto-wtr-2025",
+      "org": "WTO",
+      "title": {
+        "ko": "세계무역보고서 2025: 무역과 AI가 함께 모두에게 이롭게",
+        "en": "World Trade Report 2025: Making trade and AI work together to the benefit of all"
+      },
+      "published": "2025-09-17",
+      "scope": {
+        "ko": "요약 · 개요 (AI와 교역 부분)",
+        "en": "Executive summary and overview (AI and trade)"
+      },
+      "url": "https://www.wto.org/english/res_e/publications_e/wtr25_e.htm",
+      "pages_printed": "PDF 쪽 기준 (요약 8쪽 · 개요 6쪽 · 디지털 격차 9쪽)",
+      "citation": "WTO. 2025. World Trade Report 2025: Making trade and AI work together to the benefit of all. Geneva: World Trade Organization.",
+      "license_note": "WTO 저작권 안내: 비상업적 재사용은 출처 표시 조건으로 허용된다고 안내됨. 원문 재배포 금지, 링크만.",
+      "reviewed": false,
+      "reviewed_on": null,
+      "gist": {
+        "ko": "AI는 교역을 크게 늘릴 잠재력이 있다. WTO 모의실험은 2040년까지 상품·서비스 교역이 약 40% 늘 수 있다고 본다. 다만 디지털 격차를 줄이는 정책이 없으면 불평등을 키울 수 있다.",
+        "en": "AI could lift goods and services trade by nearly 40% by 2040 in WTO simulations, but without policies to close the digital divide it could deepen inequality."
+      },
+      "items": [
+        {
+          "id": "c1",
+          "role": "claim",
+          "page": "6",
+          "ko": "WTO 모의실험에 따르면 AI 활용으로 2040년까지 상품·서비스 교역이 거의 40% 늘 수 있다.",
+          "en": "WTO simulations suggest AI could boost goods and services trade by nearly 40% by 2040.",
+          "quote": "AI could boost goods and services trade by nearly 40 per cent by 2040",
+          "verified": true
+        },
+        {
+          "id": "c2",
+          "role": "claim",
+          "page": "6",
+          "ko": "사전 정책과 국제 협력이 없으면 AI는 불평등을 줄이기보다 깊게 할 수 있다고 경고한다.",
+          "en": "Without proactive policy and cooperation, AI could deepen inequalities rather than reduce them.",
+          "quote": "Without proactive policy responses and greater international cooperation, AI could deepen inequalities rather than reducing them",
+          "verified": true
+        },
+        {
+          "id": "e1",
+          "role": "evidence",
+          "page": "8",
+          "ko": "모의실험 시나리오마다 2040년까지 세계 교역이 34~37% 늘어난다고 제시된다.",
+          "en": "Simulations project global trade rising by 34 to 37 per cent by 2040 across scenarios.",
+          "quote": "global trade projected to rise by 34 to 37 per cent across different scenarios",
+          "verified": true
+        },
+        {
+          "id": "e2",
+          "role": "evidence",
+          "page": "9",
+          "ko": "디지털로 거래 가능한 서비스의 양자 교역은 AI 특허 인용과 밀접하게 같이 움직인다.",
+          "en": "Bilateral trade in digitally deliverable services is closely correlated with cross-border AI patent citations.",
+          "quote": "Bilateral trade flows in digitally deliverable services are closely correlated with cross-border AI patent citations",
+          "verified": true
+        },
+        {
+          "id": "e3",
+          "role": "evidence",
+          "page": "21",
+          "ko": "AI 도입은 아직 고르지 않다. 주로 고소득 나라의 대형·도시·디지털 연결이 좋은 기업에 몰려 있다.",
+          "en": "AI adoption is not uniform; it clusters in large, urban, digitally connected firms in high-income economies.",
+          "quote": "AI adoption is not uniform, as it tends to cluster in large, urban, digitally connected firms in high-income economies",
+          "verified": true
+        },
+        {
+          "id": "l1",
+          "role": "limit",
+          "page": "9",
+          "ko": "AI가 전 세계에 퍼지지 않으면 디지털 격차가 더 벌어질 수 있다고 본다.",
+          "en": "Without targeted investment and coordination, AI could exacerbate existing divides and create new ones.",
+          "quote": "Without targeted investment, inclusive policy frameworks and international coordination, AI could exacerbate existing divides and even create new ones",
+          "verified": true
+        },
+        {
+          "id": "l2",
+          "role": "limit",
+          "page": "8",
+          "ko": "모의실험 결과는 정책과 기술 확산 방식에 따라 크게 달라진다. 디지털 격차 해소가 관건이다.",
+          "en": "Outcomes depend on how the digital divide is addressed and how the technology spreads.",
+          "quote": "The impact of AI on inclusive growth will depend on how the digital divide across economies",
+          "verified": true
+        },
+        {
+          "id": "l3",
+          "role": "limit",
+          "page": "8",
+          "ko": "AI의 미래 경로와 영향은 아직 불확실하다고 보고서 스스로 밝힌다.",
+          "en": "The report itself notes AI's future trajectory and impact remain uncertain.",
+          "quote": "its future trajectory and impact remain uncertain",
+          "verified": true
+        }
+      ],
+      "checks": [
+        {
+          "q": "c1",
+          "verdict": "yes",
+          "page": "6",
+          "quote": "WTO simulations suggest that the use of AI could boost goods and services trade",
+          "ko": "모의실험 결과임을 밝힌다.",
+          "en": "States that the figure comes from WTO simulations.",
+          "verified": true
+        },
+        {
+          "q": "c2",
+          "verdict": "yes",
+          "page": "8",
+          "quote": "its future trajectory and impact remain uncertain",
+          "ko": "불확실성을 명시한다.",
+          "en": "States uncertainty.",
+          "verified": true
+        },
+        {
+          "q": "c3",
+          "verdict": "hard",
+          "page": null,
+          "quote": null,
+          "ko": "검수 때 확인: 2040년 40% 모의실험의 가정(시나리오 조건)이 요약에 충분히 드러났는지.",
+          "en": "To check in review: whether the simulation assumptions are sufficiently shown."
+        },
+        {
+          "q": "c4",
+          "verdict": "yes",
+          "page": "8",
+          "quote": "WTO simulations suggest that AI could lead to significant increases in global trade and real income",
+          "ko": "모의실험이라는 점을 밝힌다.",
+          "en": "States simulation-based results.",
+          "verified": true
+        }
+      ],
+      "terms": []
+    },
+    {
+      "id": "wb-cmo-2026-10",
+      "org": "World Bank",
+      "title": {
+        "ko": "원자재 시장 전망 2026년 10월",
+        "en": "Commodity Markets Outlook, October 2026"
+      },
+      "published": "2026-10-28",
+      "scope": {
+        "ko": "요약 · 에너지 · 식량 전망 (PDF 쪽 기준)",
+        "en": "Executive summary, energy and food outlook (PDF page numbers)"
+      },
+      "url": "https://www.worldbank.org/en/research/commodity-markets",
+      "pages_printed": "PDF 쪽 기준 (요약 9쪽 · 에너지 12쪽 · 식량 14쪽)",
+      "citation": "World Bank. 2026. Commodity Markets Outlook, October 2026. Washington, DC: World Bank.",
+      "license_note": "World Bank 출판물 이용 조건 확인 필요. 원문 PDF 재배포 금지, 링크만.",
+      "reviewed": false,
+      "reviewed_on": null,
+      "gist": {
+        "ko": "중동 분쟁으로 2026년 원자재 가격은 23% 오른다. 에너지는 32% 오르고, 2027년에는 전체가 7% 내린다. 식량 가격은 2027년에도 오를 것으로 본다.",
+        "en": "Commodity prices rise 23% in 2026 on the Middle East conflict, with energy up 32%. Prices fall 7% in 2027, but food keeps rising."
+      },
+      "items": [
+        {
+          "id": "c1",
+          "role": "claim",
+          "page": "1",
+          "ko": "2026년 원자재 가격은 23% 오를 것으로 본다. 1세기 가까이 된 높은 수준이다.",
+          "en": "Commodity prices are projected to rise 23% in 2026, to their second-highest level since 2013.",
+          "quote": "commodity prices are projected to increase by 23 percent in 2026",
+          "verified": true
+        },
+        {
+          "id": "c2",
+          "role": "claim",
+          "page": "1",
+          "ko": "2027년에는 원자재 가격이 7% 내릴 것으로 본다.",
+          "en": "Commodity prices are forecast to decline 7% in 2027.",
+          "quote": "In 2027, commodity prices are forecast to decline by 7 percent",
+          "verified": true
+        },
+        {
+          "id": "e1",
+          "role": "evidence",
+          "page": "1",
+          "ko": "증가의 중심은 에너지 가격으로, 32% 급등이 주도한다.",
+          "en": "Energy prices, up 32%, lead the increase.",
+          "quote": "led by a 32 percent jump in energy prices",
+          "verified": true
+        },
+        {
+          "id": "e2",
+          "role": "evidence",
+          "page": "1",
+          "ko": "2026년 브렌트유 평균 가격은 배럴당 91달러로 전망된다.",
+          "en": "Brent oil is forecast to average $91 per barrel in 2026.",
+          "quote": "averaging $91 per barrel for the year",
+          "verified": true
+        },
+        {
+          "id": "e3",
+          "role": "evidence",
+          "page": "1",
+          "ko": "식량 가격은 2026년에 10% 오를 것으로 본다.",
+          "en": "Food commodity prices are on track to climb 10% in 2026.",
+          "quote": "Food commodity prices are on track to climb by 10 percent in 2026",
+          "verified": true
+        },
+        {
+          "id": "e4",
+          "role": "evidence",
+          "page": "1",
+          "ko": "2027년 가격 전망은 4월 이후 대부분 위로 수정됐다.",
+          "en": "2027 price projections have mostly been revised up since April.",
+          "quote": "2027 price projections have mostly been revised up since April",
+          "verified": true
+        },
+        {
+          "id": "l1",
+          "role": "limit",
+          "page": "1",
+          "ko": "2026년 전 세계 석유 생산은 5% 넘게 줄어든다는 전제에 기댄다.",
+          "en": "The outlook assumes global oil production drops more than 5% in 2026.",
+          "quote": "As global oil production drops more than 5 percent in 2026",
+          "verified": true
+        },
+        {
+          "id": "l2",
+          "role": "limit",
+          "page": "3",
+          "ko": "귀금속 가격은 1월~9월 평균이 2026년에 크게 올랐다고 밝힌다 (금·은·백금).",
+          "en": "Average January–September 2026 prices for gold, silver and platinum rose sharply year on year.",
+          "quote": "gold, silver, and platinum",
+          "verified": true
+        },
+        {
+          "id": "l3",
+          "role": "limit",
+          "page": "4",
+          "ko": "중동 공급 차질이 더 길지만 덜 강하게 이어진다는 전제 위에서 에너지 전망을 올렸다.",
+          "en": "Energy forecasts were revised up on the view that Middle East supply disruptions are longer but less intense.",
+          "quote": "reflecting longer but less intense Middle East supply disruptions",
+          "verified": true
+        }
+      ],
+      "checks": [
+        {
+          "q": "c1",
+          "verdict": "yes",
+          "page": "1",
+          "quote": "Overall, commodity prices are projected to increase by 23 percent in 2026",
+          "ko": "2026년 수치는 전망(projected)이다.",
+          "en": "2026 figures are projections.",
+          "verified": true
+        },
+        {
+          "q": "c2",
+          "verdict": "yes",
+          "page": "4",
+          "quote": "Relative to the April forecasts, projected energy prices have been revised higher by 7 percent for 2026",
+          "ko": "4월 전망과의 차이를 밝힌다.",
+          "en": "States the change from the April forecast.",
+          "verified": true
+        },
+        {
+          "q": "c3",
+          "verdict": "hard",
+          "page": null,
+          "quote": null,
+          "ko": "검수 때 확인: 식량 가격 전망 수치(10%)와 다른 자료의 차이.",
+          "en": "To check in review: food price figure (10%) against other sources."
+        },
+        {
+          "q": "c4",
+          "verdict": "yes",
+          "page": "1",
+          "quote": "As global oil production drops more than 5 percent in 2026",
+          "ko": "석유 생산 감소 전제를 밝힌다.",
+          "en": "States the oil production assumption.",
+          "verified": true
+        }
+      ],
+      "terms": []
+    },
+    {
+      "id": "oecd-crm-export-restrictions-2026",
+      "org": "OECD",
+      "title": {
+        "ko": "핵심 원자재 수출제한 현황 2026",
+        "en": "Inventory of Export Restrictions on Critical Raw Materials 2026"
+      },
+      "published": "2026-04",
+      "scope": {
+        "ko": "핵심 메시지 · 주요 사실 (PDF 쪽 기준)",
+        "en": "Key messages and key facts (PDF page numbers)"
+      },
+      "url": "https://www.oecd.org/en/about/news/press-releases/2026/04/critical-raw-materials-face-rising-export-restrictions-increasing-risks-to-global-supply-chains.html",
+      "pages_printed": "PDF 쪽 기준 (핵심 메시지 6쪽 · 주요 사실 8쪽 · 시사점 17쪽 근처)",
+      "citation": "OECD. 2026. OECD Inventory of Export Restrictions on Critical Raw Materials 2026: Monitoring the Use of Export Restrictions Amidst Growing Market and Policy Tensions. Paris: OECD Publishing.",
+      "license_note": "OECD 출판물 이용 조건 확인 필요. 원문 PDF 재배포 금지, 링크만.",
+      "reviewed": false,
+      "reviewed_on": null,
+      "gist": {
+        "ko": "핵심 원자재 수출제한은 2009년 이후 5배로 늘었다. 코발트·망간 등은 세계 수출의 약 70%가 최소 하나의 수출제한을 받는다. 수출세와 허가제가 가장 흔하고, 금지처럼 가장 강한 조치도 늘었다.",
+        "en": "Export restrictions on critical raw materials rose fivefold since 2009. About 70% of global cobalt and manganese exports face at least one restriction. Taxes and licensing are most common, and outright bans are rising."
+      },
+      "items": [
+        {
+          "id": "c1",
+          "role": "claim",
+          "page": "6",
+          "ko": "핵심 원자재 수출제한은 2009년 이후 다섯 배로 늘었다.",
+          "en": "Export restrictions on critical raw materials have risen fivefold since 2009.",
+          "quote": "Export restrictions on critical raw materials have increased fivefold since 2009",
+          "verified": true
+        },
+        {
+          "id": "c2",
+          "role": "claim",
+          "page": "6",
+          "ko": "코발트와 망간은 세계 수출의 약 70%가 최소 하나의 수출제한을 받는다.",
+          "en": "About 70% of global exports of cobalt and manganese face at least one export restriction.",
+          "quote": "around 70% of global exports of cobalt and manganese were subject to",
+          "verified": true
+        },
+        {
+          "id": "e1",
+          "role": "evidence",
+          "page": "6",
+          "ko": "2024년 수출제한이 많이 늘어난 품목은 탄탈럼, 리튬, 주석, 망간, 니켈, 코발트 등이다.",
+          "en": "Materials with the largest 2024 increases include tantalum, lithium, tin, manganese, nickel and cobalt.",
+          "quote": "tantalum, lithium, tin, manganese, nickel, cobalt",
+          "verified": true
+        },
+        {
+          "id": "e2",
+          "role": "evidence",
+          "page": "6",
+          "ko": "가장 흔한 수단은 수출세와 허가 요건이다.",
+          "en": "The most widely used instruments are export taxes and licensing requirements.",
+          "quote": "Export taxes and licensing requirements remain the most widely used export restriction instruments",
+          "verified": true
+        },
+        {
+          "id": "e3",
+          "role": "evidence",
+          "page": "6",
+          "ko": "수출 금지 같은 가장 강한 제한도 늘었다.",
+          "en": "The most severe restrictions, such as export bans, have become more common.",
+          "quote": "the most severe type of restrictions",
+          "verified": true
+        },
+        {
+          "id": "e4",
+          "role": "evidence",
+          "page": "5",
+          "ko": "정부 세수 확보가 공식적으로 밝힌 수출제한 목적 중 가장 빨리 늘고 있다.",
+          "en": "Raising government revenue is the fastest-growing officially stated purpose of export restrictions.",
+          "quote": "Generating government revenue is the fastest growing officially stated purpose",
+          "verified": true
+        },
+        {
+          "id": "l1",
+          "role": "limit",
+          "page": "6",
+          "ko": "니오븀·탄탈럼·바나듐·리튬은 수출제한 증가율이 10%를 넘었다. 증가율 수치는 2024년 기준이다.",
+          "en": "Export restrictions on niobium, tantalum, vanadium and lithium grew over 10%; figures cover measures in force through 2024.",
+          "quote": "growth rate of export restrictions on niobium, tantalum, vanadium and lithium exceeded 10%",
+          "verified": true
+        },
+        {
+          "id": "l2",
+          "role": "limit",
+          "page": "7",
+          "ko": "광물 채굴과 가공의 집중, 수출제한 확대는 경제 위협으로 점점 여겨진다고 보고서는 밝힌다.",
+          "en": "Concentration of mining and processing, and growing export restrictions, are increasingly seen as threats to the economy.",
+          "quote": "are increasingly viewed as threats to economic",
+          "verified": true
+        },
+        {
+          "id": "l3",
+          "role": "limit",
+          "page": "8",
+          "ko": "2009년부터 2024년까지 수출제한 품목 수는 다섯 배로 늘었다 (2024년까지 시행 중인 조치 기준).",
+          "en": "Between 2009 and 2024 the number of products under export restrictions increased fivefold.",
+          "quote": "Between 2009 and 2024, export restrictions on CRMs increased fivefold",
+          "verified": true
+        }
+      ],
+      "checks": [
+        {
+          "q": "c1",
+          "verdict": "yes",
+          "page": "6",
+          "quote": "Export restrictions on critical raw materials have increased fivefold since 2009",
+          "ko": "2024년까지 조치 기준임을 밝힌다.",
+          "en": "States the data cover measures up to 2024.",
+          "verified": true
+        },
+        {
+          "q": "c2",
+          "verdict": "yes",
+          "page": "4",
+          "quote": "Please cite this publication as",
+          "ko": "OECD 2026 발간물임을 밝힌다.",
+          "en": "Identifies the OECD 2026 publication.",
+          "verified": true
+        },
+        {
+          "q": "c3",
+          "verdict": "hard",
+          "page": null,
+          "quote": null,
+          "ko": "검수 때 확인: 국가별 수출제한 상세 수치(부록 표)가 요약에서 빠졌는지.",
+          "en": "To check in review: country-level figures (annex tables) are not summarized."
+        },
+        {
+          "q": "c4",
+          "verdict": "yes",
+          "page": "5",
+          "quote": "Generating government revenue is the fastest growing officially stated purpose",
+          "ko": "공식 발표된 목적을 기준으로 한다.",
+          "en": "Based on officially stated purposes.",
+          "verified": true
+        }
+      ],
+      "terms": []
+    },
+    {
+      "id": "oecd-iea-traceability-2026",
+      "org": "OECD · IEA",
+      "title": {
+        "ko": "추적성으로 공급망 회복력 높이기: 리튬·니켈 공급망 (라틴아메리카·동남아)",
+        "en": "Enhancing Resilience through Traceability: Lithium and Nickel Supply Chains in Latin America and Southeast Asia"
+      },
+      "published": "2026-09",
+      "scope": {
+        "ko": "서문 · 요약 (PDF 쪽 기준)",
+        "en": "Preface and summary (PDF page numbers)"
+      },
+      "url": "https://www.oecd.org/en/about/news/announcements/2026/09/new-oecd-report-shows-how-traceability-can-help-strengthen-critical-minerals-supply-chains.html",
+      "pages_printed": "PDF 쪽 기준 (서문 5쪽 · 목차 7쪽 · 요약 13쪽 근처)",
+      "citation": "OECD. 2026. Enhancing Resilience Through Traceability: Insights from Lithium and Nickel Supply Chains in Latin America and Southeast Asia. Paris: OECD Publishing.",
+      "license_note": "OECD·IEA 출판물 이용 조건 확인 필요. 원문 PDF 재배포 금지, 링크만.",
+      "reviewed": false,
+      "reviewed_on": null,
+      "gist": {
+        "ko": "추적성(공급망 출처 확인) 도입은 늘고 있다. 기업 90곳 조사에서 4분의 3이 투자를 늘릴 계획이다. 다만 시스템이 흩어져 있고, 데이터 공유 우려와 소유 구조 불투명이 걸림돌이다.",
+        "en": "Traceability adoption is growing: three-quarters of 90 surveyed firms plan to scale up investment. Fragmented systems, data-sharing concerns and opaque ownership remain obstacles."
+      },
+      "items": [
+        {
+          "id": "c1",
+          "role": "claim",
+          "page": "5",
+          "ko": "목표에 맞게 실용적으로 쓰면 추적성은 공급망 회복력을 높일 수 있다고 본다.",
+          "en": "Applied in a targeted and pragmatic way, traceability can strengthen resilience.",
+          "quote": "When applied in a targeted and pragmatic way, traceability can",
+          "verified": true
+        },
+        {
+          "id": "c2",
+          "role": "claim",
+          "page": "5",
+          "ko": "조사 기업의 4분의 3이 가까운 시일 안에 추적성 투자를 늘릴 계획이라고 밝힌다.",
+          "en": "Three-quarters of surveyed companies plan to scale up traceability investment in the near term.",
+          "quote": "three-quarters of surveyed companies planning to scale up investments",
+          "verified": true
+        },
+        {
+          "id": "e1",
+          "role": "evidence",
+          "page": "5",
+          "ko": "이 보고서는 OECD·IEA가 주요 핵심 광물 기업 90곳을 상대로 한 공동 조사에 기반한다.",
+          "en": "The report draws on a joint OECD–IEA survey of 90 companies across critical minerals.",
+          "quote": "survey of 90 companies",
+          "verified": true
+        },
+        {
+          "id": "e2",
+          "role": "evidence",
+          "page": "5",
+          "ko": "추적성 시스템 도입은 핵심 광물 공급망 전체로 넓어지고 있다.",
+          "en": "Adoption of traceability systems is expanding across critical mineral supply chains.",
+          "quote": "adoption of traceability systems is expanding across critical mineral supply chains",
+          "verified": true
+        },
+        {
+          "id": "e3",
+          "role": "evidence",
+          "page": "5",
+          "ko": "라틴아메리카 리튬 산업은 정제 집중도가 높아 표적 개입 기회가 있다. 동남아 니켈은 소유 구조가 복잡해 추적성이 어렵다.",
+          "en": "Latin American lithium has high refining concentration, creating opportunities for targeted action; Southeast Asian nickel ownership is complex.",
+          "quote": "In Latin America's lithium sector, high refining concentration",
+          "verified": true
+        },
+        {
+          "id": "l1",
+          "role": "limit",
+          "page": "5",
+          "ko": "추적성 체계가 나뉘어 있다는 점이 가장 큰 과제 중 하나다.",
+          "en": "Fragmented traceability systems are among the main challenges.",
+          "quote": "fragmented traceability systems",
+          "verified": true
+        },
+        {
+          "id": "l2",
+          "role": "limit",
+          "page": "5",
+          "ko": "소유 구조의 투명성이 낮아 누가 핵심 광물을 지배하는지 알기 어렵다.",
+          "en": "Limited transparency over ownership structures makes it hard to see who controls key minerals.",
+          "quote": "limited transparency over ownership structures",
+          "verified": true
+        },
+        {
+          "id": "l3",
+          "role": "limit",
+          "page": "5",
+          "ko": "상업적으로 민감한 데이터를 공유하는 데 대한 우려가 있다.",
+          "en": "Concerns over sharing commercially sensitive data persist.",
+          "quote": "concerns over sharing commercially sensitive data",
+          "verified": true
+        }
+      ],
+      "checks": [
+        {
+          "q": "c1",
+          "verdict": "yes",
+          "page": "5",
+          "quote": "This report draws on a joint OECD-International Energy Agency survey",
+          "ko": "조사 기반임을 밝힌다.",
+          "en": "States the survey basis.",
+          "verified": true
+        },
+        {
+          "q": "c2",
+          "verdict": "yes",
+          "page": "7",
+          "quote": "The purpose of the report is to give policymakers",
+          "ko": "정책 목적과 한계를 함께 밝힌다.",
+          "en": "States purpose and limits.",
+          "verified": true
+        },
+        {
+          "q": "c3",
+          "verdict": "hard",
+          "page": null,
+          "quote": null,
+          "ko": "검수 때 확인: 권고안(정책 제언) 내용이 요약에 빠져 있음.",
+          "en": "To check in review: policy recommendations are not yet summarized."
+        },
+        {
+          "q": "c4",
+          "verdict": "yes",
+          "page": "5",
+          "quote": "This report draws on a joint OECD-International Energy Agency survey",
+          "ko": "90개 기업 조사 기반임을 밝힌다.",
+          "en": "States the 90-company survey basis.",
+          "verified": true
+        }
+      ],
+      "terms": []
+    },
+    {
+      "id": "oecd-deso-2026",
+      "org": "OECD",
+      "title": {
+        "ko": "OECD 디지털 경제 · 사회 전망 2026",
+        "en": "OECD Digital Economy and Society Outlook 2026"
+      },
+      "published": "2026-11",
+      "scope": {
+        "ko": "요약 · 주요 발견 (PDF 쪽 기준)",
+        "en": "Executive summary and key findings (PDF page numbers)"
+      },
+      "url": "https://www.oecd.org/en/publications/2026/11/oecd-digital-economy-and-society-outlook-2026_457d074d.html",
+      "pages_printed": "PDF 쪽 기준 (요약 13–14쪽 · 정책 22쪽 · 3장 29쪽)",
+      "citation": "OECD. 2026. OECD Digital Economy and Society Outlook 2026. Paris: OECD Publishing.",
+      "license_note": "OECD 출판물 이용 조건 확인 필요. 원문 PDF 재배포 금지, 링크만.",
+      "reviewed": false,
+      "reviewed_on": null,
+      "gist": {
+        "ko": "OECD 디지털 경제는 2025년 약 5% 성장했다. 생성형 AI 사용은 개인의 37%로 늘었다. 다만 가치 창출과 조달은 소수 대기업과 나라에 집중돼 있다.",
+        "en": "The OECD digital economy grew about 5% in 2025; 37% of individuals used generative AI. Value creation and sourcing remain highly concentrated."
+      },
+      "items": [
+        {
+          "id": "c1",
+          "role": "claim",
+          "page": "13",
+          "ko": "OECD 전체 정보통신(ICT) 부문은 2025년 약 5% 성장한 것으로 추정된다.",
+          "en": "The OECD ICT sector is estimated to have grown about 5% in 2025.",
+          "quote": "The ICT sector is estimated to have grown at 5% in 2025 across the OECD",
+          "verified": true
+        },
+        {
+          "id": "c2",
+          "role": "claim",
+          "page": "14",
+          "ko": "개인의 생성형 AI 사용률은 2025년에 37%에 이르렀다.",
+          "en": "Individual use of generative AI reached 37% in 2025.",
+          "quote": "generative AI use reached 37% in 2025",
+          "verified": true
+        },
+        {
+          "id": "e1",
+          "role": "evidence",
+          "page": "13",
+          "ko": "가치 창출과 조달은 여전히 매우 집중돼 있다. 효율 향상과 국경 간 상호의존이 함께 반영된 결과라고 본다.",
+          "en": "Value creation and sourcing remain highly concentrated, reflecting efficiency gains and cross-border interdependencies.",
+          "quote": "value creation and sourcing remain highly concentrated",
+          "verified": true
+        },
+        {
+          "id": "e2",
+          "role": "evidence",
+          "page": "14",
+          "ko": "고령층의 43%는 AI가 필요 없다고 답했다. 16~24세(25%)의 거의 두 배다.",
+          "en": "43% of older adults see no need for AI, almost double the rate for 16–24-year-olds.",
+          "quote": "43% perceived no need for AI",
+          "verified": true
+        },
+        {
+          "id": "e3",
+          "role": "evidence",
+          "page": "22",
+          "ko": "디지털 정책 문서에서 '인공지능'이 '디지털 전환'을 제치고 가장 많이 언급되는 말이 됐다 (2023~2025).",
+          "en": "'Artificial intelligence' has overtaken 'digital transformation' as the most cited term in digital policy documents, 2023–2025.",
+          "quote": "artificial intelligence” has overtaken “digital transformation” as the most oft-cited",
+          "verified": true
+        },
+        {
+          "id": "l1",
+          "role": "limit",
+          "page": "13",
+          "ko": "국경 간 상호의존이 커서 공급 구조가 한두 나라에 쏠릴 위험이 있다.",
+          "en": "Cross-border interdependencies mean supply is concentrated and exposed to shocks in a few places.",
+          "quote": "cross-border interdependencies",
+          "verified": true
+        },
+        {
+          "id": "l2",
+          "role": "limit",
+          "page": "29",
+          "ko": "보고서는 AI가 정책 문서에서 가장 많이 언급되는 이유를 기술의 확산과 중요성 때문이라고 설명한다.",
+          "en": "The report attributes AI's top rank in policy documents to the technology's ubiquity and importance.",
+          "quote": "This chapter shows that “artificial intelligence” is the most oft-cited term",
+          "verified": true
+        }
+      ],
+      "checks": [
+        {
+          "q": "c1",
+          "verdict": "yes",
+          "page": "14",
+          "quote": "generative AI use reached 37% in 2025",
+          "ko": "2025년 수치를 밝힌다.",
+          "en": "States 2025 figures.",
+          "verified": true
+        },
+        {
+          "q": "c2",
+          "verdict": "yes",
+          "page": "29",
+          "quote": "This chapter shows that “artificial intelligence” is the most oft-cited term",
+          "ko": "정책 문서 분석 기준임을 밝힌다.",
+          "en": "States the policy-document basis.",
+          "verified": true
+        },
+        {
+          "q": "c3",
+          "verdict": "hard",
+          "page": null,
+          "quote": null,
+          "ko": "검수 때 확인: 디지털 무역(국경 간 서비스·데이터 흐름) 수치가 본문에 있는지. 이번 요약에는 넣지 않음.",
+          "en": "To check in review: whether digital trade figures appear; not included here."
+        },
+        {
+          "q": "c4",
+          "verdict": "yes",
+          "page": "13",
+          "quote": "The ICT sector is estimated to have grown at 5% in 2025 across the OECD",
+          "ko": "추정치임을 밝힌다.",
+          "en": "States that the figure is an estimate.",
+          "verified": true
+        }
+      ],
+      "terms": []
+    },
+    {
+      "id": "kiep-weo-2026-05",
+      "org": "KIEP",
+      "title": {
+        "ko": "2026년 세계경제 전망 (업데이트)",
+        "en": "2026 World Economic Outlook (Update)"
+      },
+      "published": "2026-05-12",
+      "scope": {
+        "ko": "요약 · 세계 성장 전망 · 위험 요인 (PDF 쪽 기준)",
+        "en": "Summary, growth outlook and risks (PDF page numbers)"
+      },
+      "url": "https://www.kiep.go.kr",
+      "pages_printed": "PDF 쪽 기준 (요약 3쪽 · 2027년 5쪽 · 유가 6쪽 · 통상 8쪽)",
+      "citation": "대외경제정책연구원(KIEP). 2026. 2026년 세계경제 전망(업데이트). 세종: KIEP.",
+      "license_note": "KIEP 보고서 이용 조건 확인 필요. 원문 재배포 금지, 링크만.",
+      "reviewed": false,
+      "reviewed_on": null,
+      "gist": {
+        "ko": "2026년 세계 성장률은 3.0%로 2025년 11월 전망과 같다. 2027년은 3.1%로 소폭 오른다. 중동 전쟁에 따른 고유가와 미국 관세 정책 불확실성이 가장 큰 하방 요인이다.",
+        "en": "KIEP projects 2026 world growth at 3.0%, unchanged from its November 2025 outlook, and 3.1% in 2027. Middle East energy prices and US tariff uncertainty are the main downside risks."
+      },
+      "items": [
+        {
+          "id": "c1",
+          "role": "claim",
+          "page": "3",
+          "ko": "2026년 세계 성장률은 3.0%로 전망된다.",
+          "en": "World growth is projected at 3.0% in 2026.",
+          "quote": "3.0%의 성장세를 보일 것으로 전망",
+          "verified": true
+        },
+        {
+          "id": "c2",
+          "role": "claim",
+          "page": "5",
+          "ko": "2027년 세계 성장률은 3.1%로 2026년보다 소폭 높아질 것으로 본다. 유럽의 완만한 회복과 인도·아세안의 성장 개선이 바탕이다.",
+          "en": "World growth is projected at 3.1% in 2027, a slight rise, supported by a gradual recovery in Europe and better growth in India and ASEAN.",
+          "quote": "2027년 세계경제는 유럽의 완만한 회복과 인도·아세안 성장세 개선에 힘입어 전년보다 소폭 높은 3.1% 성장할 전망",
+          "verified": true
+        },
+        {
+          "id": "e1",
+          "role": "evidence",
+          "page": "3",
+          "ko": "중동 전쟁에 따른 에너지 가격 상승과 미국발 관세 불확실성이 교역·투자 심리를 위축시킨다고 본다.",
+          "en": "Energy prices from the Middle East war and US tariff uncertainty are weighing on trade and investment sentiment.",
+          "quote": "미·이란 전쟁에 따른 에너지 가격 상승과 미국발 관세 불확실성이 교역·투자 심리를 위축시키며",
+          "verified": true
+        },
+        {
+          "id": "e2",
+          "role": "evidence",
+          "page": "8",
+          "ko": "2026년 이후에는 2025년의 밀어내기 효과가 사라지고, 관세 부담과 정책 불확실성이 더 직접 반영될 것으로 예상한다.",
+          "en": "After 2026, the front-loading effect of 2025 fades and tariff burdens and policy uncertainty weigh more directly on trade.",
+          "quote": "2026년 이후에는 밀어내기 효과가 소멸되고 관세 부담과 정책 불확실성이 보다 직접적으로 반영될 것으로 예상",
+          "verified": true
+        },
+        {
+          "id": "e3",
+          "role": "evidence",
+          "page": "3",
+          "ko": "2026년 전망치는 2025년 11월 KIEP 전망치와 같은 수준이다. 다만 2025년 실적보다는 낮다.",
+          "en": "The 2026 figure is the same as KIEP's November 2025 forecast.",
+          "quote": "지난 KIEP 전망치(2025년 11월)와 동일한 수준",
+          "verified": true
+        },
+        {
+          "id": "l1",
+          "role": "limit",
+          "page": "6",
+          "ko": "가장 큰 위험은 유가의 일시적 급등보다 Brent 유가가 100달러 안팎으로 오래 머무는 경로라고 본다.",
+          "en": "The main risk is Brent staying around $100 for a prolonged period rather than a brief spike.",
+          "quote": "Brent 유가가 100달러 내외로 지속되는 경로",
+          "verified": true
+        },
+        {
+          "id": "l2",
+          "role": "limit",
+          "page": "8",
+          "ko": "IEEPA 관세가 위법 판결을 받은 뒤에도 미국의 자국 중심 통상정책 기조는 유지되고 있다고 본다.",
+          "en": "After the ruling that IEEPA tariffs were unlawful, US trade policy remains inward-looking.",
+          "quote": "IEEPA 관세에 대한 위법 판단 이후에도 미국은",
+          "verified": true
+        },
+        {
+          "id": "l3",
+          "role": "limit",
+          "page": "7",
+          "ko": "운송·보험료 상승은 상품·서비스 교역 비용 증가로 이어져 물가 부담을 길게 만들 수 있다고 본다.",
+          "en": "Higher transport and insurance costs pass through to trade costs and can prolong inflation pressure.",
+          "quote": "운송·보험료 상승은 상품 및 서비스 교역 비용 증가로 전이",
+          "verified": true
+        }
+      ],
+      "checks": [
+        {
+          "q": "c1",
+          "verdict": "yes",
+          "page": "3",
+          "quote": "3.0%의 성장세를 보일 것으로 전망",
+          "ko": "2026년 전망치임을 밝힌다.",
+          "en": "States the 2026 forecast.",
+          "verified": true
+        },
+        {
+          "q": "c2",
+          "verdict": "yes",
+          "page": "8",
+          "quote": "2026년 이후에는 밀어내기 효과가 소멸되고 관세 부담과 정책 불확실성이 보다 직접적으로 반영될 것으로 예상",
+          "ko": "정책 가정(관세 부담 반영)을 밝힌다.",
+          "en": "States policy assumptions (tariff burden).",
+          "verified": true
+        },
+        {
+          "q": "c3",
+          "verdict": "hard",
+          "page": null,
+          "quote": null,
+          "ko": "검수 때 확인: 국가별 전망(미국 2.0%, 중국 4.5% 등 보도 수치)을 원문 표로 확인.",
+          "en": "To check in review: country-level figures (press-reported) against the report's tables."
+        },
+        {
+          "q": "c4",
+          "verdict": "yes",
+          "page": "3",
+          "quote": "3.0%의 성장세를 보일 것으로 전망",
+          "ko": "전망치임을 명시한다.",
+          "en": "States the figure is a forecast.",
+          "verified": true
+        }
+      ],
+      "terms": []
     }
   ]
 }

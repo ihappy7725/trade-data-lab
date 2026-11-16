@@ -95,8 +95,8 @@
         "en": "2026 External Sector Report: Amid Rising Imbalances, the Case for Rebalancing"
       },
       "url": "https://www.imf.org/en/publications/esr/issues/2026/07/30/external-sector-report-2026",
-      "link_check": "blocked",
-      "summary": false
+      "link_check": "ok",
+      "summary": true
     },
     {
       "id": "kiep-weo-2026-05",
@@ -108,8 +108,8 @@
         "en": "2026 World Economic Outlook (Update)"
       },
       "url": "https://www.kiep.go.kr",
-      "link_check": "verify",
-      "summary": false
+      "link_check": "ok",
+      "summary": true
     },
     {
       "id": "oecd-crm-export-restrictions-2026",
@@ -121,8 +121,8 @@
         "en": "Inventory of Export Restrictions on Critical Raw Materials 2026"
       },
       "url": "https://www.oecd.org/en/about/news/press-releases/2026/04/critical-raw-materials-face-rising-export-restrictions-increasing-risks-to-global-supply-chains.html",
-      "link_check": "blocked",
-      "summary": false
+      "link_check": "ok",
+      "summary": true
     },
     {
       "id": "oecd-iea-traceability-2026",
@@ -134,8 +134,8 @@
         "en": "Enhancing Resilience through Traceability"
       },
       "url": "https://www.oecd.org/en/about/news/announcements/2026/09/new-oecd-report-shows-how-traceability-can-help-strengthen-critical-minerals-supply-chains.html",
-      "link_check": "blocked",
-      "summary": false
+      "link_check": "ok",
+      "summary": true
     },
     {
       "id": "wto-wtr-2025",
@@ -148,7 +148,7 @@
       },
       "url": "https://www.wto.org/english/res_e/publications_e/wtr25_e.htm",
       "link_check": "ok",
-      "summary": false
+      "summary": true
     },
     {
       "id": "oecd-deso-2026",
@@ -160,8 +160,8 @@
         "en": "OECD Digital Economy and Society Outlook 2026"
       },
       "url": "https://www.oecd.org/en/publications/2026/11/oecd-digital-economy-and-society-outlook-2026_457d074d.html",
-      "link_check": "blocked",
-      "summary": false
+      "link_check": "ok",
+      "summary": true
     },
     {
       "id": "wb-cmo-2026-10",
@@ -173,8 +173,8 @@
         "en": "Commodity Markets Outlook, October 2026"
       },
       "url": "https://www.worldbank.org/en/research/commodity-markets",
-      "link_check": "verify",
-      "summary": false
+      "link_check": "ok",
+      "summary": true
     },
     {
       "id": "kita-outlook-2026",
