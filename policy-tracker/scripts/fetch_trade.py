@@ -73,6 +73,10 @@ def get_json(url, headers=None, tries=5):
     raise RuntimeError(f"요청 실패: {last}")
 
 
+class QuotaError(RuntimeError):
+    """하루 호출 한도를 다 썼을 때. 다시 시도해도 소용없으므로 바로 멈춘다."""
+
+
 # ---------- UN Comtrade ----------
 def fetch_comtrade(src, months, raw):
     key = env_value("COMTRADE_KEY")
@@ -89,6 +93,8 @@ def fetch_comtrade(src, months, raw):
                          {"Ocp-Apim-Subscription-Key": key} if key else None)
             if "data" in d:
                 break
+            if "quota" in str(d.get("message", "")).lower():
+                raise QuotaError(f"Comtrade 호출 한도 초과: {d.get('message')}")
             time.sleep(3 * (attempt + 1))  # 429: 잠시 후 다시
         else:
             raise RuntimeError(f"Comtrade 응답 이상: {str(d)[:160]}")
@@ -173,6 +179,7 @@ def build(p, raw):
     out["data_source"] = {**SOURCES[src["api"]], "api": src["api"],
                           "query": {k: v for k, v in src.items() if k != "fallback"}}
     out["series"] = series
+    out["fetched"] = date.today().isoformat()
     return out
 
 
@@ -186,16 +193,33 @@ def main():
             old = {x["id"]: x for x in json.load(f).get("policies", [])}
     print("키:", "Comtrade" if env_value("COMTRADE_KEY") else "Comtrade 없음(미리보기)",
           "/", "Census" if env_value("CENSUS_KEY") else "Census 없음(대체 출처)")
-    raw, out = [], []
+    raw, out, failed, quota_hit = [], [], [], False
     for p in plist:
         if only and p["id"] not in only and p["id"] in old:
             out.append(old[p["id"]])
             continue
-        b = build(p, raw)
+        try:
+            if quota_hit and pick_source(p)["api"] == "comtrade":
+                raise QuotaError("앞에서 Comtrade 호출 한도에 걸려 건너뜀")
+            b = build(p, raw)
+        except Exception as e:  # 한 정책이 실패해도 나머지는 계속, 이 정책은 이전 값을 유지
+            quota_hit = quota_hit or isinstance(e, QuotaError)
+            failed.append((p["id"], str(e)[:160]))
+            prev = old.get(p["id"])
+            if prev:
+                out.append(prev)
+                print(f'{p["id"]}: 실패 — 이전 값 유지 (받은 날 {prev.get("fetched", "이전")}) · {str(e)[:120]}', flush=True)
+            else:
+                print(f'{p["id"]}: 실패 — 이전 값도 없어 이번에는 빠짐 · {str(e)[:120]}', flush=True)
+            continue
         n = sum(1 for s in b["series"] if s["v"] is not None)
         fut = sum(1 for s in b["series"] if s.get("future"))
         print(f'{p["id"]}: {b["data_source"]["name"]} {n}/25개월' + (f" (아직 오지 않은 달 {fut})" if fut else ""), flush=True)
         out.append(b)
+    if not any(x.get("fetched") == date.today().isoformat() for x in out) and failed:
+        print("모든 정책이 실패해 파일을 바꾸지 않습니다.")
+        report(failed)
+        sys.exit(1)
     meta = {"fetched": date.today().isoformat(),
             "note": "Values are as reported by each source; not edited or estimated. Months with no record are null."}
     with open(OUT_JSON, "w", encoding="utf-8") as f:
@@ -206,6 +230,18 @@ def main():
     if raw:
         with open(RAW, "w", encoding="utf-8") as f:
             json.dump(raw, f, ensure_ascii=False)
+    report(failed)
+
+
+def report(failed):
+    if not failed:
+        print("모든 정책을 새로 받았습니다.")
+        return
+    print(f"실패 {len(failed)}건 (이전 값 유지):")
+    for pid, msg in failed:
+        print(f"  - {pid}: {msg}")
+        if os.environ.get("GITHUB_ACTIONS"):  # Actions 화면에 노란 경고로 보이게
+            print(f"::warning title=Policyline 자료 받기 실패 ({pid})::{msg}")
 
 
 if __name__ == "__main__":

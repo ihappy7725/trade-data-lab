@@ -551,11 +551,11 @@ function bigChart(p,W){const H=Math.round(Math.max(220,Math.min(360,W*.42))),L=6
 function repRange(p){const r=p.series.map(x=>x.reporters).filter(x=>x!=null);const rep=p.data_source&&p.data_source.query&&p.data_source.query.reporter;if(!Array.isArray(rep)||!r.length)return "";
  const lo=Math.min(...r),hi=Math.max(...r),n=rep.length;
  return `<li>${lang==="ko"?`달마다 자료를 신고한 나라 수가 ${n}개국 중 ${lo}~${hi}개국으로 다릅니다. 신고가 없는 나라는 합계에 들어가지 않았습니다.`:`The number of reporting countries varies by month (${lo}–${hi} of ${n}). Countries with no record are not in the totals.`}</li>`}
-function citeFor(p){const per=p.series[0].m.replace("-",".")+"–"+p.series[24].m.replace("-","."),f=DATA.meta.fetched||"";
+function citeFor(p){const per=p.series[0].m.replace("-",".")+"–"+p.series[24].m.replace("-","."),f=(p.fetched||DATA.meta.fetched)||"";
  return lang==="ko"?`Policyline, 「${p.title.ko} 발표 전후 12개월 ${p.item.ko} 교역액」, 자료: ${p.data_source.name} 월별 자료 (${per}, ${curOf(p)}, ${p.flow.ko}, HS ${fmtHS(p.hs)}), 받은 날 ${f}.`
   :`Policyline, "${p.item.en} trade 12 months before and after: ${p.title.en}", data: ${p.data_source.name} monthly (${per}, ${curOf(p)}, ${p.flow.en}, HS ${fmtHS(p.hs)}), retrieved ${f}.`}
 function csvFor(p){const q=JSON.stringify(p.data_source.query).replaceAll('"',"'"),rows=[["policy_id","month","value","currency","source","query","hs","retrieved","note"]];
- p.series.forEach(x=>rows.push([p.id,x.m,x.v??"",curOf(p),p.data_source.name,`"${q}"`,p.hs,DATA.meta.fetched||"",x.future?"future":(x.v==null?"no record":"")]));
+ p.series.forEach(x=>rows.push([p.id,x.m,x.v??"",curOf(p),p.data_source.name,`"${q}"`,p.hs,(p.fetched||DATA.meta.fetched)||"",x.future?"future":(x.v==null?"no record":"")]));
  return rows.map(r=>r.join(",")).join("\n")}
 function renderDetail(){const id=(location.hash.match(/^#policy\/(.+)$/)||[])[1],p=P.find(x=>x.id===id),el=document.getElementById("detail");
  document.body.classList.toggle("is-detail",!!p);el.hidden=!p;if(!p)return;
@@ -581,7 +581,7 @@ function renderDetail(){const id=(location.hash.match(/^#policy\/(.+)$/)||[])[1]
   </div>
   <div class="srcs">
    <div>${t("d.src.policy")}: <a href="${p.policy_source.url}" target="_blank" rel="noopener">${p.policy_source.label}</a></div>
-   <div>${t("d.src.data")}: <a href="${p.data_source.url}" target="_blank" rel="noopener">${p.data_source.name}</a> · ${curOf(p)} · ${p.flow[lang]} · HS ${fmtHS(p.hs)} · ${p.series[0].m} – ${p.series[24].m} · ${lang==="ko"?"받은 날":"retrieved"} ${DATA.meta.fetched}</div>
+   <div>${t("d.src.data")}: <a href="${p.data_source.url}" target="_blank" rel="noopener">${p.data_source.name}</a> · ${curOf(p)} · ${p.flow[lang]} · HS ${fmtHS(p.hs)} · ${p.series[0].m} – ${p.series[24].m} · ${lang==="ko"?"받은 날":"retrieved"} ${(p.fetched||DATA.meta.fetched)}</div>
   </div>
   <div class="cite"><code id="dCite">${citeFor(p)}</code><div class="cite-actions"><button class="btn ghost small" type="button" id="dCopy">${t("cite.copy")}</button><button class="btn ghost small" type="button" id="dCsv">${t("d.csv")}</button></div></div>
   <details class="vals"><summary>${t("d.vals")}</summary><table><tr><th>${t("d.month")}</th><th>${t("d.value")}</th></tr>${p.series.map((x,i)=>`<tr${i===ANN_IDX?' class="ann"':""}><td>${x.m}</td><td>${x.v==null?t("d.missing"):Math.round(x.v).toLocaleString("en-US")}</td></tr>`).join("")}</table></details>`;
