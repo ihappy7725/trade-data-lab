@@ -1,7 +1,7 @@
 # Trade Data Lab 작업 규칙
 
 ## 구조
-- 이 저장소는 여러 서비스를 담는 장기 프로젝트다. 서비스마다 폴더 하나(`trade-weave/`, `policy-tracker/`, `trade-news-room/`, `report-digest/`, `data-notes/`)이고, 각자 독립된 웹서비스다.
+- 이 저장소는 여러 서비스를 담는 장기 프로젝트다. 서비스마다 폴더 하나(`trade-weave/`, `policy-tracker/`, `trade-news-room/`, `trade-digest/`, `data-notes/`)이고, 각자 독립된 웹서비스다.
 - 한 서비스 작업 중에는 그 서비스 폴더 안의 파일만 고친다. 다른 서비스 폴더나 루트 파일을 바꿔야 하면 먼저 물어본다.
 - 프로젝트 전체 문서는 `docs/`, 서비스별 문서는 각 서비스 폴더 안에 둔다.
 - 서비스별 배포는 Vercel 프로젝트를 따로 만들고 Root Directory를 서비스 폴더로 지정한다.

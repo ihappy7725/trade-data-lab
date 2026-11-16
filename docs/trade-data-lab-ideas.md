@@ -60,7 +60,7 @@
 | 1 | 정책·무역 변화 추적기 | `policy-tracker/` | 대기 |
 | 2 | 글로벌 정책 브리핑 | `trade-news-room/` (Trade News Room 안의 기능) | 대기 |
 | 3 | **Tradeweave** (국가별 무역 의존도 지도) | `trade-weave/` | **진행 중** · 2024년 CEPII BACI 데이터로 지도·상위 5개·쏠림 비중·CSV 구현, Vercel 배포 |
-| 4 | 보고서 쉬운 말 요약기 | `report-digest/` | 대기 |
+| 4 | **Trade Digest** (보고서 쉬운 말 요약) | `trade-digest/` | 기획 중 |
 | 5 | 이슈 데이터 노트 | `data-notes/` | 대기 |
 
 ### Tradeweave 핵심 결정 (자세한 내용: `trade-weave/materials/docs/tradeweave-onepager.md`)

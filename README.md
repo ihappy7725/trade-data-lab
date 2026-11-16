@@ -8,7 +8,7 @@
 | 1 | [policy-tracker/](policy-tracker/) | 정책 발표 → 무역 변화 추적기 | 대기 |
 | 2 | [trade-news-room/](trade-news-room/) | **Trade News Room** · 뉴스 속 무역 공부방 (글로벌 정책 브리핑 Fact Desk를 이 안의 기능으로) | 배포됨 · https://trade-news-room.vercel.app/ |
 | 3 | [trade-weave/](trade-weave/) | **Tradeweave** · 국가별 무역 의존도 지도 | 진행 중 |
-| 4 | [report-digest/](report-digest/) | 국제기구·KITA·KOTRA 보고서 쉬운 말 요약기 | 대기 |
+| 4 | [trade-digest/](trade-digest/) | **Trade Digest** · 국제기구·KITA·KOTRA 보고서 쉬운 말 요약 | 기획 중 |
 | 5 | [data-notes/](data-notes/) | 이슈 하나 깊게 파는 데이터 노트 | 대기 |
 
 ## 배포
@@ -25,6 +25,6 @@ trade-data-lab/
 ├── trade-weave/       ③ Tradeweave
 ├── policy-tracker/    ① 정책·무역 변화 추적기
 ├── trade-news-room/   ② Trade News Room (+ Fact Desk)
-├── report-digest/     ④ 보고서 요약기
+├── trade-digest/      ④ Trade Digest (보고서 쉬운 말 요약)
 └── data-notes/        ⑤ 데이터 노트
 ```
