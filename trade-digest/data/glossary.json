@@ -1,12 +1,12 @@
 {
-  "_note": "용어 사전. 풀이는 원문 문장을 쉽게 풀어 쓴 것이고, 근거 구절과 쪽은 원문에서 확인한 것만 넣는다.",
+  "_note": "용어 사전. 근거 구절과 쪽은 원문 텍스트에서 확인. 풀이는 쉬운 말 설명.",
   "terms": [
     {
       "id": "trade-volume",
       "ko": "교역량 (물량)",
       "en": "Trade volume",
-      "def_ko": "가격 변화를 뺀 교역의 양이다. 수출과 수입 물량을 평균해서 잰다. 금액(달러)으로 잰 교역과 다르다.",
-      "def_en": "The quantity of trade with price changes removed. It is the average of export and import volumes, unlike trade measured in dollar value.",
+      "def_ko": "가격 변화를 뺀 교역의 양이다. 수출과 수입 물량을 평균해 잰다. 금액(달러)으로 잰 교역과 다르다.",
+      "def_en": "The quantity of trade with price changes removed; the average of export and import volumes, unlike dollar value.",
       "src": {
         "report": "wb-gep-2026-06",
         "page": "36",
@@ -18,7 +18,7 @@
       "ko": "밀어내기 (앞당긴 수요)",
       "en": "Front-loading",
       "def_ko": "관세가 오르기 전에 미리 수입·수출을 몰아서 하는 것이다. 이후 교역이 줄어드는 원인이 된다.",
-      "def_en": "Shipping goods early to beat expected tariff increases. It is followed by a drop in trade.",
+      "def_en": "Shipping goods early to beat expected tariff increases; trade then falls.",
       "src": {
         "report": "wb-gep-2026-06",
         "page": "36",
@@ -29,8 +29,8 @@
       "id": "export-restriction",
       "ko": "수출제한",
       "en": "Export restriction",
-      "def_ko": "나라가 원자재 등의 수출을 세금·허가·금지 등으로 제한하는 것이다. 가장 흔한 방법은 수출세와 허가 요건이다.",
-      "def_en": "A government limiting exports of raw materials through taxes, licences or bans. Export taxes and licensing are the most common.",
+      "def_ko": "나라가 원자재 등의 수출을 세금·허가·금지로 제한하는 것이다. 가장 흔한 방법은 수출세와 허가 요건이다.",
+      "def_en": "A government limiting raw-material exports through taxes, licences or bans; taxes and licensing are most common.",
       "src": {
         "report": "oecd-crm-export-restrictions-2026",
         "page": "6",
@@ -38,11 +38,23 @@
       }
     },
     {
+      "id": "export-ban",
+      "ko": "수출 금지",
+      "en": "Export prohibition",
+      "def_ko": "가장 강한 형태의 수출제한이다. 이런 조치가 최근 늘고 있다.",
+      "def_en": "The most severe form of export restriction; such bans have been rising.",
+      "src": {
+        "report": "oecd-crm-export-restrictions-2026",
+        "page": "6",
+        "quote": "the most severe type of restrictions"
+      }
+    },
+    {
       "id": "ieepa",
       "ko": "IEEPA (국제비상경제권한법)",
       "en": "IEEPA",
       "def_ko": "KIEP 보고서에서 미국 관세의 법적 근거로 언급된 법이다. 이 법에 기반한 관세는 위법 판결을 받았다.",
-      "def_en": "A US law cited by KIEP as the legal basis for tariffs. Tariffs based on it were ruled unlawful.",
+      "def_en": "A US law cited as the basis for tariffs; tariffs under it were ruled unlawful.",
       "src": {
         "report": "kiep-weo-2026-05",
         "page": "8",
@@ -53,12 +65,168 @@
       "id": "ppp",
       "ko": "구매력 기준 (PPP)",
       "en": "PPP (purchasing power parity)",
-      "def_ko": "나라마다 물가 차이를 반영해 환산한 방식이다. 시장환율 기준과 숫자가 다르므로 직접 비교하지 않는다.",
-      "def_en": "Converts GDP using price-level differences between countries. Not directly comparable with market-exchange-rate figures.",
+      "def_ko": "나라 간 물가 차이를 반영해 환산한 방식이다. 시장환율 기준과 숫자가 달라 직접 비교하지 않는다.",
+      "def_en": "Converts GDP using price-level differences; not directly comparable with market-exchange-rate figures.",
       "src": {
         "report": "oecd-eo-2026-09",
         "page": "11",
         "quote": "PPP-weighted"
+      }
+    },
+    {
+      "id": "market-rate",
+      "ko": "시장환율 기준",
+      "en": "Market exchange rates",
+      "def_ko": "달러 등 시장에서 정해진 환율로 나라별 GDP를 환산한 방식이다.",
+      "def_en": "GDP converted at market exchange rates.",
+      "src": {
+        "report": "imf-weo-2026-10",
+        "page": "10",
+        "quote": "World growth Based on Market Exchange Rates"
+      }
+    },
+    {
+      "id": "secondary-sanctions",
+      "ko": "2차 제재",
+      "en": "Secondary sanctions",
+      "def_ko": "제재 대상과 거래하는 제3국 기업이나 나라까지 제재하는 것이다. 교역 전망을 더 낮출 수 있다.",
+      "def_en": "Sanctions on firms or countries that trade with a sanctioned entity; they can further weigh on trade.",
+      "src": {
+        "report": "wb-gep-2026-06",
+        "page": "36",
+        "quote": "involving secondary sanctions"
+      }
+    },
+    {
+      "id": "fragmentation",
+      "ko": "분절화",
+      "en": "Fragmentation",
+      "def_ko": "세계 경제가 몇 개의 블록으로 나뉘어 교류가 줄어드는 현상이다.",
+      "def_en": "Division of the world economy into blocs with less exchange between them.",
+      "src": {
+        "report": "imf-weo-2026-10",
+        "page": "xiii",
+        "quote": "fragmentation could become a greater drag on efficiency"
+      }
+    },
+    {
+      "id": "trade-reconfiguration",
+      "ko": "교역 재편 (공급처 대체)",
+      "en": "Trade reconfiguration",
+      "def_ko": "생산 사슬을 바꾸고 공급처를 다른 나라로 바꾸는 것이다. 교역 흐름이 달라진다.",
+      "def_en": "Changing production chains and switching suppliers, which reshapes trade flows.",
+      "src": {
+        "report": "imf-weo-2026-10",
+        "page": "14",
+        "quote": "trade reconfiguration and substitution of suppliers"
+      }
+    },
+    {
+      "id": "current-account",
+      "ko": "경상수지",
+      "en": "Current account",
+      "def_ko": "상품·서비스·소득의 해외 거래 차이를 나타내는 지표다. 흑자는 들어온 돈이 나간 돈보다 많다는 뜻이다.",
+      "def_en": "The balance of goods, services and income flows with the rest of the world; a surplus means inflows exceed outflows.",
+      "src": {
+        "report": "imf-esr-2026",
+        "page": "ix",
+        "quote": "Global current account balances widened further in 2025"
+      }
+    },
+    {
+      "id": "terms-of-trade",
+      "ko": "교역 조건",
+      "en": "Terms of trade",
+      "def_ko": "수출 가격 대비 수입 가격의 비율이다. 교역 조건이 좋아지면 같은 수출로 더 많이 사올 수 있다.",
+      "def_en": "The ratio of export prices to import prices; better terms let a country buy more imports with the same exports.",
+      "src": {
+        "report": "imf-weo-2026-10",
+        "page": "xiii",
+        "quote": "Favorable terms of trade"
+      }
+    },
+    {
+      "id": "ai-enabling-goods",
+      "ko": "AI 관련 제품",
+      "en": "AI-enabling goods",
+      "def_ko": "반도체·서버처럼 AI 개발과 운영에 필요한 제품이다. 이 제품의 교역이 최근 세계 상품 교역 증가를 주도했다.",
+      "def_en": "Products such as chips and servers needed to develop and run AI; their trade drove recent growth in world goods trade.",
+      "src": {
+        "report": "wto-gtos-2026-10",
+        "page": "2",
+        "quote": "which accounted for 47% of global merchandise trade growth"
+      }
+    },
+    {
+      "id": "digital-divide",
+      "ko": "디지털 격차",
+      "en": "Digital divide",
+      "def_ko": "나라·기업·사람 사이에 디지털 기술과 인프라에 접근하는 차이다. AI 혜택이 고르지 않게 퍼지는 원인이다.",
+      "def_en": "Gaps in access to digital technology and infrastructure between countries, firms and people; it makes AI benefits uneven.",
+      "src": {
+        "report": "wto-wtr-2025",
+        "page": "6",
+        "quote": "closing digital divides"
+      }
+    },
+    {
+      "id": "digitally-deliverable",
+      "ko": "디지털로 거래 가능한 서비스",
+      "en": "Digitally deliverable services",
+      "def_ko": "인터넷으로 국경을 넘어 전달되는 서비스다. 예를 들어 소프트웨어와 금융·컴퓨터 서비스다.",
+      "def_en": "Services delivered over the internet across borders, such as software and computer or financial services.",
+      "src": {
+        "report": "wto-wtr-2025",
+        "page": "8",
+        "quote": "digitally deliverable services"
+      }
+    },
+    {
+      "id": "commodity-price-index",
+      "ko": "원자재 가격 지수",
+      "en": "Commodity price index",
+      "def_ko": "에너지·식량·금속 등 원자재 가격을 하나의 지표로 묶은 것이다.",
+      "def_en": "A single index combining energy, food and metal prices.",
+      "src": {
+        "report": "wb-cmo-2026-10",
+        "page": "4",
+        "quote": "commodity price index is forecast to increase"
+      }
+    },
+    {
+      "id": "headline-inflation",
+      "ko": "전체 물가상승률 (헤드라인 인플레이션)",
+      "en": "Headline inflation",
+      "def_ko": "식품·에너지 등을 모두 포함한 전체 물가 상승률이다. 근원 물가와 구분한다.",
+      "def_en": "Overall inflation including food and energy, distinct from core inflation.",
+      "src": {
+        "report": "oecd-eo-2026-09",
+        "page": "6",
+        "quote": "headline inflation is projected to fall"
+      }
+    },
+    {
+      "id": "hormuz",
+      "ko": "호르무즈 해협",
+      "en": "Strait of Hormuz",
+      "def_ko": "페르시아만에서 원유와 LNG가 빠져나가는 좁은 바닷길이다. 이번 중동 분쟁에서 해운이 크게 줄었다.",
+      "def_en": "The narrow sea passage through which Gulf oil and LNG leave; shipping through it fell sharply in the 2026 conflict.",
+      "src": {
+        "report": "oecd-eo-2026-09",
+        "page": "11",
+        "quote": "shipping through the Straits of Hormuz has remained at very low levels"
+      }
+    },
+    {
+      "id": "energy-price-shock",
+      "ko": "에너지 가격 충격",
+      "en": "Energy price shock",
+      "def_ko": "유가·가스 가격이 갑자기 오르는 것이다. 물가와 교역 비용을 함께 밀어 올린다.",
+      "def_en": "A sudden rise in oil or gas prices, pushing up both inflation and trade costs.",
+      "src": {
+        "report": "imf-weo-2026-10",
+        "page": "xiii",
+        "quote": "commodity markets remain vulnerable"
       }
     }
   ]
