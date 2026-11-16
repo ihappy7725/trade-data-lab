@@ -38,7 +38,8 @@
 ---
 
 ## 2. 기존 사이트 Docklab(무역 뉴스 공부방)과의 관계
-- 주소: https://trade-news-room-rev.vercel.app/
+- 주소: https://trade-news-room.vercel.app/
+- 2026-11-16부터 이 저장소의 `trade-news-room/` 폴더에서 관리 (원래 별도 저장소 `trade-news-room`)
 - 내용: 실제 뉴스를 읽고, 그래프를 조작하고, 퀴즈·용어로 무역 개념을 공부하는 학습 사이트
 - 메뉴: 무역 맵, 실시간 뉴스, 학습실, 내 기록, 용어 사전
 - 없는 것: 국가별 대시보드, 정식 브리핑 보고서
@@ -57,7 +58,7 @@
 | # | 서비스 | 저장소 폴더 | 상태 |
 |---|---|---|---|
 | 1 | 정책·무역 변화 추적기 | `policy-tracker/` | 대기 |
-| 2 | 글로벌 정책 브리핑 | (Docklab 저장소에서 개발) | 대기 |
+| 2 | 글로벌 정책 브리핑 | `trade-news-room/` (Trade News Room 안의 기능) | 대기 |
 | 3 | **Tradeweave** (국가별 무역 의존도 지도) | `trade-weave/` | **진행 중** · 2024년 CEPII BACI 데이터로 지도·상위 5개·쏠림 비중·CSV 구현, Vercel 배포 |
 | 4 | 보고서 쉬운 말 요약기 | `report-digest/` | 대기 |
 | 5 | 이슈 데이터 노트 | `data-notes/` | 대기 |

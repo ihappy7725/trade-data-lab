@@ -6,7 +6,7 @@
 | # | 폴더 | 서비스 | 상태 |
 |---|---|---|---|
 | 1 | [policy-tracker/](policy-tracker/) | 정책 발표 → 무역 변화 추적기 | 대기 |
-| 2 | (Docklab에 합침) | 글로벌 정책 브리핑 (사실·해석 분리형) | 대기 · [trade-news-room](https://trade-news-room-rev.vercel.app/)에서 개발 |
+| 2 | [trade-news-room/](trade-news-room/) | **Trade News Room** · 뉴스 속 무역 공부방 (글로벌 정책 브리핑 Fact Desk를 이 안의 기능으로) | 배포됨 · https://trade-news-room.vercel.app/ |
 | 3 | [trade-weave/](trade-weave/) | **Tradeweave** · 국가별 무역 의존도 지도 | 진행 중 |
 | 4 | [report-digest/](report-digest/) | 국제기구·KITA·KOTRA 보고서 쉬운 말 요약기 | 대기 |
 | 5 | [data-notes/](data-notes/) | 이슈 하나 깊게 파는 데이터 노트 | 대기 |
@@ -24,6 +24,7 @@ trade-data-lab/
 ├── docs/              프로젝트 전체 문서 (아이디어 목록, 결정 기록)
 ├── trade-weave/       ③ Tradeweave
 ├── policy-tracker/    ① 정책·무역 변화 추적기
+├── trade-news-room/   ② Trade News Room (+ Fact Desk)
 ├── report-digest/     ④ 보고서 요약기
 └── data-notes/        ⑤ 데이터 노트
 ```
