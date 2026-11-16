@@ -165,9 +165,11 @@
             {
               "date": "2026-05-12",
               "value": 3.0,
-              "basis": "press",
-              "note_ko": "KIEP 2026년 세계경제 전망 업데이트 보도. 원문 확인 필요",
-              "source": "https://www.newsis.com/view/NISX20260512_0003626292"
+              "basis": "source",
+              "report": "kiep-weo-2026-05",
+              "page": "3",
+              "quote": "3.0%의 성장세를 보일 것으로 전망",
+              "note_ko": "KIEP 2026년 세계경제 전망 업데이트 (시장환율 기준으로 표기됨, 원문 3쪽)"
             }
           ]
         }
