@@ -151,7 +151,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 .drop p{margin:8px 0 14px;font-size:15px}
 .drop .btn{height:42px;padding:0 18px}
 .drop small{display:block;margin-top:12px;color:var(--ink-3);font-size:12.5px}
-.shelfbar{position:absolute;left:0;right:0;top:calc(61px + 4.6vw + clamp(52px,8.2vw,132px) + 74px);z-index:8;display:grid;justify-items:center;gap:10px;padding:0 16px}
+.shelfbar{position:absolute;left:0;right:0;top:calc(61px + 4.6vw + clamp(52px,8.2vw,132px) + 28px);z-index:8;display:grid;justify-items:center;gap:10px;padding:0 16px}
 .chips{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
 .chips button{border:0;border-radius:999px;padding:7px 13px;font-size:13.5px;background:rgba(243,239,229,.08);color:rgba(243,239,229,.82);box-shadow:inset 0 0 0 1px rgba(243,239,229,.18)}
 .chips button:hover{background:rgba(243,239,229,.14)}
@@ -231,7 +231,6 @@ button{font:inherit;color:inherit;cursor:pointer}
   <section class="hero">
     <canvas class="globe" id="globe" aria-hidden="true"></canvas>
     <h1 class="headline">Trade Digest</h1>
-    <p class="lede" id="lede"></p>
     <div class="shelfbar" role="search">
       <div class="chips" id="chips"></div>
       <div class="shelf-tools">
@@ -318,7 +317,7 @@ const TERM = { ko:{w:"교역 물량",d:"가격 변화를 뺀 교역의 양. 금�
 /* 실제 보고서 목록 (data/catalog.json → data/reports.js) */
 const CAT = (window.TD_CATALOG || {categories:[], reports:[]});
 const SUMS = ((window.TD_REPORTS && window.TD_REPORTS.reports) || []);
-const CAT_COLOR = {outlook:"#23344F", policy:"#6B2A2A", supply:"#3F5E57", digital:"#1F2E44", energy:"#8A6A2C", korea:"#1E3A2F"};
+const CAT_COLOR = {outlook:"#4F7A85", policy:"#A86F5A", supply:"#5E8C84", digital:"#6E7FA0", energy:"#B08A4E", korea:"#6E8F7A"};  // 딥그린과 어울리는 밝은 톤
 const ARTS = ["line","rings","grid","bars","wave","dots","rays"];
 const ALL = CAT.reports.map((x, i) => ({
   id:x.id, org:x.org, ko:x.title.ko, en:x.title.en, year:x.published.slice(0,4), published:x.published,
@@ -374,7 +373,7 @@ function buildWall(){
     const s = SLOTS[ORDER[i]], b = document.createElement("button");
     b.className = "slot";
         b.style.zIndex = String(Math.round(Math.abs(s.x) * 100));
-    b.style.cssText += `;--x:${s.x*vw*k}px;--w:${s.h/1.414*vw*k}px;--h:${s.h*vw*k}px;--ry:${s.ry}deg;--c:${r.c};--d:${reduce?0:i*45}ms`;
+    b.style.cssText += `;--x:${s.x*vw*k*1.1}px;--w:${s.h/1.414*vw*k}px;--h:${s.h*vw*k}px;--ry:${s.ry}deg;--c:${r.c};--d:${reduce?0:i*45}ms`;
     b.setAttribute("aria-pressed", String(i === pick));
     b.innerHTML = `${ART[r.art]}<span class="cv"><span class="cv__org">${r.org}</span><span class="cv__title">${r[lang]}</span><span class="cv__year">${r.year}</span></span><span class="cv__tag">${tagOf(r)}</span>`;
     b.setAttribute("aria-label", `${r[lang]} ${r.year}`);
@@ -553,7 +552,6 @@ function applyLang(){
   document.documentElement.lang = lang;
   document.querySelectorAll("[data-t]").forEach(el => el.textContent = t(el.dataset.t));
   $("#lang").textContent = t("lang");
-  $("#lede").innerHTML = t("lede").join("<br>");
   [...wall.children].forEach((el, i) => { el.querySelector(".cv__title").textContent = REPORTS[i][lang]; el.querySelector(".cv__tag").textContent = tagOf(REPORTS[i]); });
   drawFilters(); $("#shelf-count").textContent = t("count", REPORTS.length, ALL.length);
   renderWork(); if (typeof drawRequests === "function") drawRequests();
