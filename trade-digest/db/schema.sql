@@ -1,25 +1,34 @@
--- Trade Digest · 보고서 요청함 (Neon / PostgreSQL)
--- 쌓지 않는 것: 이름 · 이메일 · IP · 올린 PDF 파일. 누가 요청했는지는 저장하지 않는다.
+-- Trade Digest · 전망치 제보 (Neon / PostgreSQL)
+-- 쌓지 않는 것: 이름 · 이메일 · IP · 올린 파일. 누가 제보했는지는 저장하지 않는다.
 
-create table if not exists requests (
-  id          bigint generated always as identity primary key,
-  title       text not null check (char_length(title) between 2 and 200),       -- 보고서 이름
-  org         text not null check (org in ('WTO','IMF','OECD','World Bank','KITA','KOTRA','기타')),
-  url         text check (url is null or (url ~ '^https://' and char_length(url) <= 500)), -- 원문 링크 (선택)
-  reason      text check (reason is null or char_length(reason) <= 200),      -- 왜 필요한지 한 줄 (선택)
-  purpose     text not null check (purpose in ('과제','스터디','업무','기타')), -- 어디에 쓰는지
-  status      text not null default '접수' check (status in ('접수','요약 중','서가에 올림')),
-  created_at  timestamptz not null default now()
+-- 1) 추적하는 지표 목록
+create table if not exists indicators (
+  id      text primary key,                 -- 예: world-trade-2026
+  name_ko text not null,
+  name_en text not null,
+  unit    text not null default '%'
 );
+insert into indicators (id, name_ko, name_en) values
+  ('world-trade-2026', '2026년 세계 교역량 증가율', 'World trade volume growth, 2026')
+on conflict (id) do nothing;
 
-create table if not exists votes (
-  id          bigint generated always as identity primary key,
-  request_id  bigint not null references requests(id) on delete cascade,
-  created_at  timestamptz not null default now()
+-- 2) 방문자가 제보한 전망치 (원문 대조 전에는 '확인 전')
+create table if not exists forecast_submissions (
+  id           bigint generated always as identity primary key,
+  indicator_id text not null references indicators(id),
+  org          text not null check (org in ('WTO','IMF','OECD','World Bank','UNCTAD','KIEP','KITA','기타')),
+  released_on  date not null check (released_on between '2024-01-01' and current_date + 1),
+  value        numeric(5,2) not null check (value between -50 and 50),
+  basis        text not null check (basis in ('goods','goods+services')),   -- 상품만 / 상품+서비스
+  source_url   text not null check (source_url ~ '^https://' and char_length(source_url) <= 500),
+  page         text check (page is null or char_length(page) <= 10),
+  note         text check (note is null or char_length(note) <= 200),
+  status       text not null default '확인 전' check (status in ('확인 전','원문 확인','반려')),
+  created_at   timestamptz not null default now()
 );
-create index if not exists votes_request_idx on votes(request_id);
+create index if not exists fs_indicator_idx on forecast_submissions(indicator_id, released_on);
 
--- 화면 서버 함수가 쓰는 계정은 "읽기 + 새 줄 쓰기"만 (고치기 · 지우기 불가)
--- Neon 콘솔에서 역할 app_writer를 만든 뒤 아래를 실행하고, 그 역할의 연결 주소를 Vercel DATABASE_URL에 넣는다.
--- grant select, insert on requests, votes to app_writer;
+-- 화면 서버 함수용 계정은 "읽기 + 새 줄 쓰기"만 (고치기 · 지우기 · 상태 바꾸기 불가)
+-- grant select on indicators to app_writer;
+-- grant select, insert on forecast_submissions to app_writer;
 -- grant usage on all sequences in schema public to app_writer;

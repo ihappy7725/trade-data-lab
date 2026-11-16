@@ -1,0 +1,28 @@
+{
+  "_note": "전망 추적판 자료. basis: source=원문에서 쪽수까지 확인, press=언론 보도로만 확인(원문 확인 필요). 정의가 다르면(상품만 vs 상품+서비스) 같은 선으로 잇지 않는다.",
+  "indicators": [
+    { "id": "world-trade-2026",
+      "ko": "2026년 세계 교역량 증가율", "en": "World trade volume growth, 2026",
+      "unit": "%",
+      "series": [
+        { "org": "WTO", "def": "goods", "def_ko": "상품 교역량", "def_en": "merchandise volume",
+          "points": [
+            { "date": "2025-08", "value": 1.8, "basis": "press", "note_ko": "2025년 10월 보도에서 '1.8%에서 낮췄다'로 언급된 이전 전망", "source": "https://www.business-standard.com/world-news/wto-downgrades-global-trade-growth-forecast-to-0-5-for-next-year-125100701538_1.html" },
+            { "date": "2025-10-07", "value": 0.5, "basis": "press", "note_ko": "미국 관세 영향이 2026년에 본격 반영된다고 봄", "source": "https://www.business-standard.com/world-news/wto-downgrades-global-trade-growth-forecast-to-0-5-for-next-year-125100701538_1.html" },
+            { "date": "2026-03", "value": 1.9, "basis": "source", "report": "wto-gtos-2026-10", "page": "4", "quote": "up from 1.9% in the baseline scenario in the March 2026 forecast", "note_ko": "3월 기준 시나리오 (2026년 10월 보고서가 인용)" },
+            { "date": "2026-10-08", "value": 3.9, "basis": "source", "report": "wto-gtos-2026-10", "page": "2", "quote": "merchandise trade volume growth in 2026 up sharply to 3.9% from 1.9%", "note_ko": "AI 관련 투자 붐으로 크게 올림" }
+          ] },
+        { "org": "IMF", "def": "goods+services", "def_ko": "상품+서비스 교역량", "def_en": "goods & services volume",
+          "points": [
+            { "date": "2026-07", "value": 3.5, "basis": "press", "note_ko": "7월 세계경제전망 업데이트 보도. 10월 수치는 원문 확인 필요", "source": "https://tass.com/economy/2157617/amp" }
+          ] },
+        { "org": "World Bank", "def": "goods+services", "def_ko": "상품+서비스 교역량", "def_en": "goods & services volume",
+          "points": [
+            { "date": "2026-06-11", "value": 2.9, "basis": "press", "note_ko": "GEP 2026년 6월 보도 (한 곳에서만 확인)", "source": "https://biz.heraldcorp.com/article/10779912" }
+          ] }
+      ],
+      "actual": { "label_ko": "참고: 2025년 실제 상품 교역량 증가율 (WTO)", "value": 4.2, "basis": "source", "report": "wto-gtos-2026-10", "page": "6", "quote": "World Trade a 2.4 -0.9 2.7 4.2" },
+      "missing_ko": "OECD는 2026년 교역량 전망치를 아직 찾지 못했다."
+    }
+  ]
+}

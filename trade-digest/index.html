@@ -163,6 +163,28 @@ button{font:inherit;color:inherit;cursor:pointer}
 #shelf-empty{margin:4px 0 0;font-size:14px;color:rgba(243,239,229,.8)}
 .pending{background:var(--surface);border-radius:12px;padding:22px;display:grid;gap:12px;justify-items:start}
 .pending p{margin:0;color:var(--ink-2)}
+.sub-h{font-family:var(--font-head);font-weight:400;font-size:26px;letter-spacing:-.02em;margin:36px 0 8px}
+#tracker .rq-form{max-width:720px}
+.basis--sub{background:#EDEEEF;color:var(--ink-2)}
+.tr-box{background:var(--surface);border-radius:12px;padding:20px}
+.tr-head{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:baseline;margin-bottom:8px}
+.tr-head b{font-size:17px}
+.tr-legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;color:var(--ink-2)}
+.tr-legend i{display:inline-block;width:18px;height:0;border-top:2px solid var(--c);vertical-align:middle;margin-right:6px}
+.tr-legend i.dash{border-top-style:dashed}
+#tr-chart svg{width:100%;height:auto;display:block}
+#tr-chart .pt{cursor:pointer} #tr-chart .pt:hover circle,#tr-chart .pt:focus circle{r:7}
+.tr-detail{min-height:44px;margin:6px 0 10px;font-size:14px;color:var(--ink-2)}
+.tr-detail b{color:var(--ink)}
+.tr-table{width:100%;border-collapse:collapse;font-size:13.5px}
+.tr-table th,.tr-table td{text-align:left;padding:8px 10px;border-top:1px solid var(--line)}
+.tr-table th{font-size:12.5px;color:var(--ink-3);font-weight:600}
+.basis{font-size:11.5px;font-weight:600;padding:2px 7px;border-radius:5px;white-space:nowrap}
+.basis--source{background:var(--evidence-bg);color:var(--evidence)} .basis--press{background:var(--limit-bg);color:var(--limit)}
+.tr-note{margin:12px 0 0;font-size:12.5px;color:var(--ink-3)}
+.fc-chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.fc-chip{border:1px solid var(--line-2);background:var(--surface-2);border-radius:999px;padding:4px 11px;font-size:12.5px}
+.fc-chip:hover{border-color:var(--ink-3)}
 .rq-lede{margin:-6px 0 18px;color:var(--ink-2)}
 .rq{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:20px;align-items:start}
 .rq-form{background:var(--surface);border-radius:12px;padding:20px;display:grid;gap:12px}
@@ -218,7 +240,7 @@ button{font:inherit;color:inherit;cursor:pointer}
     </a>
     <nav class="nav">
       <a href="#" data-t="nav.shelf"></a>
-      <a href="#request" data-t="nav.request"></a>
+      <a href="#tracker" data-t="nav.tracker"></a>
       <a aria-disabled="true"><span data-t="nav.glossary"></span><small data-t="soon"></small></a>
       <a aria-disabled="true"><span data-t="nav.calendar"></span><small data-t="soon"></small></a>
     </nav>
@@ -249,24 +271,36 @@ button{font:inherit;color:inherit;cursor:pointer}
 
   <section class="work" id="work" hidden aria-live="polite"></section>
 
-  <section class="up" id="request">
-    <h2 data-t="rq.title"></h2>
-    <p class="rq-lede" data-t="rq.lede"></p>
-    <div class="rq">
-      <form class="rq-form" id="rq-form" novalidate>
-        <label><span data-t="rq.f.title"></span><input name="title" maxlength="200" required></label>
-        <div class="rq-2">
-          <label><span data-t="rq.f.org"></span><select name="org" required><option>WTO</option><option>IMF</option><option>OECD</option><option>World Bank</option><option>KITA</option><option>KOTRA</option><option value="기타" data-t="rq.etc"></option></select></label>
-          <label><span data-t="rq.f.purpose"></span><select name="purpose" required><option value="과제" data-t="rq.p1"></option><option value="스터디" data-t="rq.p2"></option><option value="업무" data-t="rq.p3"></option><option value="기타" data-t="rq.etc"></option></select></label>
-        </div>
-        <label><span data-t="rq.f.url"></span><input name="url" type="url" maxlength="500" placeholder="https://"></label>
-        <label><span data-t="rq.f.reason"></span><input name="reason" maxlength="200"></label>
-        <button class="btn btn--primary" type="submit" id="rq-send" data-t="rq.send"></button>
-        <p class="rq-msg" id="rq-msg" role="status"></p>
-        <small class="rq-note" data-t="rq.note"></small>
-      </form>
-      <div class="rq-list" id="rq-list" aria-live="polite"></div>
+  <section class="up tracker" id="tracker">
+    <h2 data-t="tr.title"></h2>
+    <p class="rq-lede" data-t="tr.lede"></p>
+    <div class="tr-box">
+      <div class="tr-head"><b id="tr-ind"></b><span class="tr-legend" id="tr-legend"></span></div>
+      <div id="tr-chart"></div>
+      <div class="tr-detail" id="tr-detail" aria-live="polite"></div>
+      <table class="tr-table" id="tr-table"></table>
+      <p class="tr-note" id="tr-note"></p>
     </div>
+    <h3 class="sub-h" data-t="sb.title"></h3>
+    <p class="rq-lede" data-t="sb.lede"></p>
+    <form class="rq-form" id="sb-form" novalidate>
+      <div class="rq-2">
+        <label><span data-t="sb.org"></span><select name="org"><option>WTO</option><option>IMF</option><option>OECD</option><option>World Bank</option><option>UNCTAD</option><option>KIEP</option><option>KITA</option><option value="기타" data-t="rq.etc"></option></select></label>
+        <label><span data-t="sb.date"></span><input name="released_on" type="date" required></label>
+      </div>
+      <div class="rq-2">
+        <label><span data-t="sb.value"></span><input name="value" type="number" step="0.1" min="-50" max="50" required></label>
+        <label><span data-t="sb.basis"></span><select name="basis"><option value="goods" data-t="sb.goods"></option><option value="goods+services" data-t="sb.gs"></option></select></label>
+      </div>
+      <label><span data-t="sb.url"></span><input name="source_url" type="url" maxlength="500" placeholder="https://" required></label>
+      <div class="rq-2">
+        <label><span data-t="sb.page"></span><input name="page" maxlength="10"></label>
+        <label><span data-t="sb.note"></span><input name="note" maxlength="200"></label>
+      </div>
+      <button class="btn btn--primary" type="submit" id="sb-send" data-t="sb.send"></button>
+      <p class="rq-msg" id="sb-msg" role="status"></p>
+      <small class="rq-note" data-t="sb.privacy"></small>
+    </form>
   </section>
 
   <section class="up" id="upload">
@@ -289,7 +323,7 @@ const T = {
     lede:["국제기구 · KITA · KOTRA 보고서를 쉬운 말로.","표지를 누르면 주장 · 근거 · 한계를 원문 쪽수와 함께 보여 줍니다."],
     "cta.open":"보고서 열어 보기","cta.upload":"내 PDF 요약",
     "t.summary":"한 장 요약","t.check":"한계 점검표","t.compare":"다른 기관은?",
-    claim:"주장",evidence:"근거",limit:"한계",pdf:"원문 PDF ↗",copy:"요약 복사",copied:"복사됨",reviewed:"✓ 검수 완료",fake:"가상",draftTag:"검수 전",pending:"요약 준비 중",srcBtn:"원문 보기",all:"전체",allOrg:"모든 기관",search:"보고서 · 기관 검색",count:(n,m)=>`${n} / ${m}권`,empty:"맞는 보고서가 없습니다. 조건을 바꿔 보세요.",pendMsg:"이 보고서는 아직 요약하지 않았습니다. 원문은 아래 링크로 볼 수 있습니다.",askSum:"이 보고서 요약 요청하기",linkNote:"링크 확인 필요",draftBadge:"초안 · 사람이 검수하기 전",noLink:"연결 주소 준비 중",source:"출처",
+    claim:"주장",evidence:"근거",limit:"한계",pdf:"원문 PDF ↗",copy:"요약 복사",copied:"복사됨",reviewed:"✓ 검수 완료",fake:"가상",draftTag:"검수 전",pending:"요약 준비 중","nav.tracker":"전망 추적","sb.title":"전망치 제보","sb.lede":"빠진 전망치를 알려 주세요. 제보는 그래프에 '확인 전'으로 바로 보이고, 원문과 대조한 뒤 확정합니다. (지표: 2026년 세계 교역량 증가율)","sb.org":"기관","sb.date":"발표일","sb.value":"전망치 (%)","sb.basis":"기준","sb.goods":"상품만","sb.gs":"상품+서비스","sb.url":"원문 또는 보도 링크","sb.page":"원문 쪽 (선택)","sb.note":"한 줄 메모 (선택)","sb.send":"제보 보내기","sb.sending":"보내는 중…","sb.ok":"제보가 저장됐습니다. 그래프에 '확인 전'으로 표시됩니다.","sb.bad":"입력을 확인해 주세요: ","sb.fail":"저장하지 못했습니다. 잠시 뒤 다시 시도해 주세요.","sb.privacy":"이름 · 이메일은 받지 않습니다. 제보는 누구나 볼 수 있습니다.",basisSub:"제보 · 확인 전",sbf:{org:"기관",released_on:"발표일(2024년 이후, 오늘까지)",value:"전망치(-50~50)",basis:"기준",source_url:"링크(https://)",page:"쪽(10자 이내)",note:"메모(200자 이내)"},"tr.title":"전망 추적","tr.lede":"같은 지표에 대해 기관마다, 발표할 때마다 전망이 어떻게 달라졌는지 봅니다. 점을 누르면 근거가 나옵니다.",fcHere:"이 보고서의 전망치",basisSource:"원문 확인 (쪽수)",basisPress:"보도 인용 · 원문 확인 필요",trOrg:"기관",trDate:"발표",trVal:"전망",trDef:"기준",trBasis:"근거",solid:"실선 = 상품만",dashed:"점선 = 상품+서비스 (직접 비교 주의) · 채운 점 = 원문 확인, 빈 점 = 보도 인용",actual:"참고 실제치",openRep:"보고서 요약 보기",openSrc:"보도 보기",srcBtn:"원문 보기",all:"전체",allOrg:"모든 기관",search:"보고서 · 기관 검색",count:(n,m)=>`${n} / ${m}권`,empty:"맞는 보고서가 없습니다. 조건을 바꿔 보세요.",pendMsg:"이 보고서는 아직 요약하지 않았습니다. 원문은 아래 링크로 볼 수 있습니다.",askSum:"이 보고서 요약 요청하기",linkNote:"링크 확인 필요",draftBadge:"초안 · 사람이 검수하기 전",noLink:"연결 주소 준비 중",source:"출처",
     pages:n=>`${n}쪽`,items:n=>`문장 ${n}개`,
     ok:"원문에서 확인됨",miss:"확인 못 함",quote:"원문 구절",missMsg:"이 쪽에서 구절을 찾지 못했습니다. 원문에서 직접 확인하세요.",
     data:"데이터로 보기 →",dataMsg:"Policyline에서 같은 품목의 월별 교역 그래프를 엽니다.",open:"열기 →",
@@ -302,7 +336,7 @@ const T = {
     lede:["Trade reports from international bodies, KITA and KOTRA, in plain words.","Tap a cover to see its claims, evidence and limits — with page numbers."],
     "cta.open":"Open a report","cta.upload":"Summarize my PDF",
     "t.summary":"One-page summary","t.check":"Limits check","t.compare":"Other institutions",
-    claim:"Claim",evidence:"Evidence",limit:"Limit",pdf:"Original PDF ↗",copy:"Copy summary",copied:"Copied",reviewed:"✓ Reviewed",fake:"Fictional",draftTag:"Not reviewed",pending:"Summary coming",srcBtn:"See source",all:"All",allOrg:"All institutions",search:"Search reports · institutions",count:(n,m)=>`${n} / ${m} reports`,empty:"No matching reports. Try other filters.",pendMsg:"This report has not been summarized yet. Read the original via the link below.",askSum:"Request a summary of this report",linkNote:"link to be checked",draftBadge:"Draft · not yet reviewed by a person",noLink:"link coming soon",source:"Source",
+    claim:"Claim",evidence:"Evidence",limit:"Limit",pdf:"Original PDF ↗",copy:"Copy summary",copied:"Copied",reviewed:"✓ Reviewed",fake:"Fictional",draftTag:"Not reviewed",pending:"Summary coming","nav.tracker":"Forecast tracker","sb.title":"Submit a forecast","sb.lede":"Tell us a missing forecast. It appears on the chart as 'unchecked' right away and is confirmed after checking the source. (Indicator: world trade volume growth, 2026)","sb.org":"Institution","sb.date":"Release date","sb.value":"Forecast (%)","sb.basis":"Basis","sb.goods":"Goods only","sb.gs":"Goods & services","sb.url":"Link to source or press","sb.page":"Source page (optional)","sb.note":"Note (optional)","sb.send":"Submit","sb.sending":"Sending…","sb.ok":"Saved. It now shows on the chart as unchecked.","sb.bad":"Please check: ","sb.fail":"Could not save. Please try again shortly.","sb.privacy":"No names or emails collected. Submissions are public.",basisSub:"Submitted · unchecked",sbf:{org:"institution",released_on:"release date (2024 to today)",value:"forecast (-50 to 50)",basis:"basis",source_url:"link (https://)",page:"page (≤10 chars)",note:"note (≤200 chars)"},"tr.title":"Forecast tracker","tr.lede":"See how each institution's forecast for the same indicator changed with each release. Tap a point for its source.",fcHere:"Forecasts in this report",basisSource:"Checked in source (page)",basisPress:"From press · source not yet checked",trOrg:"Institution",trDate:"Released",trVal:"Forecast",trDef:"Basis",trBasis:"Evidence",solid:"Solid = goods only",dashed:"Dashed = goods & services (compare with care) · filled = checked in source, hollow = press",actual:"Reference actual",openRep:"Open report summary",openSrc:"Open press source",srcBtn:"See source",all:"All",allOrg:"All institutions",search:"Search reports · institutions",count:(n,m)=>`${n} / ${m} reports`,empty:"No matching reports. Try other filters.",pendMsg:"This report has not been summarized yet. Read the original via the link below.",askSum:"Request a summary of this report",linkNote:"link to be checked",draftBadge:"Draft · not yet reviewed by a person",noLink:"link coming soon",source:"Source",
     pages:n=>`${n} pp.`,items:n=>`${n} sentences`,
     ok:"Page verified",miss:"Not found",quote:"Source passage",missMsg:"The passage was not found on this page. Check the original.",
     data:"See the data →",dataMsg:"Opens the monthly trade chart for the same product in Policyline.",open:"Open →",
@@ -419,7 +453,8 @@ function renderReal(r){
     <div class="head">
       <div class="head__txt"><div class="head__org">${R.org} · ${R.published} · ${R.scope[lang]}</div><h2 class="head__title">${R.title[lang]}</h2>
         <div class="head__meta">${R.reviewed?`<span class="badge badge--reviewed">${t("reviewed")}</span>`:`<span class="badge badge--auto">${t("draftBadge")}</span>`}<span>${t("pages",r.pages)} · ${t("items",R.items.length)}</span></div>
-        <p style="margin:10px 0 0;font-size:14.5px;color:var(--ink-2);max-width:70ch">${esc(R.gist[lang])}</p></div>
+        <p style="margin:10px 0 0;font-size:14.5px;color:var(--ink-2);max-width:70ch">${esc(R.gist[lang])}</p>
+        ${fcOf(R.id).length?`<div class="fc-chips"><small style="color:var(--ink-3);align-self:center">${t("fcHere")}</small>${fcOf(R.id).map(f=>`<button class="fc-chip" data-fc="${f.key}">${f.ind[lang]} · ${f.p.value}%</button>`).join("")}</div>`:""}</div>
       <a class="btn btn--white" href="${R.url}" target="_blank" rel="noopener">${t("pdf")}</a><button class="btn btn--white" id="copy">${t("copy")}</button>
     </div>
     <div class="tabs" role="tablist">
@@ -441,7 +476,7 @@ function renderWork(){
   work.innerHTML = `<div class="head"><div class="head__txt"><div class="head__org">${r.org} · ${r.published} · ${catName}</div>
       <h2 class="head__title">${r[lang]}</h2><div class="head__meta"><span class="badge badge--auto">${t("pending")}</span>${r.link_check!=="ok"?`<span>${t("linkNote")}</span>`:""}</div></div>
       <a class="btn btn--white" href="${r.url}" target="_blank" rel="noopener">${t("pdf")}</a></div>
-    <div class="pending" style="margin-top:14px"><p>${t("pendMsg")}</p><button class="btn btn--primary" id="ask-sum">${t("askSum")}</button></div>`;
+    <div class="pending" style="margin-top:14px"><p>${t("pendMsg")}</p></div>`;
   return;
   const text = s => s[lang].replace("TERM", `<button class="term" data-pop="t">${TERM[lang].w}</button>`);
   const col = role => `<section><h3><span class="chip chip--${role}">${t(role)}</span></h3><ol>${BASE.map((s,k)=>({...s,k})).filter(s=>s.r===role).map(s => {
@@ -472,9 +507,7 @@ function renderWork(){
 work.addEventListener("click", e => {
   const tb = e.target.closest("[data-tab]"); if (tb){ tab = tb.dataset.tab; pop = null; renderWork(); return; }
   const pp = e.target.closest("[data-pop]"); if (pp){ pop = pop === pp.dataset.pop ? null : pp.dataset.pop; renderWork(); return; }
-  if (e.target.id === "ask-sum"){ const r = REPORTS[pick]; rqForm.title.value = r.ko; 
-    const orgSel = rqForm.org; orgSel.value = [...orgSel.options].some(o => o.value === r.org) ? r.org : "기타";
-    document.getElementById("request").scrollIntoView({behavior:"smooth"}); return; }
+  const fc = e.target.closest("[data-fc]"); if (fc){ trSelect(fc.dataset.fc); $("#tracker").scrollIntoView({behavior:"smooth"}); return; }
   if (e.target.id === "copy"){ const r = REPORTS[pick];
     if (r && r.real && navigator.clipboard) navigator.clipboard.writeText(copyText(r)).catch(()=>{});
     e.target.textContent = t("copied"); }
@@ -487,52 +520,76 @@ const drop = $("#drop"), file = $("#file");
 drop.addEventListener("drop", e => { const f = e.dataTransfer.files[0]; if (f) $("#drop-msg").textContent = t("picked", f.name); });
 file.addEventListener("change", () => { if (file.files[0]) $("#drop-msg").textContent = t("picked", file.files[0].name); });
 
-/* ---------- 보고서 요청 (Neon) ---------- */
-const rqForm = $("#rq-form"), rqMsg = $("#rq-msg"), rqList = $("#rq-list"), rqSend = $("#rq-send");
-let rqRows = null, rqFailed = false;
-const voted = new Set(JSON.parse((()=>{ try{ return localStorage.getItem("td-voted") || "[]"; }catch(e){ return "[]"; } })()));
-const escH = x => String(x ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const purposeLabel = v => ({"과제":t("rq.p1"),"스터디":t("rq.p2"),"업무":t("rq.p3"),"기타":t("rq.etc")})[v] || v;
-function drawRequests(){
-  if (rqFailed) { rqList.innerHTML = `<p class="rq-empty">${t("rq.offline")}</p>`; return; }
-  if (!rqRows) return;
-  if (!rqRows.length) { rqList.innerHTML = `<p class="rq-empty">${t("rq.empty")}</p>`; return; }
-  rqList.innerHTML = rqRows.map(r => `<article class="rq-card">
-    <b>${r.url ? `<a href="${escH(r.url)}" target="_blank" rel="noopener">${escH(r.title)}</a>` : escH(r.title)}</b>
-    <button class="rq-vote" data-vote="${r.id}" ${voted.has(r.id) ? "disabled" : ""}><strong>${r.votes}</strong><span>${t("rq.want")}</span></button>
-    <small>${escH(r.org === "기타" ? t("rq.etc") : r.org)} · ${escH(purposeLabel(r.purpose))} · ${escH(r.status)} · ${new Date(r.created_at).toLocaleDateString(lang === "ko" ? "ko-KR" : "en-US")}</small>
-    ${r.reason ? `<p>${escH(r.reason)}</p>` : ""}
-  </article>`).join("");
+/* ---------- 전망 추적 ---------- */
+const FC = (window.TD_FORECASTS || {indicators:[]});
+const ORG_C = {"WTO":"#1E3A2F","IMF":"#4F7A85","World Bank":"#B08A4E","OECD":"#A86F5A"};
+const fcOf = repId => FC.indicators.flatMap(ind => ind.series.flatMap((s,si) => s.points.map((p,pi) => ({ind, s, p, key:`${ind.id}|${si}|${pi}`})))).filter(x => x.p.report === repId);
+let trKey = null, SUBS = [];
+function withSubs(ind){
+  const series = ind.series.map(s => ({...s, points:[...s.points]}));
+  SUBS.filter(x => x.indicator_id === ind.id).forEach(x => {
+    let s = series.find(q => q.org === x.org && q.def === x.basis);
+    if (!s){ s = {org:x.org, def:x.basis, def_ko:x.basis==="goods"?"상품 교역량":"상품+서비스 교역량", def_en:x.basis==="goods"?"merchandise volume":"goods & services volume", points:[]}; series.push(s); }
+    s.points.push({date:x.released_on, value:x.value, basis:"sub", source:x.source_url, page:x.page, note_ko:x.note||"", status:x.status});
+  });
+  series.forEach(s => s.points.sort((a,b) => a.date.localeCompare(b.date)));
+  return {...ind, series};
 }
-async function loadRequests(){
-  try { const r = await fetch("/api/requests"); const j = await r.json(); if (!j.ok) throw 0; rqRows = j.requests; rqFailed = false; }
-  catch(e){ rqFailed = true; }
-  drawRequests();
-}
-let rqBusy = false;
-rqForm.addEventListener("submit", async e => {
-  e.preventDefault(); if (rqBusy) return;          // 빠르게 두 번 눌러도 한 번만
-  rqBusy = true; rqSend.disabled = true; rqSend.textContent = t("rq.sending"); rqMsg.className = "rq-msg"; rqMsg.textContent = "";
-  const body = Object.fromEntries(new FormData(rqForm));
+async function loadSubs(){ try{ const r = await fetch("/api/forecasts"); const j = await r.json(); if (j.ok){ SUBS = j.submissions; drawTracker(); } }catch(e){} }
+loadSubs();
+const sbForm = $("#sb-form"), sbMsg = $("#sb-msg"), sbSend = $("#sb-send"); let sbBusy = false;
+sbForm.addEventListener("submit", async e => {
+  e.preventDefault(); if (sbBusy) return;            // 빠르게 두 번 눌러도 한 번만
+  sbBusy = true; sbSend.disabled = true; sbSend.textContent = t("sb.sending"); sbMsg.className = "rq-msg"; sbMsg.textContent = "";
+  const body = {...Object.fromEntries(new FormData(sbForm)), indicator:"world-trade-2026"};
   try {
-    const r = await fetch("/api/requests", {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(body)});
+    const r = await fetch("/api/forecasts", {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(body)});
     const j = await r.json().catch(() => ({}));
-    if (r.status === 201){ rqMsg.className = "rq-msg ok"; rqMsg.textContent = t("rq.ok"); rqForm.reset(); loadRequests(); }
-    else if (r.status === 400){ rqMsg.className = "rq-msg err"; rqMsg.textContent = t("rq.bad") + (j.fields||[]).map(f => T[lang].rqf[f] || f).join(", "); }
+    if (r.status === 201){ sbMsg.className = "rq-msg ok"; sbMsg.textContent = t("sb.ok"); sbForm.reset(); loadSubs(); }
+    else if (r.status === 400){ sbMsg.className = "rq-msg err"; sbMsg.textContent = t("sb.bad") + (j.fields||[]).map(f => T[lang].sbf[f] || f).join(", "); }
     else throw 0;
-  } catch(err){ rqMsg.className = "rq-msg err"; rqMsg.textContent = t("rq.fail"); }
-  rqBusy = false; rqSend.disabled = false; rqSend.textContent = t("rq.send");
+  } catch(err){ sbMsg.className = "rq-msg err"; sbMsg.textContent = t("sb.fail"); }
+  sbBusy = false; sbSend.disabled = false; sbSend.textContent = t("sb.send");
 });
-rqList.addEventListener("click", async e => {
-  const b = e.target.closest("[data-vote]"); if (!b || b.disabled) return;
-  const id = Number(b.dataset.vote); b.disabled = true;
-  try { const r = await fetch("/api/vote", {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({id})});
-    const j = await r.json(); if (r.status !== 201) throw 0;
-    voted.add(id); try{ localStorage.setItem("td-voted", JSON.stringify([...voted])); }catch(_){}
-    const row = rqRows.find(x => x.id === id); if (row) row.votes = j.votes; drawRequests();
-  } catch(err){ b.disabled = false; }
+function trSelect(key){ trKey = key; drawTracker(); }
+function drawTracker(){
+  const ind0 = FC.indicators[0]; if (!ind0) return; const ind = withSubs(ind0);
+  $("#tr-ind").textContent = ind[lang];
+  $("#tr-legend").innerHTML = ind.series.map(s => `<span><i class="${s.def==="goods"?"":"dash"}" style="--c:${ORG_C[s.org]||"#555"}"></i>${s.org}</span>`).join("") + `<span>${t("solid")} · ${t("dashed")}</span>`;
+  const all = ind.series.flatMap(s => s.points); const vals = all.map(p => p.value).concat(ind.actual ? [ind.actual.value] : []);
+  const toT = d => { const [y,m,dd] = d.split("-").map(Number); return y*12 + (m-1) + ((dd||15)-1)/30; };
+  const ts = all.map(p => toT(p.date)); const t0 = Math.min(...ts) - 1, t1 = Math.max(...ts) + 1;
+  const vMin = Math.min(0, ...vals), vMax = Math.ceil(Math.max(...vals) + .5);
+  const W = 720, H = 300, L = 44, Rr = 16, T = 16, B = 34;
+  const x = tt => L + (tt - t0) / (t1 - t0) * (W - L - Rr), y = v => T + (vMax - v) / (vMax - vMin) * (H - T - B);
+  let g = "";
+  for (let v = Math.ceil(vMin); v <= vMax; v++) g += `<line x1="${L}" x2="${W-Rr}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)" /><text x="${L-8}" y="${y(v)+4}" text-anchor="end" font-size="11" fill="var(--ink-3)">${v}%</text>`;
+  for (let tt = Math.ceil(t0); tt <= t1; tt += 3){ const yy = Math.floor(tt/12), mm = tt%12+1; g += `<text x="${x(tt)}" y="${H-12}" text-anchor="middle" font-size="11" fill="var(--ink-3)">${yy}.${String(mm).padStart(2,"0")}</text>`; }
+  if (ind.actual) g += `<line x1="${L}" x2="${W-Rr}" y1="${y(ind.actual.value)}" y2="${y(ind.actual.value)}" stroke="var(--ink-3)" stroke-dasharray="2 4"/><text x="${W-Rr}" y="${y(ind.actual.value)-6}" text-anchor="end" font-size="11" fill="var(--ink-3)">${t("actual")} 2025 ${ind.actual.value}%</text>`;
+  ind.series.forEach((s, si) => {
+    const c = ORG_C[s.org] || "#555", pts = s.points.map(p => [x(toT(p.date)), y(p.value)]);
+    if (pts.length > 1) g += `<polyline fill="none" stroke="${c}" stroke-width="2" ${s.def==="goods"?"":'stroke-dasharray="6 5"'} points="${pts.map(q=>q.join(",")).join(" ")}"/>`;
+    s.points.forEach((p, pi) => { const key = `${ind.id}|${si}|${pi}`, on = key === trKey;
+      g += `<g class="pt" tabindex="0" role="button" data-key="${key}" aria-label="${s.org} ${p.date} ${p.value}%"><circle cx="${pts[pi][0]}" cy="${pts[pi][1]}" r="${on?7:5}" fill="${p.basis==="source"?c:"var(--surface)"}" stroke="${c}" stroke-width="2" ${p.basis==="sub"?'stroke-dasharray="2 2"':""}/>
+        <text x="${pts[pi][0]}" y="${pts[pi][1]-11}" text-anchor="middle" font-size="12" font-weight="600" fill="var(--ink)">${p.value}</text></g>`; });
+  });
+  $("#tr-chart").innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${ind[lang]}">${g}</svg>`;
+  const rows = ind.series.flatMap((s, si) => s.points.map((p, pi) => ({s, p, key:`${ind.id}|${si}|${pi}`}))).sort((a,b) => a.p.date.localeCompare(b.p.date));
+  const basis = p => `<span class="basis basis--${p.basis}">${p.basis==="source"?`${t("basisSource")} p.${p.page}`:p.basis==="sub"?t("basisSub"):t("basisPress")}</span>`;
+  $("#tr-table").innerHTML = `<tr><th>${t("trDate")}</th><th>${t("trOrg")}</th><th>${t("trVal")}</th><th>${t("trDef")}</th><th>${t("trBasis")}</th></tr>` +
+    rows.map(r => `<tr data-key="${r.key}" style="cursor:pointer"><td>${r.p.date}</td><td>${r.s.org}</td><td><b>${r.p.value}%</b></td><td>${r.s["def_"+lang]}</td><td>${basis(r.p)}</td></tr>`).join("");
+  const sel = rows.find(r => r.key === trKey);
+  $("#tr-detail").innerHTML = sel ? `<b>${sel.s.org} · ${sel.p.date} · ${sel.p.value}%</b> (${sel.s["def_"+lang]}) — ${lang==="ko"?(sel.p.note_ko||""):""}
+     ${sel.p.quote?`<br>“${sel.p.quote}” (p. ${sel.p.page})`:""}
+     ${sel.p.report?` <button class="fc-chip" data-open="${sel.p.report}">${t("openRep")}</button>`:sel.p.source?` <a class="fc-chip" href="${sel.p.source}" target="_blank" rel="noopener">${t("openSrc")} ↗</a>`:""}` : "";
+  $("#tr-note").textContent = lang==="ko" ? (ind.missing_ko || "") : "";
+}
+$("#tracker").addEventListener("click", e => {
+  const k = e.target.closest("[data-key]"); if (k){ trSelect(k.dataset.key); return; }
+  const o = e.target.closest("[data-open]"); if (o){ fCat = "all"; fOrg = "all"; fQ = ""; buildWall(); wall.classList.add("is-open","is-settled");
+    const i = REPORTS.findIndex(r => r.id === o.dataset.open); if (i >= 0) choose(i); }
 });
-loadRequests();
+$("#tracker").addEventListener("keydown", e => { const k = e.target.closest("[data-key]"); if (k && (e.key==="Enter"||e.key===" ")){ e.preventDefault(); trSelect(k.dataset.key); } });
 
 /* ---------- 서가 필터 ---------- */
 const chips = $("#chips"), fOrgSel = $("#f-org"), fQIn = $("#f-q");
@@ -553,8 +610,8 @@ function applyLang(){
   document.querySelectorAll("[data-t]").forEach(el => el.textContent = t(el.dataset.t));
   $("#lang").textContent = t("lang");
   [...wall.children].forEach((el, i) => { el.querySelector(".cv__title").textContent = REPORTS[i][lang]; el.querySelector(".cv__tag").textContent = tagOf(REPORTS[i]); });
-  drawFilters(); $("#shelf-count").textContent = t("count", REPORTS.length, ALL.length);
-  renderWork(); if (typeof drawRequests === "function") drawRequests();
+  drawTracker(); drawFilters(); $("#shelf-count").textContent = t("count", REPORTS.length, ALL.length);
+  renderWork();
 }
 $("#lang").addEventListener("click", () => { lang = lang === "ko" ? "en" : "ko"; try{ localStorage.setItem("td-lang", lang); }catch(e){} applyLang(); });
 
