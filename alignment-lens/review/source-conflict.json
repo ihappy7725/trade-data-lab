@@ -1,0 +1,7 @@
+{
+  "error": "BACI v uses an unexpected decimal format or precision; inspect source before changing the scale",
+  "action": "build_stopped_no_automatic_substitution",
+  "status": "resolved",
+  "resolution": "Literal source decimals retained with Decimal, then all annual ZIP CRC and conservation checks passed.",
+  "resolved_at": "2026-11-17T14:50:05+09:00"
+}

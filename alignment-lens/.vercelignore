@@ -1,0 +1,12 @@
+raw/
+scripts/
+docs/
+review/
+.venv/
+.env
+.env.*
+__pycache__/
+*.pyc
+.git/
+.DS_Store
+PROMPT.md

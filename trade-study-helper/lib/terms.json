@@ -1,0 +1,19 @@
+{
+  "_설명": "(가상) 학습용 무역 용어 동의어 사전. 질문에 이 단어가 있으면 짝이 되는 말을 덧붙여 다시 찾아봅니다.",
+  "FOB": ["본선인도", "free on board"],
+  "CIF": ["운임보험료포함", "cost insurance freight"],
+  "L/C": ["신용장", "letter of credit"],
+  "신용장": ["L/C", "letter of credit"],
+  "B/L": ["선하증권", "bill of lading"],
+  "선하증권": ["B/L", "bill of lading"],
+  "T/T": ["전신송금", "wire transfer"],
+  "D/P": ["지급인도", "documents against payment"],
+  "D/A": ["인수인도", "documents against acceptance"],
+  "송장": ["인보이스", "invoice"],
+  "인보이스": ["송장", "invoice"],
+  "포장명세서": ["packing list"],
+  "원산지증명서": ["certificate of origin"],
+  "보험": ["insurance"],
+  "ETD": ["출항 예정일"],
+  "ETA": ["도착 예정일"]
+}

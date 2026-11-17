@@ -1,0 +1,612 @@
+{
+  "checked_at": "2026-11-17T14:03:38+09:00",
+  "stage": "source_inspection",
+  "selected_by_user": "IdealpointestimatesAll_Jun2024.csv",
+  "dataverse_version": 39,
+  "dataverse_released_at": "2026-07-30T15:57:56Z",
+  "unga_columns": [
+    "",
+    "ccode",
+    "session",
+    "NVotesAll",
+    "IdealPointAll",
+    "QO%All",
+    "Q5%All",
+    "Q10%All",
+    "Q50%All",
+    "Q90%All",
+    "Q95%All",
+    "Q100%All",
+    "iso3c",
+    "Countryname",
+    "USAgree",
+    "RUSSAgree",
+    "BrazilAgree",
+    "ChinaAgree",
+    "IndiaAgree",
+    "IsraelAgree"
+  ],
+  "unga_rows": 11238,
+  "unga_sessions": [
+    1,
+    78
+  ],
+  "unga_unique_codes": 197,
+  "baci_country_rows": 238,
+  "baci_trade_columns": [
+    "t",
+    "i",
+    "j",
+    "k",
+    "v",
+    "q"
+  ],
+  "baci_country_columns": [
+    "country_code",
+    "country_name",
+    "country_iso2",
+    "country_iso3"
+  ],
+  "baci_trade_years": [
+    1995,
+    1996,
+    1997,
+    1998,
+    1999,
+    2000,
+    2001,
+    2002,
+    2003,
+    2004,
+    2005,
+    2006,
+    2007,
+    2008,
+    2009,
+    2010,
+    2011,
+    2012,
+    2013,
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023,
+    2024
+  ],
+  "baci_archive_bytes": 2417732497,
+  "literal_matches": 192,
+  "un_only": [
+    "LIE",
+    "MCO",
+    "TWN",
+    "YAR",
+    "YUG"
+  ],
+  "baci_only": [
+    {
+      "country_code": "16",
+      "country_name": "American Samoa",
+      "country_iso2": "AS",
+      "country_iso3": "ASM"
+    },
+    {
+      "country_code": "60",
+      "country_name": "Bermuda",
+      "country_iso2": "BM",
+      "country_iso3": "BMU"
+    },
+    {
+      "country_code": "86",
+      "country_name": "Br. Indian Ocean Terr.",
+      "country_iso2": "IO",
+      "country_iso3": "IOT"
+    },
+    {
+      "country_code": "92",
+      "country_name": "Br. Virgin Isds",
+      "country_iso2": "VG",
+      "country_iso3": "VGB"
+    },
+    {
+      "country_code": "136",
+      "country_name": "Cayman Isds",
+      "country_iso2": "KY",
+      "country_iso3": "CYM"
+    },
+    {
+      "country_code": "162",
+      "country_name": "Christmas Isds",
+      "country_iso2": "CX",
+      "country_iso3": "CXR"
+    },
+    {
+      "country_code": "166",
+      "country_name": "Cocos Isds",
+      "country_iso2": "CC",
+      "country_iso3": "CCK"
+    },
+    {
+      "country_code": "175",
+      "country_name": "Mayotte (Overseas France)",
+      "country_iso2": "YT",
+      "country_iso3": "MYT"
+    },
+    {
+      "country_code": "184",
+      "country_name": "Cook Isds",
+      "country_iso2": "CK",
+      "country_iso3": "COK"
+    },
+    {
+      "country_code": "238",
+      "country_name": "Falkland Isds (Malvinas)",
+      "country_iso2": "FK",
+      "country_iso3": "FLK"
+    },
+    {
+      "country_code": "258",
+      "country_name": "French Polynesia",
+      "country_iso2": "PF",
+      "country_iso3": "PYF"
+    },
+    {
+      "country_code": "260",
+      "country_name": "Fr. South Antarctic Terr.",
+      "country_iso2": "TF",
+      "country_iso3": "ATF"
+    },
+    {
+      "country_code": "275",
+      "country_name": "State of Palestine",
+      "country_iso2": "PS",
+      "country_iso3": "PSE"
+    },
+    {
+      "country_code": "292",
+      "country_name": "Gibraltar",
+      "country_iso2": "GI",
+      "country_iso3": "GIB"
+    },
+    {
+      "country_code": "304",
+      "country_name": "Greenland",
+      "country_iso2": "GL",
+      "country_iso3": "GRL"
+    },
+    {
+      "country_code": "316",
+      "country_name": "Guam",
+      "country_iso2": "GU",
+      "country_iso3": "GUM"
+    },
+    {
+      "country_code": "344",
+      "country_name": "China, Hong Kong SAR",
+      "country_iso2": "HK",
+      "country_iso3": "HKG"
+    },
+    {
+      "country_code": "446",
+      "country_name": "China, Macao SAR",
+      "country_iso2": "MO",
+      "country_iso3": "MAC"
+    },
+    {
+      "country_code": "490",
+      "country_name": "Other Asia, nes",
+      "country_iso2": "",
+      "country_iso3": "S19"
+    },
+    {
+      "country_code": "500",
+      "country_name": "Montserrat",
+      "country_iso2": "MS",
+      "country_iso3": "MSR"
+    },
+    {
+      "country_code": "530",
+      "country_name": "Netherlands Antilles (...2010)",
+      "country_iso2": "AN",
+      "country_iso3": "ANT"
+    },
+    {
+      "country_code": "531",
+      "country_name": "CuraÃ§ao",
+      "country_iso2": "CW",
+      "country_iso3": "CUW"
+    },
+    {
+      "country_code": "533",
+      "country_name": "Aruba",
+      "country_iso2": "AW",
+      "country_iso3": "ABW"
+    },
+    {
+      "country_code": "534",
+      "country_name": "Saint Maarten",
+      "country_iso2": "SX",
+      "country_iso3": "SXM"
+    },
+    {
+      "country_code": "535",
+      "country_name": "Bonaire",
+      "country_iso2": "BQ",
+      "country_iso3": "BES"
+    },
+    {
+      "country_code": "540",
+      "country_name": "New Caledonia",
+      "country_iso2": "NC",
+      "country_iso3": "NCL"
+    },
+    {
+      "country_code": "570",
+      "country_name": "Niue",
+      "country_iso2": "NU",
+      "country_iso3": "NIU"
+    },
+    {
+      "country_code": "574",
+      "country_name": "Norfolk Isds",
+      "country_iso2": "NF",
+      "country_iso3": "NFK"
+    },
+    {
+      "country_code": "580",
+      "country_name": "N. Mariana Isds",
+      "country_iso2": "MP",
+      "country_iso3": "MNP"
+    },
+    {
+      "country_code": "612",
+      "country_name": "Pitcairn",
+      "country_iso2": "PN",
+      "country_iso3": "PCN"
+    },
+    {
+      "country_code": "652",
+      "country_name": "Saint BarthÃ©lemy",
+      "country_iso2": "BL",
+      "country_iso3": "BLM"
+    },
+    {
+      "country_code": "654",
+      "country_name": "Saint Helena",
+      "country_iso2": "SH",
+      "country_iso3": "SHN"
+    },
+    {
+      "country_code": "660",
+      "country_name": "Anguilla",
+      "country_iso2": "AI",
+      "country_iso3": "AIA"
+    },
+    {
+      "country_code": "666",
+      "country_name": "Saint Pierre and Miquelon",
+      "country_iso2": "PM",
+      "country_iso3": "SPM"
+    },
+    {
+      "country_code": "688",
+      "country_name": "Serbia",
+      "country_iso2": "RS",
+      "country_iso3": "SRB"
+    },
+    {
+      "country_code": "697",
+      "country_name": "Europe EFTA, nes",
+      "country_iso2": "",
+      "country_iso3": "R20"
+    },
+    {
+      "country_code": "711",
+      "country_name": "Southern African Customs Union (...1999)",
+      "country_iso2": "",
+      "country_iso3": "ZA1"
+    },
+    {
+      "country_code": "772",
+      "country_name": "Tokelau",
+      "country_iso2": "TK",
+      "country_iso3": "TKL"
+    },
+    {
+      "country_code": "796",
+      "country_name": "Turks and Caicos Isds",
+      "country_iso2": "TC",
+      "country_iso3": "TCA"
+    },
+    {
+      "country_code": "810",
+      "country_name": "USSR (...1990)",
+      "country_iso2": "SU",
+      "country_iso3": "SUN"
+    },
+    {
+      "country_code": "849",
+      "country_name": "US Misc. Pacific Isds",
+      "country_iso2": "PU",
+      "country_iso3": "PUS"
+    },
+    {
+      "country_code": "876",
+      "country_name": "Wallis and Futuna Isds",
+      "country_iso2": "WF",
+      "country_iso3": "WLF"
+    },
+    {
+      "country_code": "891",
+      "country_name": "Serbia and Montenegro (...2005)",
+      "country_iso2": "CS",
+      "country_iso3": "SCG"
+    }
+  ],
+  "duplicate_baci_iso3": {
+    "BEL": [
+      {
+        "country_code": "56",
+        "country_name": "Belgium",
+        "country_iso2": "BE",
+        "country_iso3": "BEL"
+      },
+      {
+        "country_code": "58",
+        "country_name": "Belgium-Luxembourg (...1998)",
+        "country_iso2": "BE",
+        "country_iso3": "BEL"
+      }
+    ],
+    "DEU": [
+      {
+        "country_code": "276",
+        "country_name": "Germany",
+        "country_iso2": "DE",
+        "country_iso3": "DEU"
+      },
+      {
+        "country_code": "280",
+        "country_name": "Fed. Rep. of Germany (...1990)",
+        "country_iso2": "DE",
+        "country_iso3": "DEU"
+      }
+    ],
+    "SDN": [
+      {
+        "country_code": "729",
+        "country_name": "Sudan",
+        "country_iso2": "SD",
+        "country_iso3": "SDN"
+      },
+      {
+        "country_code": "736",
+        "country_name": "Sudan (...2011)",
+        "country_iso2": "SD",
+        "country_iso3": "SDN"
+      }
+    ]
+  },
+  "duplicate_un_country_sessions": [
+    {
+      "iso3": "YAR",
+      "session": "22",
+      "count": 2
+    },
+    {
+      "iso3": "YAR",
+      "session": "23",
+      "count": 2
+    },
+    {
+      "iso3": "YAR",
+      "session": "24",
+      "count": 2
+    },
+    {
+      "iso3": "YAR",
+      "session": "25",
+      "count": 2
+    },
+    {
+      "iso3": "YAR",
+      "session": "26",
+      "count": 2
+    },
+    {
+      "iso3": "YAR",
+      "session": "27",
+      "count": 2
+    },
+    {
+      "iso3": "YAR",
+      "session": "28",
+      "count": 2
+    },
+    {
+      "iso3": "YAR",
+      "session": "29",
+      "count": 2
+    },
+    {
+      "iso3": "YAR",
+      "session": "30",
+      "count": 2
+    },
+    {
+      "iso3": "YAR",
+      "session": "31",
+      "count": 2
+    },
+    {
+      "iso3": "YAR",
+      "session": "32",
+      "count": 2
+    },
+    {
+      "iso3": "YAR",
+      "session": "33",
+      "count": 2
+    },
+    {
+      "iso3": "YAR",
+      "session": "34",
+      "count": 2
+    },
+    {
+      "iso3": "YAR",
+      "session": "35",
+      "count": 2
+    },
+    {
+      "iso3": "YAR",
+      "session": "36",
+      "count": 2
+    },
+    {
+      "iso3": "YAR",
+      "session": "37",
+      "count": 2
+    },
+    {
+      "iso3": "YAR",
+      "session": "38",
+      "count": 2
+    },
+    {
+      "iso3": "YAR",
+      "session": "39",
+      "count": 2
+    },
+    {
+      "iso3": "YAR",
+      "session": "40",
+      "count": 2
+    },
+    {
+      "iso3": "YAR",
+      "session": "41",
+      "count": 2
+    },
+    {
+      "iso3": "YAR",
+      "session": "42",
+      "count": 2
+    },
+    {
+      "iso3": "YAR",
+      "session": "43",
+      "count": 2
+    },
+    {
+      "iso3": "YAR",
+      "session": "44",
+      "count": 2
+    }
+  ],
+  "agreement_columns": [
+    "",
+    "session.x",
+    "ccode1",
+    "ccode2",
+    "agree",
+    "year",
+    "IdealPointAll.x",
+    "NVotesAll.x",
+    "IdealPointAll.y",
+    "NVotesAll.y",
+    "IdealPointDistance"
+  ],
+  "agreement_rows": 1800294,
+  "session_years": {
+    "1": 1946,
+    "2": 1947,
+    "3": 1948,
+    "4": 1949,
+    "5": 1950,
+    "6": 1951,
+    "7": 1952,
+    "8": 1953,
+    "9": 1954,
+    "10": 1955,
+    "11": 1956,
+    "12": 1957,
+    "13": 1958,
+    "14": 1959,
+    "15": 1960,
+    "16": 1961,
+    "17": 1962,
+    "18": 1963,
+    "19": 1964,
+    "20": 1965,
+    "21": 1966,
+    "22": 1967,
+    "23": 1968,
+    "24": 1969,
+    "25": 1970,
+    "26": 1971,
+    "27": 1972,
+    "28": 1973,
+    "29": 1974,
+    "30": 1975,
+    "31": 1976,
+    "32": 1977,
+    "33": 1978,
+    "34": 1979,
+    "35": 1980,
+    "36": 1981,
+    "37": 1982,
+    "38": 1983,
+    "39": 1984,
+    "40": 1985,
+    "41": 1986,
+    "42": 1987,
+    "43": 1988,
+    "44": 1989,
+    "45": 1990,
+    "46": 1991,
+    "47": 1992,
+    "48": 1993,
+    "49": 1994,
+    "50": 1995,
+    "51": 1996,
+    "52": 1997,
+    "53": 1998,
+    "54": 1999,
+    "55": 2000,
+    "56": 2001,
+    "57": 2002,
+    "58": 2003,
+    "59": 2004,
+    "60": 2005,
+    "61": 2006,
+    "62": 2007,
+    "63": 2008,
+    "64": 2009,
+    "65": 2010,
+    "66": 2011,
+    "67": 2012,
+    "68": 2013,
+    "69": 2014,
+    "70": 2015,
+    "71": 2016,
+    "72": 2017,
+    "73": 2018,
+    "74": 2019,
+    "75": 2020,
+    "76": 2021,
+    "77": 2022,
+    "78": 2023
+  },
+  "limitations": [
+    "Country-table comparison includes historical entries; it does not establish annual trade coverage.",
+    "Only a header sample of the annual BACI trade file has been downloaded.",
+    "No country JSON, bilateral values, or graphs have been calculated.",
+    "The score file has no year column; its sessions are linked through the agreement source's year column when available."
+  ]
+}

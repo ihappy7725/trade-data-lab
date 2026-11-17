@@ -1,0 +1,256 @@
+[
+  {
+    "source": "BACI",
+    "original_code": "S19",
+    "replacement_code": "TWN",
+    "reason": "User-specified display crosswalk for Other Asia, nes; trade retained and service-period vote data absent.",
+    "status": "decided_under_user_delegation",
+    "references": [
+      "https://www.cepii.fr/DATA_DOWNLOAD/baci/doc/baci_webpage.html"
+    ],
+    "country_code": 490,
+    "vote_action": "null"
+  },
+  {
+    "source": "UNGA",
+    "original_code": "YUG",
+    "replacement_code": "SCG",
+    "reason": "COW 345 maps to the historical federation before the 2006 dissolution; apply only to existing rows, first observed service-period score is 2000.",
+    "status": "decided_under_user_delegation",
+    "references": [
+      "https://doi.org/10.7910/DVN/LEJUQZ",
+      "https://www.un.org/en/about-us/member-states/yugoslavia",
+      "https://unstats.un.org/unsd/methodology/m49/"
+    ],
+    "ccode": 345,
+    "year_start": 1995,
+    "year_end": 2005,
+    "scope": "SCG"
+  },
+  {
+    "source": "UNGA",
+    "original_code": "YUG",
+    "replacement_code": "SRB",
+    "reason": "COW 345 denotes Serbia from 2006; verified against identity columns of the newer same-Dataverse file without using its scores.",
+    "status": "decided_under_user_delegation",
+    "references": [
+      "https://doi.org/10.7910/DVN/LEJUQZ",
+      "https://www.un.org/en/about-us/member-states/yugoslavia",
+      "https://unstats.un.org/unsd/methodology/m49/"
+    ],
+    "ccode": 345,
+    "year_start": 2006,
+    "scope": "SRB"
+  },
+  {
+    "source": "BACI",
+    "original_code": "BEL",
+    "replacement_code": null,
+    "reason": "Code 58 is combined Belgium-Luxembourg, not individual Belgium or Luxembourg. Preserve flows in denominators without allocating or inventing a joint vote.",
+    "status": "decided_under_user_delegation",
+    "references": [
+      "https://unstats.un.org/unsd/methodology/m49/",
+      "https://comtradeapi.un.org/files/v1/app/reference/Reporters.json"
+    ],
+    "country_code": 58,
+    "year_end": 1998,
+    "scope": "BACI:58",
+    "kind": "aggregate"
+  },
+  {
+    "source": "BACI",
+    "original_code": "SCG",
+    "replacement_code": "SCG",
+    "reason": "Historical Serbia and Montenegro remains separate from SRB and MNE.",
+    "status": "decided_under_user_delegation",
+    "references": [
+      "https://unstats.un.org/unsd/methodology/m49/",
+      "https://comtradeapi.un.org/files/v1/app/reference/Reporters.json"
+    ],
+    "country_code": 891,
+    "year_end": 2005,
+    "scope": "SCG"
+  },
+  {
+    "source": "BACI",
+    "original_code": "SCG",
+    "replacement_code": null,
+    "reason": "Comtrade 891 remains valid into May 2006 despite BACI label ending 2005. If an annual 2006 row occurs, retain it as a transition aggregate and do not match to post-dissolution SRB votes.",
+    "status": "decided_under_user_delegation",
+    "references": [
+      "https://unstats.un.org/unsd/methodology/m49/",
+      "https://comtradeapi.un.org/files/v1/app/reference/Reporters.json"
+    ],
+    "country_code": 891,
+    "year_start": 2006,
+    "year_end": 2006,
+    "scope": "BACI:891:TRANSITION2006",
+    "kind": "transition_aggregate"
+  },
+  {
+    "source": "BACI",
+    "original_code": "SDN",
+    "replacement_code": "SDN",
+    "reason": "Old-boundary Sudan is a separate geographical scope; retain pre-split observations and never compare across the split.",
+    "status": "decided_under_user_delegation",
+    "references": [
+      "https://unstats.un.org/unsd/methodology/m49/",
+      "https://comtradeapi.un.org/files/v1/app/reference/Reporters.json"
+    ],
+    "country_code": 736,
+    "year_end": 2010,
+    "scope": "SDN_PRE2011"
+  },
+  {
+    "source": "BACI",
+    "original_code": "SDN",
+    "replacement_code": null,
+    "reason": "Old Sudan annual data in the 2011 transition cannot be assigned to post-split Sudan or South Sudan; preserve in other countries denominators.",
+    "status": "decided_under_user_delegation",
+    "references": [
+      "https://unstats.un.org/unsd/methodology/m49/",
+      "https://comtradeapi.un.org/files/v1/app/reference/Reporters.json"
+    ],
+    "country_code": 736,
+    "year_start": 2011,
+    "year_end": 2011,
+    "scope": "BACI:736:TRANSITION2011",
+    "kind": "transition_aggregate"
+  },
+  {
+    "source": "BACI",
+    "original_code": "SDN",
+    "replacement_code": "SDN",
+    "reason": "Post-split Sudan has a distinct geographical scope and is never stitched to pre-split scope for change summaries.",
+    "status": "decided_under_user_delegation",
+    "references": [
+      "https://unstats.un.org/unsd/methodology/m49/",
+      "https://comtradeapi.un.org/files/v1/app/reference/Reporters.json"
+    ],
+    "country_code": 729,
+    "year_start": 2011,
+    "scope": "SDN_POST2011"
+  },
+  {
+    "source": "UNGA",
+    "original_code": "SDN",
+    "replacement_code": "SDN",
+    "reason": "Published Sudan scores before 2011 refer to pre-split scope; score values remain untouched.",
+    "status": "decided_under_user_delegation",
+    "references": [
+      "https://unstats.un.org/unsd/methodology/m49/",
+      "https://comtradeapi.un.org/files/v1/app/reference/Reporters.json"
+    ],
+    "ccode": 625,
+    "year_end": 2010,
+    "scope": "SDN_PRE2011"
+  },
+  {
+    "source": "UNGA",
+    "original_code": "SDN",
+    "replacement_code": "SDN",
+    "reason": "Session-start-year mapping places the 2011 session after the July split. Published point estimates remain untouched; match only to post-split trade scope.",
+    "status": "decided_under_user_delegation",
+    "references": [
+      "https://unstats.un.org/unsd/methodology/m49/",
+      "https://comtradeapi.un.org/files/v1/app/reference/Reporters.json"
+    ],
+    "ccode": 625,
+    "year_start": 2011,
+    "scope": "SDN_POST2011"
+  },
+  {
+    "source": "BACI",
+    "original_code": "ZA1",
+    "replacement_code": null,
+    "reason": "Southern African Customs Union is not assigned to any one modern state; retain original trade flows and do not create a political score.",
+    "status": "decided_under_user_delegation",
+    "references": [
+      "https://unstats.un.org/unsd/methodology/m49/",
+      "https://comtradeapi.un.org/files/v1/app/reference/Reporters.json"
+    ],
+    "country_code": 711,
+    "scope": "BACI:711",
+    "kind": "aggregate"
+  },
+  {
+    "source": "BACI",
+    "original_code": "R20",
+    "replacement_code": null,
+    "reason": "Europe EFTA, nes is not assigned to any one modern state; retain original trade flows and do not create a political score.",
+    "status": "decided_under_user_delegation",
+    "references": [
+      "https://unstats.un.org/unsd/methodology/m49/",
+      "https://comtradeapi.un.org/files/v1/app/reference/Reporters.json"
+    ],
+    "country_code": 697,
+    "scope": "BACI:697",
+    "kind": "aggregate"
+  },
+  {
+    "source": "BACI",
+    "original_code": "PUS",
+    "replacement_code": null,
+    "reason": "US Misc. Pacific Isds is not assigned to any one modern state; retain original trade flows and do not create a political score.",
+    "status": "decided_under_user_delegation",
+    "references": [
+      "https://unstats.un.org/unsd/methodology/m49/",
+      "https://comtradeapi.un.org/files/v1/app/reference/Reporters.json"
+    ],
+    "country_code": 849,
+    "scope": "BACI:849",
+    "kind": "aggregate"
+  },
+  {
+    "source": "BACI",
+    "original_code": "CSK",
+    "replacement_code": null,
+    "reason": "A pre-1995 entity in the metadata table is allowed; an actual service-period flow under this obsolete numeric code triggers source-conflict review rather than modern-country substitution.",
+    "status": "decided_under_user_delegation",
+    "references": [
+      "https://unstats.un.org/unsd/methodology/m49/",
+      "https://comtradeapi.un.org/files/v1/app/reference/Reporters.json"
+    ],
+    "country_code": 200,
+    "action": "raise_if_observed_in_service_period"
+  },
+  {
+    "source": "BACI",
+    "original_code": "DDR",
+    "replacement_code": null,
+    "reason": "A pre-1995 entity in the metadata table is allowed; an actual service-period flow under this obsolete numeric code triggers source-conflict review rather than modern-country substitution.",
+    "status": "decided_under_user_delegation",
+    "references": [
+      "https://unstats.un.org/unsd/methodology/m49/",
+      "https://comtradeapi.un.org/files/v1/app/reference/Reporters.json"
+    ],
+    "country_code": 278,
+    "action": "raise_if_observed_in_service_period"
+  },
+  {
+    "source": "BACI",
+    "original_code": "DEU",
+    "replacement_code": null,
+    "reason": "A pre-1995 entity in the metadata table is allowed; an actual service-period flow under this obsolete numeric code triggers source-conflict review rather than modern-country substitution.",
+    "status": "decided_under_user_delegation",
+    "references": [
+      "https://unstats.un.org/unsd/methodology/m49/",
+      "https://comtradeapi.un.org/files/v1/app/reference/Reporters.json"
+    ],
+    "country_code": 280,
+    "action": "raise_if_observed_in_service_period"
+  },
+  {
+    "source": "BACI",
+    "original_code": "SUN",
+    "replacement_code": null,
+    "reason": "A pre-1995 entity in the metadata table is allowed; an actual service-period flow under this obsolete numeric code triggers source-conflict review rather than modern-country substitution.",
+    "status": "decided_under_user_delegation",
+    "references": [
+      "https://unstats.un.org/unsd/methodology/m49/",
+      "https://comtradeapi.un.org/files/v1/app/reference/Reporters.json"
+    ],
+    "country_code": 810,
+    "action": "raise_if_observed_in_service_period"
+  }
+]

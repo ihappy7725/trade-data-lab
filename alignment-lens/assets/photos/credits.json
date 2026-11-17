@@ -1,0 +1,34 @@
+[
+  {
+    "id": "cargo-ship",
+    "filename": "cargo-ship.jpg",
+    "title": "Aerial photograph of a cargo ship",
+    "author": "Wilfredor",
+    "date": "2012-08-26",
+    "location": "Caribbean Sea, Venezuela",
+    "source": "https://commons.wikimedia.org/wiki/File:Aerial_photograph_of_a_cargo_ship.jpg",
+    "license": "CC BY-SA 3.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+    "modifications": [
+      "Responsive CSS crop",
+      "Dark overlay for text contrast"
+    ],
+    "purpose": "Illustrative logistics photograph, not the selected pair or observation year"
+  },
+  {
+    "id": "container-terminal",
+    "filename": "container-terminal.jpg",
+    "title": "Container port",
+    "author": "KimonBerlin / Wikimedia Commons",
+    "date": "2014-01-25",
+    "location": "Singapore",
+    "source": "https://commons.wikimedia.org/wiki/File:Container_port_(12848714813).jpg",
+    "license": "CC BY-SA 2.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/2.0/",
+    "modifications": [
+      "Responsive CSS crop",
+      "Dark overlay for text contrast"
+    ],
+    "purpose": "Illustrative logistics photograph, not the selected pair or observation year"
+  }
+]

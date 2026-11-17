@@ -1,0 +1,355 @@
+{
+  "status": "local_implementation_verified_not_deployed",
+  "checked_at": "2026-11-17T11:00:14+09:00",
+  "generated_at": "2026-11-17T14:50:05+09:00",
+  "sources": {
+    "unga": {
+      "name": "United Nations General Assembly Ideal Points",
+      "url": "https://doi.org/10.7910/DVN/LEJUQZ",
+      "version": "39.0",
+      "release_date": "2026-07-30",
+      "filename": "IdealpointestimatesAll_Jun2024.csv",
+      "file_id": 10295878,
+      "file_published": "2024-06-24",
+      "downloaded_on": "2026-11-17",
+      "license": "CC0 1.0",
+      "checksum": {
+        "type": "MD5",
+        "value": "fd3d361f454206c480040bbccf362319"
+      },
+      "score_column": "IdealPointAll",
+      "country_column": "iso3c",
+      "session_column": "session",
+      "year_column": null,
+      "year_mapping": {
+        "source_file": "AgreementScoresAll_Jun2024.csv",
+        "session_column": "session.x",
+        "year_column": "year",
+        "session_years": {
+          "1": 1946,
+          "2": 1947,
+          "3": 1948,
+          "4": 1949,
+          "5": 1950,
+          "6": 1951,
+          "7": 1952,
+          "8": 1953,
+          "9": 1954,
+          "10": 1955,
+          "11": 1956,
+          "12": 1957,
+          "13": 1958,
+          "14": 1959,
+          "15": 1960,
+          "16": 1961,
+          "17": 1962,
+          "18": 1963,
+          "19": 1964,
+          "20": 1965,
+          "21": 1966,
+          "22": 1967,
+          "23": 1968,
+          "24": 1969,
+          "25": 1970,
+          "26": 1971,
+          "27": 1972,
+          "28": 1973,
+          "29": 1974,
+          "30": 1975,
+          "31": 1976,
+          "32": 1977,
+          "33": 1978,
+          "34": 1979,
+          "35": 1980,
+          "36": 1981,
+          "37": 1982,
+          "38": 1983,
+          "39": 1984,
+          "40": 1985,
+          "41": 1986,
+          "42": 1987,
+          "43": 1988,
+          "44": 1989,
+          "45": 1990,
+          "46": 1991,
+          "47": 1992,
+          "48": 1993,
+          "49": 1994,
+          "50": 1995,
+          "51": 1996,
+          "52": 1997,
+          "53": 1998,
+          "54": 1999,
+          "55": 2000,
+          "56": 2001,
+          "57": 2002,
+          "58": 2003,
+          "59": 2004,
+          "60": 2005,
+          "61": 2006,
+          "62": 2007,
+          "63": 2008,
+          "64": 2009,
+          "65": 2010,
+          "66": 2011,
+          "67": 2012,
+          "68": 2013,
+          "69": 2014,
+          "70": 2015,
+          "71": 2016,
+          "72": 2017,
+          "73": 2018,
+          "74": 2019,
+          "75": 2020,
+          "76": 2021,
+          "77": 2022,
+          "78": 2023
+        }
+      },
+      "sessions": [
+        1,
+        78
+      ],
+      "citation": "Bailey, M. A., Strezhnev, A., & Voeten, E. (2017). Estimating Dynamic State Preferences from United Nations Voting Data. Journal of Conflict Resolution, 61(2).",
+      "temporal_alignment_note": "Session-labelled observations can include votes in the following calendar year. Agreement-source year labels align display axes, not exact calendar periods; no temporal interpolation."
+    },
+    "baci": {
+      "name": "BACI, CEPII",
+      "url": "https://www.cepii.fr/CEPII/en/bdd_modele/bdd_modele_item.asp?id=37",
+      "documentation_url": "https://www.cepii.fr/DATA_DOWNLOAD/baci/doc/baci_webpage.html",
+      "version": "V202601",
+      "classification": "HS92",
+      "license": "Etalab Open Licence 2.0",
+      "archive_url": "https://www.cepii.fr/DATA_DOWNLOAD/baci/data/BACI_HS92_V202601.zip",
+      "country_file": "country_codes_V202601.csv",
+      "country_table_downloaded_on": "2026-11-17",
+      "trade_downloaded_on": "2026-11-17",
+      "available_trade_years": [
+        1995,
+        1996,
+        1997,
+        1998,
+        1999,
+        2000,
+        2001,
+        2002,
+        2003,
+        2004,
+        2005,
+        2006,
+        2007,
+        2008,
+        2009,
+        2010,
+        2011,
+        2012,
+        2013,
+        2014,
+        2015,
+        2016,
+        2017,
+        2018,
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024
+      ],
+      "trade_columns": [
+        "t",
+        "i",
+        "j",
+        "k",
+        "v",
+        "q"
+      ],
+      "value_unit": "thousand USD",
+      "citation": "BACI, CEPII. Gaulier, G. & Zignago, S. (2010). BACI: International Trade Database at the Product-Level. CEPII Working Paper No. 2010-23.",
+      "archive_last_modified": "2026-01-22",
+      "presentation_page_updated": "2026-01-30",
+      "archive_sha256": "43259580059fa83e17fcdb6866e7b7f39aaf0dd50277cfe494a1ed05a4844faf"
+    },
+    "agreement": {
+      "filename": "AgreementScoresAll_Jun2024.csv",
+      "file_id": 10295876,
+      "checksum": {
+        "type": "MD5",
+        "value": "fee40b0bf750a6eea4742370c08b9aff"
+      },
+      "status": "downloaded_and_verified",
+      "downloaded_on": "2026-11-17",
+      "rows_checked": 1800294,
+      "definition": {
+        "scale": [
+          0,
+          1
+        ],
+        "formula": "session mean of 1 - abs(vote1 - vote2) / 2; yes/abstain/no ordinal coding",
+        "exclusions": [
+          "absence and non-membership",
+          "unanimous votes"
+        ],
+        "reference": "https://github.com/evoeten/United-Nations-General-Assembly-Votes-and-Ideal-Points/blob/master/DyadicAgreementScores.R"
+      }
+    }
+  },
+  "period": {
+    "start": 1995,
+    "vote_end": 2023,
+    "trade_end": 2024
+  },
+  "thresholds": {
+    "tiny_partner_share_pct": 0.01,
+    "tiny_partner_confirmed": true,
+    "tiny_partner_operator": "<",
+    "tiny_partner_purpose": "display_only",
+    "tiny_partner_origin": "Original user specification default; no claim of empirical optimality or statistical importance.",
+    "affects_denominators": false,
+    "affects_rank_correlation": false,
+    "affects_fact_cards": false,
+    "affects_csv": false,
+    "show_all_available": true,
+    "nearly_unchanged_relative": null,
+    "nearly_unchanged_policy": "disabled_no_substantive_equivalence_bound",
+    "change_direction": "sign_of_unrounded_change",
+    "exact_zero_label": "unchanged_exact",
+    "display_decimal_places": {
+      "distance": 2,
+      "share_pct": 2,
+      "share_change_pp": 2,
+      "rank_correlation": 3
+    },
+    "display_rounding": "half_up_display_only",
+    "nonzero_below_display_unit": "preserve_direction_and_show_less_than_0.01_in_metric_unit",
+    "rationale": "No domain-supported 5% equivalence bound was found in reviewed sources; relative change is undefined at zero and unstable near zero.",
+    "references": [
+      "https://doi.org/10.1177/2515245918770963",
+      "https://www.bipm.org/documents/20126/2071204/JCGM_GUM_6_2020.pdf/d4e77d99-3870-0908-ff37-c1b6a230a337",
+      "https://vis.csail.mit.edu/classes/6.859/readings/pdfs/Shneiderman-TheEyesHaveIt.pdf"
+    ]
+  },
+  "pending": [
+    "pair_screen_review"
+  ],
+  "method_decision_date": "2026-11-17",
+  "method_authorization": "User delegated selection of thresholds and historical identity handling on evidence.",
+  "comparison": {
+    "window_years": 3,
+    "window_years_origin": "User specification; descriptive comparison, not an optimal smoothing or inferential claim.",
+    "minimum_contiguous_years": 6,
+    "minimum_years_reason": "Two non-overlapping complete three-year windows require at least six years.",
+    "segment_selection": "latest_observed_contiguous_common_metric_and_entity_scope_segment",
+    "missing": "null_no_interpolation_no_skipping_years_in_means",
+    "require_all_three_years": true,
+    "allow_overlapping_windows": false,
+    "cross_scope_summary": false,
+    "share_change_unit": "percentage_point",
+    "distance_change_unit": "original_ideal_point_distance",
+    "transition_years_excluded_from_windows": {
+      "SRB": [
+        2006
+      ],
+      "MNE": [
+        2006
+      ],
+      "SDN": [
+        2011
+      ],
+      "SSD": [
+        2011
+      ],
+      "ANT": [
+        2010
+      ],
+      "CUW": [
+        2010
+      ],
+      "SXM": [
+        2010
+      ],
+      "BES": [
+        2010
+      ]
+    },
+    "transition_year_basis": "Conservative comparability policy: independence/dissolution years can mix or cover only part of a calendar year; retain observed data with notice.",
+    "insufficient_data_action": "show_observations_and_reason_without_change_summary",
+    "no_inferential_test": true,
+    "no_joint_uncertainty_reconstruction": true
+  },
+  "country_identity_policy": {
+    "join": "versioned_BACI_country_table_ISO3_plus_time_and_geographical_scope",
+    "preserve_raw_code": true,
+    "preserve_aggregate_flows_in_known_country_denominators": true,
+    "invent_aggregate_vote_score": false,
+    "redistribute_old_country_trade": false,
+    "scope_labels_are_iso3": false,
+    "scope_labels_purpose": "Internal geographical comparability identifiers, never presented as official ISO3 codes.",
+    "line_break_on_scope_change": true,
+    "source_date_conflict": "retain_evidence_and_stop_for_review_except_explicit_transition_buckets",
+    "references": [
+      "https://unstats.un.org/unsd/methodology/m49/",
+      "https://comtradeapi.un.org/files/v1/app/reference/Reporters.json",
+      "https://www.un.org/en/about-us/member-states/yugoslavia",
+      "https://www.cepii.fr/DATA_DOWNLOAD/baci/doc/baci_webpage.html"
+    ],
+    "reference_files": [
+      {
+        "filename": "comtrade-reporters-2026-11-17.json",
+        "purpose": "identity_dates_only",
+        "sha256": "e4e1114a11f59580428ece93ab22f4a1c2522ff239860bc54d52c94ec4bcd34d"
+      },
+      {
+        "filename": "IdealpointestimatesFP_2026FP.csv",
+        "purpose": "COW_345_identity_crosscheck_only_never_score_values",
+        "sha256": "3ae821bbd19977d4229cde5ac648e4bc915d637ec0dcf93368838cf5bde2a956"
+      }
+    ]
+  },
+  "fact_card_policy": {
+    "nearly_equal_label": false,
+    "numeric_change_and_direction": true,
+    "reason": "A small displayed change is not evidence of substantive equivalence or statistical insignificance.",
+    "unit_ko": {
+      "share_change": "%p",
+      "distance_change": "점수 차이"
+    },
+    "always_show_actual_windows": true
+  },
+  "design": {
+    "selection": "C",
+    "selected_on": "2026-11-17",
+    "motion_and_logistics_photos": true
+  },
+  "localization": {
+    "names": "Intl.DisplayNames Korean labels from same-version BACI ISO2 codes; documented historical names and user-requested KOR/TWN display labels",
+    "label_file": "scripts/country-labels.json"
+  },
+  "value_unit": "thousand USD",
+  "aggregation": {
+    "source_record_absence": "null",
+    "arithmetic": "literal_Decimal_sum_precision_50_and_exact_Fraction_window_comparison",
+    "countries": 231
+  },
+  "rank_correlation": {
+    "method": "Spearman: Pearson correlation of average ranks across partners in each year",
+    "inputs": "unrounded published distance and directional trade-share values with both observed",
+    "ties": "average_rank",
+    "display_filter_applied": false,
+    "minimum_count": 2,
+    "minimum_count_reason": "At least two paired observations and nonzero rank variance are mathematically required; this is not a sufficiency threshold for inference.",
+    "constant_or_missing": "null",
+    "p_values": false,
+    "causal_interpretation": false,
+    "reference": "https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.spearmanr.html"
+  },
+  "external_links": {
+    "tradeweave": {
+      "base_url": "https://trade-data-lab.vercel.app/",
+      "route": "#see/{ISO3}/export",
+      "confirmed_by_user_on": "2026-11-17",
+      "observed_reference_year": 2024
+    }
+  },
+  "ui_verified_on": "2026-11-17"
+}

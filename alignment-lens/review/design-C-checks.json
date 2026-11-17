@@ -1,0 +1,25 @@
+{
+  "date": "2026-11-17",
+  "preview": "design-C.html",
+  "status": "design_preview_only_not_data_service",
+  "desktop": {
+    "viewport_width": 1280,
+    "scroll_width": 1265,
+    "viewport_height": 720,
+    "primary_action_bottom": 522.35
+  },
+  "mobile": {
+    "viewport_width": 375,
+    "scroll_width": 360,
+    "viewport_height": 900,
+    "primary_action_bottom": 515.45
+  },
+  "checks": {
+    "horizontal_overflow": false,
+    "primary_action_visible_without_scrolling": true,
+    "dark_light_control": true,
+    "placeholder_statistics_or_trend_lines": false,
+    "forbidden_screen_wording_matches": 0
+  },
+  "reference": "https://www.poscoflow.com/kr/"
+}

@@ -1,0 +1,146 @@
+{
+  "method": "Independent pandas average ranks and Pearson correlation on published input arrays",
+  "checks": [
+    {
+      "iso3": "DEU",
+      "year": 1995,
+      "rho": -0.24297052555919438,
+      "partners": 168,
+      "passed": true
+    },
+    {
+      "iso3": "DEU",
+      "year": 2011,
+      "rho": -0.28689180378792395,
+      "partners": 188,
+      "passed": true
+    },
+    {
+      "iso3": "DEU",
+      "year": 2023,
+      "rho": -0.3510737628384687,
+      "partners": 188,
+      "passed": true
+    },
+    {
+      "iso3": "DEU",
+      "year": 2024,
+      "rho": null,
+      "partners": 0,
+      "passed": true
+    },
+    {
+      "iso3": "KOR",
+      "year": 1995,
+      "rho": 0.17994075316027835,
+      "partners": 162,
+      "passed": true
+    },
+    {
+      "iso3": "KOR",
+      "year": 2011,
+      "rho": -0.04188703621462312,
+      "partners": 187,
+      "passed": true
+    },
+    {
+      "iso3": "KOR",
+      "year": 2023,
+      "rho": -0.1408217703586915,
+      "partners": 188,
+      "passed": true
+    },
+    {
+      "iso3": "KOR",
+      "year": 2024,
+      "rho": null,
+      "partners": 0,
+      "passed": true
+    },
+    {
+      "iso3": "SDN",
+      "year": 1995,
+      "rho": 0.15045594665359663,
+      "partners": 123,
+      "passed": true
+    },
+    {
+      "iso3": "SDN",
+      "year": 2011,
+      "rho": null,
+      "partners": 0,
+      "passed": true
+    },
+    {
+      "iso3": "SDN",
+      "year": 2023,
+      "rho": 0.10425806451612903,
+      "partners": 125,
+      "passed": true
+    },
+    {
+      "iso3": "SDN",
+      "year": 2024,
+      "rho": null,
+      "partners": 0,
+      "passed": true
+    },
+    {
+      "iso3": "TWN",
+      "year": 1995,
+      "rho": null,
+      "partners": 0,
+      "passed": true
+    },
+    {
+      "iso3": "TWN",
+      "year": 2011,
+      "rho": null,
+      "partners": 0,
+      "passed": true
+    },
+    {
+      "iso3": "TWN",
+      "year": 2023,
+      "rho": null,
+      "partners": 0,
+      "passed": true
+    },
+    {
+      "iso3": "TWN",
+      "year": 2024,
+      "rho": null,
+      "partners": 0,
+      "passed": true
+    },
+    {
+      "iso3": "USA",
+      "year": 1995,
+      "rho": -0.22584692920527277,
+      "partners": 167,
+      "passed": true
+    },
+    {
+      "iso3": "USA",
+      "year": 2011,
+      "rho": -0.09142741558260957,
+      "partners": 188,
+      "passed": true
+    },
+    {
+      "iso3": "USA",
+      "year": 2023,
+      "rho": -0.269512433566185,
+      "partners": 189,
+      "passed": true
+    },
+    {
+      "iso3": "USA",
+      "year": 2024,
+      "rho": null,
+      "partners": 0,
+      "passed": true
+    }
+  ],
+  "passed": true
+}
