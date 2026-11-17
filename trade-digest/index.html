@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:,">
 <title>Trade Digest</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -573,7 +574,7 @@ work.addEventListener("click", e => {
 const drop = $("#drop"), file = $("#file");
 ["dragenter","dragover"].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add("is-over"); }));
 ["dragleave","drop"].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove("is-over"); }));
-const MAX_PDF_PAGES = 60;
+const MAX_PDF_PAGES = 150, CHAR_BUDGET = 56000;
 const normQ = x => String(x || "").normalize("NFKC").replace(/-\s*\n\s*/g, "").replace(/[‘’]/g, "'").replace(/[“”]/g, '"').replace(/[–—]/g, "-").replace(/\s+/g, " ").trim().toLowerCase();
 let mySum = null, myBusy = false;
 async function summarizePdf(f){
@@ -594,7 +595,9 @@ async function summarizePdf(f){
     }
     if (pages.reduce((a, x) => a + x.text.trim().length, 0) < 200){ msg.textContent = t("noText"); return; }
     msg.textContent = t("summarizing");
-    const r = await fetch("/api/summarize", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({pages})});
+    const per = Math.max(300, Math.floor(CHAR_BUDGET / pages.length));   // 긴 보고서는 쪽마다 앞부분만 보낸다
+    const sent = pages.map(x => ({p: x.p, text: x.text.replace(/\s+/g, " ").trim().slice(0, per)})).filter(x => x.text);
+    const r = await fetch("/api/summarize", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({pages: sent})});
     const j = await r.json().catch(() => ({}));
     if (r.status === 413){ msg.textContent = t("tooBig", MAX_PDF_PAGES); return; }
     if (j.error === "no_key"){ msg.textContent = t("noKey"); return; }
