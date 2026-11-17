@@ -9,6 +9,40 @@
 
 너는 데이터 시각화 웹서비스를 만드는 개발자다. 아래 명세대로 **Mirror Gap**이라는 정적 웹서비스를 만든다. 명세에 없는 것은 지어내지 말고, 정할 수 없는 것은 나에게 물어본다.
 
+# 작업 위치와 폴더 규칙 (가장 먼저 지킬 것)
+
+이 서비스는 혼자 있는 프로젝트가 아니다. 한 저장소 안에 여러 웹사이트가 **서비스마다 폴더 하나씩** 따로 만들어지고 있다.
+
+- 저장소 위치(이 컴퓨터): `/Users/j/Desktop/vscode 작업/trade-data-lab` (데스크탑 › `vscode 작업` › `trade-data-lab`). 경로에 띄어쓰기와 한글이 있으니 명령어에서 경로는 항상 따옴표로 감싼다.
+- 저장소 안의 서비스 폴더(각각 독립된 웹사이트, 각각 따로 Vercel에 배포):
+
+| 폴더 | 서비스 |
+|---|---|
+| `policy-tracker/` | Policyline |
+| `trade-news-room/` | Trade News Room |
+| `trade-weave/` | Tradeweave |
+| `trade-digest/` | Trade Digest |
+| `alignment-lens/` | Alignment Lens |
+| `mirror-gap/` | Mirror Gap |
+
+- **이번 작업 폴더는 `mirror-gap/` 하나뿐이다.** (전체 경로: `/Users/j/Desktop/vscode 작업/trade-data-lab/mirror-gap`)
+
+## 절대 규칙: 다른 폴더를 침범하지 않는다
+1. 파일을 만들고, 고치고, 지우고, 옮기는 일은 **`mirror-gap/` 안에서만** 한다.
+2. 다른 서비스 폴더(`policy-tracker/`, `trade-news-room/`, `trade-weave/`, `trade-digest/`, `alignment-lens/`)의 파일은 **절대 고치거나 지우지 않는다.** 참고로 읽는 것만 된다. 참고한 코드가 필요하면 `mirror-gap/` 안에 복사해서 쓰고, `../다른폴더/...` 같은 경로로 불러오거나 연결하지 않는다.
+3. 서비스끼리 코드·데이터·스타일·패키지를 공유하지 않는다. `mirror-gap/`는 다른 폴더가 없어도 혼자 빌드·실행·배포될 수 있어야 한다.
+4. 저장소 루트의 파일과 폴더(`README.md`, `CLAUDE.md`, `docs/`, `.github/`, `.gitignore`, `.gitattributes`)는 **먼저 나에게 묻고 승인받은 뒤에만** 바꾼다. 바꿀 필요가 생기면 무엇을 왜 바꿀지 보여 준다. (예: `docs/decisions.md`에 결정 한 줄 추가, GitHub Actions 작업 추가)
+5. GitHub Actions 작업을 추가하게 되면(승인 후) `paths: ['mirror-gap/**']`로 이 폴더가 바뀔 때만 돌게 하고, 작업 디렉터리를 `mirror-gap`로 두어 이 폴더 밖에 파일을 쓰지 않게 한다.
+6. 패키지 설치(`npm install`, 파이썬 가상환경 등), 원자료(`raw/`), 비밀값(`.env`), 빌드 결과는 모두 `mirror-gap/` 안에 두고, 무시할 파일은 `mirror-gap/.gitignore`에 적는다.
+7. 배포는 이 서비스 전용 Vercel 프로젝트(Root Directory = `mirror-gap`)로만 한다. 설정 파일(`vercel.json`, `.vercelignore`)도 `mirror-gap/` 안에 둔다. 다른 서비스의 Vercel 프로젝트나 설정은 건드리지 않는다.
+8. 다른 서비스로 가는 링크는 **배포된 웹 주소**로만 건다. 실제 주소는 나에게 확인한다.
+9. 다른 폴더에서 버그나 고칠 점을 발견하면 고치지 말고 나에게 알리기만 한다.
+10. git: 커밋은 내가 요청할 때만 한다. 이 폴더 파일만 올린다(`git add mirror-gap`; `git add -A`나 `git add .`를 저장소 루트에서 쓰지 않는다). 커밋 전에 `git status --short`로 `mirror-gap/` 밖의 파일이 들어가지 않았는지 확인한다. push, 브랜치 만들기, 기록 고치기(rebase·reset·force push)는 묻고 나서 한다.
+
+## 작업을 마칠 때마다 확인
+- [ ] `git status --short`에 나온 바뀐 파일이 모두 `mirror-gap/`로 시작한다 (승인받은 루트 파일 제외)
+- [ ] `mirror-gap/` 밖을 가리키는 경로(`../`)가 코드에 없다
+
 # 서비스 한 줄 설명
 
 교역 한 건에는 숫자가 두 개 생긴다. 나라 A가 "B로 이만큼 수출했다"고 신고한 값(X)과, 나라 B가 "A에서 이만큼 수입했다"고 신고한 값(M)이다. 이 서비스는 두 나라를 고르면 X와 M을 나란히 놓고, **얼마나, 어디서, 언제부터** 어긋나는지 보여 준다. 차이의 원인은 단정하지 않고, 알려진 설명 후보와 알 수 없는 부분을 나눠 보여 준다.
