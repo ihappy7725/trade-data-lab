@@ -68,17 +68,34 @@ body.is-gl{background:var(--night);background-image:radial-gradient(rgba(243,239
 .glpage__sec a{font-weight:500;letter-spacing:0;text-transform:none;color:rgba(243,239,229,.8);text-underline-offset:3px}
 .glpage__sec small{font-weight:400;letter-spacing:0;text-transform:none}
 .glgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-bottom:44px}
-.glcard{background:rgba(243,239,229,.06);border:1px solid rgba(243,239,229,.12);border-radius:14px;padding:20px 22px;display:grid;gap:8px;align-content:start;transition:background .2s,border-color .2s}
-.glcard:hover{background:rgba(243,239,229,.09);border-color:rgba(243,239,229,.2)}
-.glcard b{font-size:17px;font-weight:600;color:var(--slab-ink)}
-.glcard b small{font-weight:400;font-size:13px;color:rgba(243,239,229,.6);margin-left:6px}
-.glcard p{margin:0;font-size:14.5px;color:rgba(243,239,229,.82)}
-.glcard footer{font-size:12.5px;color:rgba(243,239,229,.55)}
-.glcard footer q{font-style:italic}
-.glcard footer a{color:rgba(243,239,229,.8);text-underline-offset:3px}
-.glcard mark{background:rgba(243,239,229,.2);color:inherit;border-radius:3px;padding:0 1px}
+.glcard{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px 22px;display:grid;gap:8px;align-content:start;color:var(--ink);transition:transform .2s var(--ease-out),box-shadow .2s}
+.glcard:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.18)}
+.glcard b{font-size:17px;font-weight:600;color:var(--ink)}
+.glcard b small{font-weight:400;font-size:13px;color:var(--ink-3);margin-left:6px}
+.glcard p{margin:0;font-size:14.5px;color:var(--ink-2)}
+.glcard footer{display:flex;gap:8px;align-items:center;font-size:12.5px;color:var(--ink-3)}
+.glcard .guess{border-radius:999px;background:var(--brass-soft);color:var(--walnut);padding:1px 8px;font-size:11.5px}
+.glcard footer a{color:var(--green-2);font-weight:600;text-decoration:none}
+.glcard footer a:hover{text-decoration:underline;text-underline-offset:3px}
+.glcard mark{background:var(--brass-soft);color:inherit;border-radius:3px;padding:0 1px}
+.glvia{margin:-6px 0 12px;font-size:13px;color:rgba(243,239,229,.62)}
 .glnote{grid-column:1/-1;margin:0;padding:18px 0;color:rgba(243,239,229,.6);font-size:14.5px}
 @media (max-width:760px){.glgrid{grid-template-columns:1fr}.glpage__in{padding-top:36px}}
+.mytabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:0 0 18px}
+.mytabs a{position:relative;display:grid;gap:4px;padding:18px 20px;border-radius:14px;text-decoration:none;color:var(--slab-ink);background:rgba(243,239,229,.06);border:1px solid rgba(243,239,229,.14);transition:background .2s,border-color .2s,transform .2s var(--ease-out)}
+.mytabs a:hover{background:rgba(243,239,229,.1)}
+.mytabs a:active{transform:translateY(1px)}
+.mytabs b{font-size:17px;font-weight:600}
+.mytabs span{font-size:13.5px;color:rgba(243,239,229,.66)}
+.mytabs em{position:absolute;right:16px;top:16px;font-style:normal;font-size:12px;font-weight:600;border-radius:999px;padding:1px 9px;background:rgba(243,239,229,.14)}
+.mytabs a.is-on{background:var(--surface);border-color:var(--surface);color:var(--ink)}
+.mytabs a.is-on span{color:var(--ink-3)}
+.mytabs em:empty{display:none}
+.mytabs a.is-on em{background:var(--green-soft);color:var(--green)}
+.mypanel{background:var(--surface);color:var(--ink);border-radius:16px;padding:24px}
+.mypanel__lede{margin:0 0 16px;color:var(--ink-2);font-size:14.5px}
+.mypanel .lib-form{max-width:none;background:transparent;padding:0;box-shadow:none}
+@media (max-width:760px){.mytabs{grid-template-columns:1fr}.mytabs span{display:none}.mytabs a{padding:14px 16px}.mypanel{padding:18px}}
 .my-save{margin-top:16px}
 .my-save [hidden]{display:none!important}
 .my-save .btn{height:42px;padding:0 18px;font-size:14.5px;cursor:pointer}
@@ -301,7 +318,7 @@ body.is-gl{background:var(--night);background-image:radial-gradient(rgba(243,239
       <a href="#glossary" data-t="nav.glossary"></a>
     </nav>
     <button class="btn btn--line" id="lang" aria-label="Language"></button>
-    <a class="btn btn--primary" href="#upload"><span data-t="upload"></span></a>
+    <a class="btn btn--primary" href="#library/summary"><span data-t="upload"></span></a>
   </header>
 </div>
 
@@ -358,13 +375,27 @@ body.is-gl{background:var(--night);background-image:radial-gradient(rgba(243,239
     </form>
   </section>
 
-  <section class="up" id="library">
-    <h2 data-t="lb.title"></h2>
-    <p class="rq-lede" data-t="lb.lede"></p>
+
+</main>
+
+<section class="glpage mypage" id="library" hidden aria-labelledby="my-h">
+  <div class="glpage__in">
+    <header class="glpage__head">
+      <h1 id="my-h" data-t="my.title"></h1>
+      <p data-t="my.lede"></p>
+    </header>
+    <nav class="mytabs" role="tablist" aria-label="내 서재">
+      <a role="tab" href="#library" data-tab="list"><b data-t="my.t1"></b><span data-t="my.d1"></span><em id="my-n"></em></a>
+      <a role="tab" href="#library/add" data-tab="add"><b data-t="my.t2"></b><span data-t="my.d2"></span></a>
+      <a role="tab" href="#library/summary" data-tab="summary"><b data-t="my.t3"></b><span data-t="my.d3"></span></a>
+    </nav>
+    <div class="mypanel" data-panel="list" role="tabpanel">
     <div class="lib" id="lib-list"></div>
     <div id="lib-view" aria-live="polite"></div>
+    </div>
+    <div class="mypanel" data-panel="add" role="tabpanel" hidden>
+      <p class="mypanel__lede" data-t="my.p2"></p>
     <form class="rq-form lib-form" id="lb-form" novalidate>
-      <b data-t="lb.ext"></b>
       <div class="rq-2">
         <label><span data-t="ad.f.title"></span><input name="title" maxlength="200" required></label>
         <label><span data-t="ad.f.org"></span><input name="org" maxlength="40"></label>
@@ -374,19 +405,19 @@ body.is-gl{background:var(--night);background-image:radial-gradient(rgba(243,239
       <p class="rq-msg" id="lb-msg" role="status"></p>
       <small class="rq-note" data-t="lb.note"></small>
     </form>
-  </section>
-
-  <section class="up" id="upload">
-    <h2 data-t="up.title"></h2>
+    </div>
+    <div class="mypanel" id="upload" data-panel="summary" role="tabpanel" hidden>
+      <p class="mypanel__lede" data-t="my.p3"></p>
     <label class="drop" id="drop">
       <p id="drop-msg" data-t="up.body"></p>
-      <span class="btn btn--primary" data-t="up.btn"></span>
+      <span class="btn btn--green" data-t="up.btn"></span>
       <input type="file" accept="application/pdf" id="file">
       <small data-t="up.note"></small>
     </label>
     <div id="my-result" aria-live="polite"></div>
-  </section>
-</main>
+    </div>
+  </div>
+</section>
 
 <section class="glpage" id="glossary" hidden aria-labelledby="gl-h">
   <div class="glpage__in">
@@ -413,26 +444,26 @@ const T = {
     lede:["국제기구 · KITA · KOTRA 보고서를 쉬운 말로.","표지를 누르면 주장 · 근거 · 한계를 원문 쪽수와 함께 보여 줍니다."],
     "cta.open":"보고서 열어 보기","cta.upload":"내 PDF 요약",
     "t.summary":"한 장 요약","t.check":"한계 점검표","t.compare":"다른 기관은?",
-    claim:"주장",evidence:"근거",limit:"한계",pdf:"원문 PDF ↗",copy:"요약 복사",copied:"복사됨",reviewed:"✓ 검수 완료",fake:"가상",draftTag:"검수 전",pending:"요약 준비 중",cmpHint:"기관마다 같은 지표를 얼마나 다르게 보는지. 강조 줄이 이 보고서입니다.",cmpOpen:"추적판에서 보기","nav.tracker":"전망 추적","gl.title":"용어 사전","gl.lede":"무역 · 경제 용어를 찾아봅니다. 위에는 우리가 보고서 원문으로 확인한 풀이, 아래에는 한국은행 · WTO 공식 사전에서 바로 가져온 풀이가 나옵니다.","gl.ours":"이 사이트 용어 사전 · 보고서 원문으로 확인","gl.noneOurs":q=>`‘${q}’ — 이 사전에는 아직 없습니다. 아래 공식 사전 결과를 확인하세요.`,"gl.ext":"공식 사전","gl.extHint":"두 글자 이상 입력하면 한국은행 · WTO 공식 사전도 함께 찾습니다.","gl.extLoading":"공식 사전에서 찾는 중…","gl.extFail":"지금은 이 사전에 연결하지 못했습니다.","gl.extNone":q=>`‘${q}’ — 결과가 없습니다. (한국은행 사전은 용어 이름이 정확히 같아야 찾습니다)`,"gl.wtoNone":q=>`‘${q}’ — 결과가 없습니다. WTO 용어집은 영문이라 영어로 찾으면 더 잘 나옵니다.`,"gl.open":"사전 열기","gl.bokSrc":"출처: 한국은행 ECOS 통계용어사전","gl.wtoSrc":"출처: WTO Glossary","gl.search":"용어 검색 (예: 관세, 공급망, PPP)","gl.total":n=>`용어 ${n}개`,"gl.found":(n,m)=>`${m}개 중 ${n}개`,"gl.none":q=>`‘${q}’ — 아직 이 사전에 없는 말입니다. 공식 사전에서 찾아보세요.`,"gl.moreLede":"여기 없는 말은 공식 사전에서 찾아보세요.","gl.bok":"한국은행 ECOS 통계용어사전","gl.wto":"WTO 용어집 (영문)","gl.src":"근거",cmpNone:"이 지표로 비교할 다른 기관의 원문 확인 전망이 아직 없습니다.","needCheck":"원문 확인 필요","nav.add":"보고서 추가","nav.library":"내 서재","ad.title":"서가에 보고서 추가","ad.lede":"함께 보면 좋을 보고서를 추가하면 메인 표지 벽에 바로 꽂힙니다. 요약은 없이 원문 링크와 기본 정보만 보입니다.","ad.f.title":"보고서 이름","ad.f.org":"기관","ad.f.cat":"카테고리","ad.f.pub":"발간 (예: 2026 · 2026-10 · 2026-10-08)","ad.f.url":"원문 링크","ad.send":"서가에 추가","ad.ok":"서가에 추가했습니다. 표지 벽을 확인해 보세요.","ad.dup":"이미 서가에 있는 링크입니다.","ad.note":"이름 · 이메일은 받지 않습니다. 추가한 보고서는 누구나 볼 수 있고, 확인 뒤 정리될 수 있습니다.","lb.title":"내 서재","lb.lede":"서가 보고서는 보고서 화면의 '내 서재에 담기'로, 외부 보고서는 아래에서 담습니다. 이 브라우저에서만 보입니다.","lb.ext":"외부 보고서 담기","lb.send":"내 서재에 담기","lb.ok":"내 서재에 담았습니다.","lb.dup":"이미 내 서재에 있습니다.","lb.note":"로그인 없이 이 브라우저의 익명 번호로만 구분합니다. 다른 기기에서는 보이지 않습니다.","lb.empty":"아직 담은 보고서가 없습니다.","lb.add":"내 서재에 담기","lb.added":"내 서재에 담김 ✓","lb.remove":"빼기","lb.offline":"내 서재를 불러오지 못했습니다. (배포된 사이트에서만 동작)",visitor:"방문자 추가 · 확인 전",fld:{title:"보고서 이름(2~200자)",org:"기관",category:"카테고리",published:"발간(2026 / 2026-10 / 2026-10-08)",url:"링크(https://)",key:"브라우저 번호"},"sb.title":"전망치 제보","sb.lede":"빠진 전망치를 알려 주세요. 제보는 그래프에 '확인 전'으로 바로 보이고, 원문과 대조한 뒤 확정합니다. (지표: 2026년 세계 교역량 증가율)","sb.org":"기관","sb.date":"발표일","sb.value":"전망치 (%)","sb.basis":"기준","sb.goods":"상품만","sb.gs":"상품+서비스","sb.url":"원문 또는 보도 링크","sb.page":"원문 쪽 (선택)","sb.note":"한 줄 메모 (선택)","sb.send":"제보 보내기","sb.sending":"보내는 중…","sb.ok":"제보가 저장됐습니다. 그래프에 '확인 전'으로 표시됩니다.","sb.bad":"입력을 확인해 주세요: ","sb.fail":"저장하지 못했습니다. 잠시 뒤 다시 시도해 주세요.","sb.privacy":"이름 · 이메일은 받지 않습니다. 제보는 누구나 볼 수 있습니다.",basisSub:"제보 · 확인 전",sbf:{org:"기관",released_on:"발표일(2024년 이후, 오늘까지)",value:"전망치(-50~50)",basis:"기준",source_url:"링크(https://)",page:"쪽(10자 이내)",note:"메모(200자 이내)"},"tr.title":"전망 추적","tr.lede":"같은 지표에 대해 기관마다, 발표할 때마다 전망이 어떻게 달라졌는지 봅니다. 점을 누르면 근거가 나옵니다.",fcHere:"이 보고서의 전망치",basisSource:"원문 확인 (쪽수)",basisPress:"원문 확인 필요",trOrg:"기관",trDate:"발표",trVal:"전망",trDef:"기준",trBasis:"근거",solid:"실선 = 상품만",dashed:"점선 = 상품+서비스 (직접 비교 주의) · 빈 점 = 원문 확인 필요",actual:"참고 실제치",openRep:"보고서 요약 보기",openSrc:"보도 보기",srcBtn:"원문 보기",all:"전체",allOrg:"모든 기관",search:"보고서 · 기관 검색",count:(n,m)=>`${n} / ${m}권`,empty:"맞는 보고서가 없습니다. 조건을 바꿔 보세요.",pendMsg:"이 보고서는 아직 요약하지 않았습니다. 원문은 아래 링크로 볼 수 있습니다.",askSum:"이 보고서 요약 요청하기",linkNote:"링크 확인 필요",draftBadge:"초안 · 사람이 검수하기 전",noLink:"연결 주소 준비 중",source:"출처",
+    claim:"주장",evidence:"근거",limit:"한계",pdf:"원문 PDF ↗",copy:"요약 복사",copied:"복사됨",reviewed:"✓ 검수 완료",fake:"가상",draftTag:"검수 전",pending:"요약 준비 중",cmpHint:"기관마다 같은 지표를 얼마나 다르게 보는지. 강조 줄이 이 보고서입니다.",cmpOpen:"추적판에서 보기","nav.tracker":"전망 추적","gl.title":"용어 사전","my.title":"내 서재","my.lede":"내가 담은 보고서를 모아 보고, 새 보고서를 추가하거나 내 PDF를 요약합니다. 로그인 없이 이 브라우저에만 연결됩니다.","my.t1":"내 서재","my.d1":"담아 둔 보고서 모아 보기","my.t2":"보고서 추가","my.d2":"링크로 보고서 담기","my.t3":"보고서 요약","my.d3":"PDF를 올려 쉬운 말로 요약","my.p2":"다른 곳에서 본 보고서를 링크로 내 서재에 담습니다.","my.p3":"PDF를 올리면 주장 · 근거 · 한계로 요약합니다. 마음에 들면 요약까지 내 서재에 담을 수 있습니다.","my.go":"내 서재 보기 →","gl.lede":"무역 · 경제 용어를 찾아봅니다. 초성이나 비슷한 말로도 찾을 수 있습니다. 풀이는 보고서 원문 또는 한국은행 · WTO 공식 사전의 원문입니다.","gl.ours":"이 사이트 용어 사전 · 보고서 원문으로 확인","gl.noneOurs":q=>`‘${q}’ — 이 사전에는 아직 없습니다. 아래 공식 사전 결과를 확인하세요.`,"gl.ext":"공식 사전","gl.extHint":"두 글자 이상 입력하면 한국은행 · WTO 공식 사전도 함께 찾습니다.","gl.extLoading":"공식 사전에서 찾는 중…","gl.extFail":"지금은 이 사전에 연결하지 못했습니다.","gl.extNone":q=>`‘${q}’ — 비슷한 말로도 찾지 못했습니다.`,"gl.wtoNone":q=>`‘${q}’ — 결과가 없습니다. WTO 용어집은 영문이라 영어로 찾으면 더 잘 나옵니다.`,"gl.open":"사전 열기","gl.bokSrc":"출처: 한국은행 ECOS 통계용어사전","gl.wtoSrc":"출처: WTO Glossary","gl.search":"용어 검색 (예: 관세, 물가, ㄱㅅㅅㅈ)","gl.total":n=>`용어 ${n}개`,"gl.found":(n,m)=>`${m}개 중 ${n}개`,"gl.none":q=>`‘${q}’ — 아직 이 사전에 없는 말입니다. 공식 사전에서 찾아보세요.`,"gl.moreLede":"여기 없는 말은 공식 사전에서 찾아보세요.","gl.bok":"한국은행 ECOS 통계용어사전","gl.wto":"WTO 용어집 (영문)","gl.src":"출처","gl.guess":"비슷한 말로 찾음","gl.via":v=>`정확히 같은 이름이 없어 비슷한 말로도 찾았습니다: ${v}`,cmpNone:"이 지표로 비교할 다른 기관의 원문 확인 전망이 아직 없습니다.","needCheck":"원문 확인 필요","nav.add":"보고서 추가","nav.library":"내 서재","ad.title":"서가에 보고서 추가","ad.lede":"함께 보면 좋을 보고서를 추가하면 메인 표지 벽에 바로 꽂힙니다. 요약은 없이 원문 링크와 기본 정보만 보입니다.","ad.f.title":"보고서 이름","ad.f.org":"기관","ad.f.cat":"카테고리","ad.f.pub":"발간 (예: 2026 · 2026-10 · 2026-10-08)","ad.f.url":"원문 링크","ad.send":"서가에 추가","ad.ok":"서가에 추가했습니다. 표지 벽을 확인해 보세요.","ad.dup":"이미 서가에 있는 링크입니다.","ad.note":"이름 · 이메일은 받지 않습니다. 추가한 보고서는 누구나 볼 수 있고, 확인 뒤 정리될 수 있습니다.","lb.title":"내 서재","lb.lede":"서가 보고서는 보고서 화면의 '내 서재에 담기'로, 외부 보고서는 아래에서 담습니다. 이 브라우저에서만 보입니다.","lb.ext":"외부 보고서 담기","lb.send":"내 서재에 담기","lb.ok":"내 서재에 담았습니다.","lb.dup":"이미 내 서재에 있습니다.","lb.note":"로그인 없이 이 브라우저의 익명 번호로만 구분합니다. 다른 기기에서는 보이지 않습니다.","lb.empty":"아직 담은 보고서가 없습니다.","lb.add":"내 서재에 담기","lb.added":"내 서재에 담김 ✓","lb.remove":"빼기","lb.offline":"내 서재를 불러오지 못했습니다. (배포된 사이트에서만 동작)",visitor:"방문자 추가 · 확인 전",fld:{title:"보고서 이름(2~200자)",org:"기관",category:"카테고리",published:"발간(2026 / 2026-10 / 2026-10-08)",url:"링크(https://)",key:"브라우저 번호"},"sb.title":"전망치 제보","sb.lede":"빠진 전망치를 알려 주세요. 제보는 그래프에 '확인 전'으로 바로 보이고, 원문과 대조한 뒤 확정합니다. (지표: 2026년 세계 교역량 증가율)","sb.org":"기관","sb.date":"발표일","sb.value":"전망치 (%)","sb.basis":"기준","sb.goods":"상품만","sb.gs":"상품+서비스","sb.url":"원문 또는 보도 링크","sb.page":"원문 쪽 (선택)","sb.note":"한 줄 메모 (선택)","sb.send":"제보 보내기","sb.sending":"보내는 중…","sb.ok":"제보가 저장됐습니다. 그래프에 '확인 전'으로 표시됩니다.","sb.bad":"입력을 확인해 주세요: ","sb.fail":"저장하지 못했습니다. 잠시 뒤 다시 시도해 주세요.","sb.privacy":"이름 · 이메일은 받지 않습니다. 제보는 누구나 볼 수 있습니다.",basisSub:"제보 · 확인 전",sbf:{org:"기관",released_on:"발표일(2024년 이후, 오늘까지)",value:"전망치(-50~50)",basis:"기준",source_url:"링크(https://)",page:"쪽(10자 이내)",note:"메모(200자 이내)"},"tr.title":"전망 추적","tr.lede":"같은 지표에 대해 기관마다, 발표할 때마다 전망이 어떻게 달라졌는지 봅니다. 점을 누르면 근거가 나옵니다.",fcHere:"이 보고서의 전망치",basisSource:"원문 확인 (쪽수)",basisPress:"원문 확인 필요",trOrg:"기관",trDate:"발표",trVal:"전망",trDef:"기준",trBasis:"근거",solid:"실선 = 상품만",dashed:"점선 = 상품+서비스 (직접 비교 주의) · 빈 점 = 원문 확인 필요",actual:"참고 실제치",openRep:"보고서 요약 보기",openSrc:"보도 보기",srcBtn:"원문 보기",all:"전체",allOrg:"모든 기관",search:"보고서 · 기관 검색",count:(n,m)=>`${n} / ${m}권`,empty:"맞는 보고서가 없습니다. 조건을 바꿔 보세요.",pendMsg:"이 보고서는 아직 요약하지 않았습니다. 원문은 아래 링크로 볼 수 있습니다.",askSum:"이 보고서 요약 요청하기",linkNote:"링크 확인 필요",draftBadge:"초안 · 사람이 검수하기 전",noLink:"연결 주소 준비 중",source:"출처",
     pages:n=>`${n}쪽`,items:n=>`문장 ${n}개`,
     ok:"원문에서 확인됨",miss:"확인 못 함",quote:"원문 구절",missMsg:"이 쪽에서 구절을 찾지 못했습니다. 원문에서 직접 확인하세요.",
     data:"데이터로 보기 →",dataMsg:"Policyline에서 같은 품목의 월별 교역 그래프를 엽니다.",open:"열기 →",
     yes:"적혀 있음",no:"보고서에 없음",hard:"판단 어려움",
     c1:"기준 기간 · 자료 시점이 적혀 있나?",c2:"전망의 가정이 적혀 있나?",c3:"다루지 않은 나라 · 품목이 있나?",c4:"숫자가 추정치인지 확정치인지?",
-    "up.title":"내 PDF 요약","up.body":"PDF를 끌어다 놓거나 골라 주세요","up.btn":"PDF 고르기","up.note":"파일과 요약은 저장하지 않습니다 · 결과에는 ‘자동 요약 · 검수 전’ 표시",
+    "up.title":"내 PDF 요약","up.body":"PDF를 끌어다 놓거나 골라 주세요","up.btn":"PDF 고르기","up.note":"PDF 파일은 저장하지 않습니다 · 요약은 원할 때만 내 서재에 담깁니다 · 결과에는 ‘자동 요약’ 표시",
     picked:f=>`${f} · 글자를 읽는 중…`, reading:(n,m)=>`쪽 글자 읽는 중 ${n}/${m}`, summarizing:"요약하는 중… (30초 안팎)", notPdf:"PDF 파일만 올릴 수 있습니다.", noText:"글자를 읽을 수 없는 PDF입니다 (스캔본 · 그림 · 글꼴 문제). 글자가 들어 있는 PDF로 다시 시도해 주세요.", tooBig:(m)=>`너무 깁니다. ${m}쪽 이하로 줄여 주세요. (앞 ${m}쪽만 요약하려면 파일을 나눠 주세요)`, sumFail:"요약하지 못했습니다. 잠시 뒤 다시 시도해 주세요.", noKey:"요약 기능이 아직 설정되지 않았습니다 (서버 키 없음).", autoBadge:"자동 요약 · 사람이 검수하지 않음", "ms.open":"＋ 내 서재에 담기","ms.lede":"원하는 보고서만 담으세요. PDF 파일은 저장하지 않습니다. 제목 · 기관 · 원문 링크(선택)와, 고르면 요약 내용을 내 서재에 남깁니다.","ms.title":"보고서 이름","ms.org":"기관 (선택)","ms.url":"원문 링크 (선택)","ms.save":"담기","ms.cancel":"취소","ms.needUrl":"원문 링크는 https:// 로 시작해야 합니다.","ms.needOne":"요약을 함께 저장하거나 원문 링크를 넣어 주세요.","ms.withSum":"요약 내용도 함께 저장 (주장 · 근거 · 한계)","lb.hasSum":"요약 저장됨","lb.mine":"내 PDF","lb.close":"닫기", myPage:"PDF 쪽" },
   en:{ "nav.shelf":"Shelf","nav.request":"Request a report","rq.title":"Request a report","rq.lede":"Tell us which report you want summarized. The most requested go on the shelf first.","rq.f.title":"Report title","rq.f.org":"Institution","rq.f.purpose":"What it is for","rq.f.url":"Link to original (optional)","rq.f.reason":"Why you need it (optional)","rq.p1":"Assignment","rq.p2":"Study group","rq.p3":"Work","rq.etc":"Other","rq.send":"Send request","rq.sending":"Sending…","rq.note":"No names or emails collected. Requests are public.","rq.ok":"Request received.","rq.bad":"Please check: ","rq.fail":"Could not save. Please try again shortly.","rq.empty":"No requests yet. Be the first.","rq.offline":"Could not load requests. (Works on the deployed site only)","rq.want":"Me too",rqf:{title:"title (2–200 chars)",org:"institution",url:"link (https://)",reason:"reason (≤200 chars)",purpose:"purpose"},"nav.glossary":"Glossary","nav.calendar":"Calendar",soon:"soon",upload:"Summarize my PDF",lang:"한국어",
     strip:"Draft · covers and content are fictional","strip.try":"Try my PDF",
     lede:["Trade reports from international bodies, KITA and KOTRA, in plain words.","Tap a cover to see its claims, evidence and limits — with page numbers."],
     "cta.open":"Open a report","cta.upload":"Summarize my PDF",
     "t.summary":"One-page summary","t.check":"Limits check","t.compare":"Other institutions",
-    claim:"Claim",evidence:"Evidence",limit:"Limit",pdf:"Original PDF ↗",copy:"Copy summary",copied:"Copied",reviewed:"✓ Reviewed",fake:"Fictional",draftTag:"Not reviewed",pending:"Summary coming",cmpHint:"how each institution sees the same indicator; the highlighted row is this report.",cmpOpen:"Open in tracker","nav.tracker":"Forecast tracker","gl.title":"Glossary","gl.lede":"Look up trade and economic terms. Above: meanings we checked against report text. Below: entries pulled live from the Bank of Korea and WTO glossaries.","gl.ours":"This site · checked against report text","gl.noneOurs":q=>`“${q}” is not in this glossary yet. See the official glossaries below.`,"gl.ext":"Official glossaries","gl.extHint":"Type two or more characters to also search the Bank of Korea and WTO glossaries.","gl.extLoading":"Searching official glossaries…","gl.extFail":"Could not reach this glossary right now.","gl.extNone":q=>`No results for “${q}”. (The Bank of Korea glossary needs the exact Korean term.)`,"gl.wtoNone":q=>`No WTO results for “${q}”.`,"gl.open":"Open","gl.bokSrc":"Source: Bank of Korea ECOS statistical terms","gl.wtoSrc":"Source: WTO Glossary","gl.search":"Search terms (e.g. tariff, supply chain, PPP)","gl.total":n=>`${n} terms`,"gl.found":(n,m)=>`${n} of ${m}`,"gl.none":q=>`“${q}” is not in this glossary yet. Try an official glossary.`,"gl.moreLede":"For other terms, try an official glossary.","gl.bok":"Bank of Korea ECOS statistical terms (Korean)","gl.wto":"WTO glossary","gl.src":"Source",cmpNone:"No source-checked forecasts from other institutions for this indicator yet.","needCheck":"Original not yet checked","nav.add":"Add a report","nav.library":"My library","ad.title":"Add a report to the shelf","ad.lede":"Add a report worth reading and it goes straight onto the cover wall. Only the link and basic details are shown, no summary.","ad.f.title":"Report title","ad.f.org":"Institution","ad.f.cat":"Category","ad.f.pub":"Published (e.g. 2026 · 2026-10 · 2026-10-08)","ad.f.url":"Link to original","ad.send":"Add to shelf","ad.ok":"Added to the shelf. Check the cover wall.","ad.dup":"That link is already on the shelf.","ad.note":"No names or emails collected. Added reports are public and may be tidied after review.","lb.title":"My library","lb.lede":"Save shelf reports with 'Save to my library' on the report view, or add any outside report below. Visible only in this browser.","lb.ext":"Save an outside report","lb.send":"Save to my library","lb.ok":"Saved to your library.","lb.dup":"Already in your library.","lb.note":"No login — only an anonymous browser number is used. Not visible on other devices.","lb.empty":"Nothing saved yet.","lb.add":"Save to my library","lb.added":"In my library ✓","lb.remove":"Remove","lb.offline":"Could not load your library. (Works on the deployed site only)",visitor:"Added by visitor · unchecked",fld:{title:"title (2–200 chars)",org:"institution",category:"category",published:"published (2026 / 2026-10 / 2026-10-08)",url:"link (https://)",key:"browser number"},"sb.title":"Submit a forecast","sb.lede":"Tell us a missing forecast. It appears on the chart as 'unchecked' right away and is confirmed after checking the source. (Indicator: world trade volume growth, 2026)","sb.org":"Institution","sb.date":"Release date","sb.value":"Forecast (%)","sb.basis":"Basis","sb.goods":"Goods only","sb.gs":"Goods & services","sb.url":"Link to source or press","sb.page":"Source page (optional)","sb.note":"Note (optional)","sb.send":"Submit","sb.sending":"Sending…","sb.ok":"Saved. It now shows on the chart as unchecked.","sb.bad":"Please check: ","sb.fail":"Could not save. Please try again shortly.","sb.privacy":"No names or emails collected. Submissions are public.",basisSub:"Submitted · unchecked",sbf:{org:"institution",released_on:"release date (2024 to today)",value:"forecast (-50 to 50)",basis:"basis",source_url:"link (https://)",page:"page (≤10 chars)",note:"note (≤200 chars)"},"tr.title":"Forecast tracker","tr.lede":"See how each institution's forecast for the same indicator changed with each release. Tap a point for its source.",fcHere:"Forecasts in this report",basisSource:"Checked in source (page)",basisPress:"Original not yet checked",trOrg:"Institution",trDate:"Released",trVal:"Forecast",trDef:"Basis",trBasis:"Evidence",solid:"Solid = goods only",dashed:"Dashed = goods & services (compare with care) · hollow = original not yet checked",actual:"Reference actual",openRep:"Open report summary",openSrc:"Open press source",srcBtn:"See source",all:"All",allOrg:"All institutions",search:"Search reports · institutions",count:(n,m)=>`${n} / ${m} reports`,empty:"No matching reports. Try other filters.",pendMsg:"This report has not been summarized yet. Read the original via the link below.",askSum:"Request a summary of this report",linkNote:"link to be checked",draftBadge:"Draft · not yet reviewed by a person",noLink:"link coming soon",source:"Source",
+    claim:"Claim",evidence:"Evidence",limit:"Limit",pdf:"Original PDF ↗",copy:"Copy summary",copied:"Copied",reviewed:"✓ Reviewed",fake:"Fictional",draftTag:"Not reviewed",pending:"Summary coming",cmpHint:"how each institution sees the same indicator; the highlighted row is this report.",cmpOpen:"Open in tracker","nav.tracker":"Forecast tracker","gl.title":"Glossary","my.title":"My library","my.lede":"See the reports you saved, add a new one, or summarize your own PDF. No login; tied to this browser only.","my.t1":"My library","my.d1":"All reports you saved","my.t2":"Add a report","my.d2":"Save a report by link","my.t3":"Summarize a report","my.d3":"Upload a PDF for a plain summary","my.p2":"Save a report you found elsewhere by its link.","my.p3":"Upload a PDF to get claims, evidence and limits. Save it, summary included, if you like.","my.go":"Open my library →","gl.lede":"Look up trade and economic terms. Above: meanings we checked against report text. Below: entries pulled live from the Bank of Korea and WTO glossaries.","gl.ours":"This site · checked against report text","gl.noneOurs":q=>`“${q}” is not in this glossary yet. See the official glossaries below.`,"gl.ext":"Official glossaries","gl.extHint":"Type two or more characters to also search the Bank of Korea and WTO glossaries.","gl.extLoading":"Searching official glossaries…","gl.extFail":"Could not reach this glossary right now.","gl.extNone":q=>`No results for “${q}”. (The Bank of Korea glossary needs the exact Korean term.)`,"gl.wtoNone":q=>`No WTO results for “${q}”.`,"gl.open":"Open","gl.bokSrc":"Source: Bank of Korea ECOS statistical terms","gl.wtoSrc":"Source: WTO Glossary","gl.search":"Search terms (e.g. tariff, supply chain, PPP)","gl.total":n=>`${n} terms`,"gl.found":(n,m)=>`${n} of ${m}`,"gl.none":q=>`“${q}” is not in this glossary yet. Try an official glossary.`,"gl.moreLede":"For other terms, try an official glossary.","gl.bok":"Bank of Korea ECOS statistical terms (Korean)","gl.wto":"WTO glossary","gl.src":"Source","gl.guess":"similar term","gl.via":v=>`No exact match, so we also searched similar terms: ${v}`,cmpNone:"No source-checked forecasts from other institutions for this indicator yet.","needCheck":"Original not yet checked","nav.add":"Add a report","nav.library":"My library","ad.title":"Add a report to the shelf","ad.lede":"Add a report worth reading and it goes straight onto the cover wall. Only the link and basic details are shown, no summary.","ad.f.title":"Report title","ad.f.org":"Institution","ad.f.cat":"Category","ad.f.pub":"Published (e.g. 2026 · 2026-10 · 2026-10-08)","ad.f.url":"Link to original","ad.send":"Add to shelf","ad.ok":"Added to the shelf. Check the cover wall.","ad.dup":"That link is already on the shelf.","ad.note":"No names or emails collected. Added reports are public and may be tidied after review.","lb.title":"My library","lb.lede":"Save shelf reports with 'Save to my library' on the report view, or add any outside report below. Visible only in this browser.","lb.ext":"Save an outside report","lb.send":"Save to my library","lb.ok":"Saved to your library.","lb.dup":"Already in your library.","lb.note":"No login — only an anonymous browser number is used. Not visible on other devices.","lb.empty":"Nothing saved yet.","lb.add":"Save to my library","lb.added":"In my library ✓","lb.remove":"Remove","lb.offline":"Could not load your library. (Works on the deployed site only)",visitor:"Added by visitor · unchecked",fld:{title:"title (2–200 chars)",org:"institution",category:"category",published:"published (2026 / 2026-10 / 2026-10-08)",url:"link (https://)",key:"browser number"},"sb.title":"Submit a forecast","sb.lede":"Tell us a missing forecast. It appears on the chart as 'unchecked' right away and is confirmed after checking the source. (Indicator: world trade volume growth, 2026)","sb.org":"Institution","sb.date":"Release date","sb.value":"Forecast (%)","sb.basis":"Basis","sb.goods":"Goods only","sb.gs":"Goods & services","sb.url":"Link to source or press","sb.page":"Source page (optional)","sb.note":"Note (optional)","sb.send":"Submit","sb.sending":"Sending…","sb.ok":"Saved. It now shows on the chart as unchecked.","sb.bad":"Please check: ","sb.fail":"Could not save. Please try again shortly.","sb.privacy":"No names or emails collected. Submissions are public.",basisSub:"Submitted · unchecked",sbf:{org:"institution",released_on:"release date (2024 to today)",value:"forecast (-50 to 50)",basis:"basis",source_url:"link (https://)",page:"page (≤10 chars)",note:"note (≤200 chars)"},"tr.title":"Forecast tracker","tr.lede":"See how each institution's forecast for the same indicator changed with each release. Tap a point for its source.",fcHere:"Forecasts in this report",basisSource:"Checked in source (page)",basisPress:"Original not yet checked",trOrg:"Institution",trDate:"Released",trVal:"Forecast",trDef:"Basis",trBasis:"Evidence",solid:"Solid = goods only",dashed:"Dashed = goods & services (compare with care) · hollow = original not yet checked",actual:"Reference actual",openRep:"Open report summary",openSrc:"Open press source",srcBtn:"See source",all:"All",allOrg:"All institutions",search:"Search reports · institutions",count:(n,m)=>`${n} / ${m} reports`,empty:"No matching reports. Try other filters.",pendMsg:"This report has not been summarized yet. Read the original via the link below.",askSum:"Request a summary of this report",linkNote:"link to be checked",draftBadge:"Draft · not yet reviewed by a person",noLink:"link coming soon",source:"Source",
     pages:n=>`${n} pp.`,items:n=>`${n} sentences`,
     ok:"Page verified",miss:"Not found",quote:"Source passage",missMsg:"The passage was not found on this page. Check the original.",
     data:"See the data →",dataMsg:"Opens the monthly trade chart for the same product in Policyline.",open:"Open →",
     yes:"Stated",no:"Not in report",hard:"Unclear",
     c1:"Is the reference period stated?",c2:"Are the forecast assumptions stated?",c3:"Are any countries or products left out?",c4:"Are figures estimates or final?",
-    "up.title":"Summarize my PDF","up.body":"Drop a PDF here or choose one","up.btn":"Choose PDF","up.note":"Files and summaries are not stored · results are marked ‘auto summary · not reviewed’",
+    "up.title":"Summarize my PDF","up.body":"Drop a PDF here or choose one","up.btn":"Choose PDF","up.note":"The PDF is never stored · the summary is saved only if you choose · results are marked ‘auto summary’",
     picked:f=>`${f} · reading text…`, reading:(n,m)=>`Reading page text ${n}/${m}`, summarizing:"Summarizing… (about 30 seconds)", notPdf:"Only PDF files can be used.", noText:"This PDF has no readable text (scan, images or font issue). Please try a PDF with text.", tooBig:(m)=>`Too long. Please use ${m} pages or fewer.`, sumFail:"Could not summarize. Please try again shortly.", noKey:"Summarizing is not set up yet (no server key).", autoBadge:"Auto summary · not reviewed by a person", "ms.open":"+ Save to my library","ms.lede":"Save only the reports you want. The PDF itself is never stored; title, institution, optional link and, if you choose, the summary go to your library.","ms.title":"Report name","ms.org":"Institution (optional)","ms.url":"Original link (optional)","ms.save":"Save","ms.cancel":"Cancel","ms.needUrl":"The link must start with https://","ms.needOne":"Save the summary or add the original link.","ms.withSum":"Also save the summary (claims, evidence, limits)","lb.hasSum":"Summary saved","lb.mine":"My PDF","lb.close":"Close", myPage:"PDF page" }
 };
 const TERM = { ko:{w:"교역 물량",d:"가격 변화를 뺀 교역의 양. 금액이 아니라 실제로 오간 양을 본다."}, en:{w:"trade volume",d:"The quantity of trade with price changes removed — what moved, not what it cost."} };
@@ -702,7 +733,7 @@ $("#my-result").addEventListener("submit", async e => {
   if (url) item.url = url;
   if (withSum) item.summary = {gist: mySum.gist, items: mySum.items.map(i => ({role: i.role, ko: i.ko, page: i.page, quote: i.quote, found: !!i.found}))};
   const ok = await libAdd(item, m);
-  if (ok) e.target.querySelectorAll("input,button[type=submit]").forEach(x => x.disabled = true);
+  if (ok){ e.target.querySelectorAll("input,button[type=submit]").forEach(x => x.disabled = true); m.innerHTML = `${t("lb.ok")} <a href="#library">${t("my.go")}</a>`; }
 });
 drop.addEventListener("drop", e => summarizePdf(e.dataTransfer.files[0]));
 file.addEventListener("change", () => summarizePdf(file.files[0]));
@@ -773,7 +804,7 @@ const libBtn = r => `<button class="btn btn--white" data-lib>${LIB && LIB.some(x
 async function loadShelf(){ try{ const r = await fetch("/api/shelf"); const j = await r.json(); if (j.ok){ addShelf(j.reports); buildWall(); wall.classList.add("is-open","is-settled"); $("#shelf-count").textContent = t("count", REPORTS.length, ALL.length); drawFilters(); } }catch(e){} }
 async function loadLib(){ try{ const r = await fetch("/api/library?key=" + KEY); const j = await r.json(); if (!j.ok) throw 0; LIB = j.items; libFailed = false; }catch(e){ libFailed = true; } drawLib(); renderWork(); }
 function drawLib(){
-  const box = $("#lib-list");
+  const box = $("#lib-list"); if ($("#my-n")) $("#my-n").textContent = LIB && LIB.length ? LIB.length : "";
   if (libFailed){ box.innerHTML = `<p class="lib-empty">${t("lb.offline")}</p>`; return; }
   if (!LIB) return;
   if (!LIB.length){ box.innerHTML = `<p class="lib-empty">${t("lb.empty")}</p>`; return; }
@@ -839,18 +870,26 @@ let qT; fQIn.addEventListener("input", () => { clearTimeout(qT); qT = setTimeout
 /* ---------- 용어 사전 (독립 페이지) ---------- */
 const GL = () => (window.TD_GLOSSARY && window.TD_GLOSSARY.terms) || [];
 const glQ = () => ($("#gl-q").value || "").trim();
-const hl = (v, q) => { const e = escH(v); if (!q) return e; const k = escH(q).toLowerCase(), i = e.toLowerCase().indexOf(k); return i < 0 ? e : e.slice(0, i) + "<mark>" + e.slice(i, i + k.length) + "</mark>" + e.slice(i + k.length); };
+const hl = (v, q) => { const e = escH(v); if (!q || isJamo(q)) return e; const k = escH(q).toLowerCase(), i = e.toLowerCase().indexOf(k); return i < 0 ? e : e.slice(0, i) + "<mark>" + e.slice(i, i + k.length) + "</mark>" + e.slice(i + k.length); };
+const srcLink = u => u ? `<a href="${escH(u)}" target="_blank" rel="noopener" title="${escH(u)}">[${t("gl.src")}]</a>` : "";
+const repUrl = id => { const r = ALL.find(x => x.id === id); return r ? r.url : ""; };
+const guessTag = x => x.guess ? `<span class="guess">${t("gl.guess")}</span>` : "";
 const repName = id => { const r = ALL.find(x => x.id === id); return r ? r[lang] : id; };
+const CHO = "ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ";
+const cho = v => [...v].map(c => { const k = c.charCodeAt(0) - 0xAC00; return k >= 0 && k < 11172 ? CHO[Math.floor(k / 588)] : c; }).join("");
+const isJamo = v => /^[ㄱ-ㅎ\s]+$/.test(v);
 function glLocal(){
-  const q = glQ().toLowerCase();
-  return GL().filter(x => !q || (x.ko + " " + x.en + " " + x.def_ko + " " + x.def_en).toLowerCase().includes(q));
+  const q = glQ().toLowerCase(), nq = q.replace(/\s/g, "");
+  if (!q) return GL();
+  if (isJamo(q)) return GL().filter(x => cho(x.ko).replace(/\s/g, "").includes(nq));   // 초성 검색: ㄱㅅㅅㅈ → 경상수지
+  return GL().filter(x => { const h = (x.ko + " " + x.en + " " + x.def_ko + " " + x.def_en).toLowerCase(); return h.includes(q) || h.replace(/\s/g, "").includes(nq); });
 }
 function drawGlossary(){
   const q = glQ(), list = glLocal();
   $("#gl-count").textContent = q ? t("gl.found", list.length, GL().length) : t("gl.total", GL().length);
   $("#gl-list").innerHTML = list.map(x => `<article class="glcard"><b>${hl(x[lang === "ko" ? "ko" : "en"], q)}<small>${hl(lang === "ko" ? x.en : x.ko, q)}</small></b>
     <p>${hl(x["def_" + lang], q)}</p>
-    <footer>${t("gl.src")}: ${escH(repName(x.src.report))} · p. ${escH(x.src.page)} · <q>${escH(x.src.quote)}</q></footer></article>`).join("")
+    <footer>${srcLink(repUrl(x.src.report))}</footer></article>`).join("")
     || `<p class="glnote">${t("gl.noneOurs", q)}</p>`;
   drawExt();
 }
@@ -861,22 +900,23 @@ function drawExt(){
   if (extBusy || extQ !== q){ box.innerHTML = `<h2 class="glpage__sec">${t("gl.ext")}</h2><p class="glnote">${t("gl.extLoading")}</p>`; return; }
   const sec = (name, link, rows, mkCard, noneMsg) => `<h2 class="glpage__sec">${name} <a href="${link}" target="_blank" rel="noopener">${t("gl.open")} ↗</a></h2>
     <div class="glgrid">${rows === null ? `<p class="glnote">${t("gl.extFail")}</p>` : rows.length ? rows.map(mkCard).join("") : `<p class="glnote">${noneMsg}</p>`}</div>`;
-  box.innerHTML =
-    sec(t("gl.bok"), "https://ecos.bok.or.kr/", extRes.bok, x => `<article class="glcard"><b>${hl(x.word, q)}</b><p>${escH(x.def)}</p><footer>${t("gl.bokSrc")}</footer></article>`, t("gl.extNone", q)) +
-    sec(t("gl.wto"), "https://www.wto.org/english/thewto_e/glossary_e/glossary_e.htm", extRes.wto, x => `<article class="glcard"><b>${hl(x.word, extRes.wtoQ)}</b><p lang="en">${escH(x.def)}</p><footer><a href="${escH(x.url)}" target="_blank" rel="noopener">${t("gl.wtoSrc")} ↗</a></footer></article>`, t("gl.wtoNone", extRes.wtoQ));
+  const via = extRes.via && (extRes.via.ko.length || extRes.via.en.length) ? `<p class="glvia">${t("gl.via", [...extRes.via.ko, ...extRes.via.en].join(", "))}</p>` : "";
+  box.innerHTML = via +
+    sec(t("gl.bok"), "https://ecos.bok.or.kr/", extRes.bok, x => `<article class="glcard"><b>${hl(x.word, q)}</b><p>${escH(x.def)}</p><footer>${srcLink("https://ecos.bok.or.kr/")}${guessTag(x)}</footer></article>`, t("gl.extNone", q)) +
+    sec(t("gl.wto"), "https://www.wto.org/english/thewto_e/glossary_e/glossary_e.htm", extRes.wto, x => `<article class="glcard"><b>${hl(x.word, extRes.wtoQ)}</b><p lang="en">${escH(x.def)}</p><footer>${srcLink(x.url)}${guessTag(x)}</footer></article>`, t("gl.wtoNone", extRes.wtoQ));
 }
 async function fetchExt(){
   const q = glQ(); if (q.length < 2){ drawExt(); return; }
   const local = GL().find(x => x.ko.toLowerCase().includes(q.toLowerCase()));   // 용어 이름이 맞을 때만 영문명을 WTO에 넘긴다
   const KO_EN = [["반덤핑","anti-dumping"],["비관세","non-tariff"],["관세","tariff"],["덤핑","dumping"],["상계","countervailing"],["보조금","subsid"],["세이프가드","safeguard"],["긴급수입제한","safeguard"],["원산지","origin"],["최혜국","most-favoured"],["내국민","national treatment"],["분쟁","dispute"],["쿼터","quota"],["할당","quota"],["지식재산","intellectual property"],["위생","sanitary"],["기술장벽","technical barriers"],["무역원활화","facilitation"],["정부조달","procurement"],["양허","concession"],["자유무역","free trade"],["지역무역","regional trade"],["서비스","services"],["농업","agricultur"],["수출","export"],["수입","import"],["투자","investment"]];   // WTO 용어집은 영문이라 흔한 무역 용어만 영어로 바꿔 찾는다
   const kw = KO_EN.find(([k]) => q.includes(k));
-  const alt = /[a-z]/i.test(q) ? "" : (kw ? kw[1] : local ? local.en.replace(/\(.*?\)/g, "").trim() : "");
+  const alt = /[a-z]/i.test(q) || isJamo(q) ? "" : (kw ? kw[1] : local ? local.en.replace(/\(.*?\)/g, "").trim() : "");
   extBusy = true; extQ = q; drawExt();
   try{
     const r = await fetch(`/api/terms?q=${encodeURIComponent(q)}${alt ? `&alt=${encodeURIComponent(alt)}` : ""}`);
     const j = await r.json();
     if (q !== glQ()) return;
-    extRes = j.ok ? {bok: j.bok, wto: j.wto, wtoQ: alt || q} : {bok: null, wto: null, wtoQ: q};
+    extRes = j.ok ? {bok: j.bok, wto: j.wto, via: j.via, wtoQ: alt || q} : {bok: null, wto: null, wtoQ: q};
   }catch(e){ if (q === glQ()) extRes = {bok: null, wto: null, wtoQ: q}; }
   finally{ if (q === glQ()){ extBusy = false; drawExt(); } }
 }
@@ -897,17 +937,26 @@ $("#lang").addEventListener("click", () => { lang = lang === "ko" ? "en" : "ko";
 const navLinks = [...document.querySelectorAll(".nav a")];
 const glSec = $("#glossary");
 let wasGl = false;
+const mySec = $("#library");
 function route(){
   const h = location.hash;
-  const onGl = h === "#glossary";
-  glSec.hidden = !onGl;   // 용어 사전은 완전히 다른 페이지처럼
-  document.querySelector("main").hidden = onGl;
-  document.body.classList.toggle("is-gl", onGl);
-  navLinks.forEach(a => a.classList.toggle("is-on", (a.getAttribute("href") === h) || (a.getAttribute("href") === "#" && (!h || h === "#"))));
-  if (onGl){ drawGlossary(); scrollTo(0, 0); requestAnimationFrame(() => scrollTo(0, 0)); }
-  else if (wasGl){ const el = h && h !== "#" && document.querySelector(h); requestAnimationFrame(() => el ? el.scrollIntoView() : scrollTo(0, 0)); }
-  wasGl = onGl;
+  const onGl = h === "#glossary", onMy = h === "#library" || h.startsWith("#library/") || h === "#upload";
+  const page = onGl || onMy;   // 용어 사전 · 내 서재는 완전히 다른 페이지처럼
+  glSec.hidden = !onGl; mySec.hidden = !onMy;
+  document.querySelector("main").hidden = page;
+  document.body.classList.toggle("is-gl", page);
+  if (onMy){
+    const tab = h === "#upload" ? "summary" : (h.split("/")[1] || "list");
+    mySec.querySelectorAll("[data-tab]").forEach(a => { const on = a.dataset.tab === tab; a.classList.toggle("is-on", on); a.setAttribute("aria-selected", on); });
+    mySec.querySelectorAll("[data-panel]").forEach(p => p.hidden = p.dataset.panel !== tab);
+  }
+  navLinks.forEach(a => { const href = a.getAttribute("href"); a.classList.toggle("is-on", href === h || (href === "#library" && onMy) || (href === "#" && (!h || h === "#"))); });
+  if (onGl) drawGlossary();
+  if (page && !(onMy && wasMy)){ scrollTo(0, 0); requestAnimationFrame(() => scrollTo(0, 0)); }
+  else if (wasGl || wasMy){ const el = h && h !== "#" && /^#[\w-]+$/.test(h) && document.querySelector(h); requestAnimationFrame(() => el ? el.scrollIntoView() : scrollTo(0, 0)); }
+  wasGl = onGl; wasMy = onMy;
 }
+let wasMy = false;
 navLinks.forEach(a => a.addEventListener("click", e => {
   const href = a.getAttribute("href");
   if (href === "#"){ e.preventDefault(); history.pushState(null, "", location.pathname + location.search); route(); scrollTo({top: 0, behavior: "smooth"}); }

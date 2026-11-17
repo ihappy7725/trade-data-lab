@@ -45,6 +45,31 @@ async function searchBok(q) {
   return rows.slice(0, 8).map((x) => ({ word: x.WORD, def: String(x.CONTENT || "").trim() }));
 }
 
+// 비슷한 말 · 초성 → 공식 사전에 있을 법한 용어 이름만 AI로 추려 다시 찾는다 (풀이는 언제나 공식 사전 원문)
+async function expand(q) {
+  if (!process.env.OPENAI_API_KEY) return { ko: [], en: [] };
+  const ctl = new AbortController(); const tm = setTimeout(() => ctl.abort(), 8000);
+  try {
+    const r = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST", signal: ctl.signal,
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${process.env.OPENAI_API_KEY}` },
+      body: JSON.stringify({
+        model: process.env.OPENAI_MODEL || "gpt-4o-mini", temperature: 0,
+        response_format: { type: "json_object" },
+        messages: [
+          { role: "system", content: '사용자가 경제 · 무역 용어를 찾는다. 입력은 오타, 초성(예: ㄱㅅㅅㅈ=경상수지), 줄임말, 비슷한 뜻의 말일 수 있다. 한국은행 경제 · 통계 용어사전에 있을 법한 한국어 표준 용어 이름 최대 5개(ko)와 WTO 영문 용어집에서 찾을 영어 핵심어 최대 3개(en)를 고른다. 설명은 쓰지 않는다. {"ko":[...],"en":[...]} JSON만 답한다.' },
+          { role: "user", content: q },
+        ],
+      }),
+    });
+    if (!r.ok) return { ko: [], en: [] };
+    const j = JSON.parse((await r.json()).choices[0].message.content);
+    const pick = (a, n) => (Array.isArray(a) ? a : []).map((x) => String(x).trim().slice(0, 30)).filter((x) => x.length >= 2 && x !== q).slice(0, n);
+    return { ko: pick(j.ko, 5), en: pick(j.en, 3) };
+  } catch { return { ko: [], en: [] }; } finally { clearTimeout(tm); }
+}
+const uniq = (rows, k) => { const seen = new Set(); return rows.filter((x) => !seen.has(x[k]) && seen.add(x[k])); };
+
 export default async function handler(req, res) {
   if (req.method !== "GET") return json(res, 405, { ok: false, error: "method" });
   const q = String((req.query && req.query.q) || "").trim();
@@ -52,9 +77,23 @@ export default async function handler(req, res) {
   const alt = String((req.query && req.query.alt) || "").trim().slice(0, 40);   // 한글 검색어의 영문 이름 (WTO용)
   const wtoQ = /[a-z]/i.test(q) ? q : (alt.length >= 2 ? alt : q);
   const [bok, wto] = await Promise.allSettled([searchBok(q), searchWto(wtoQ)]);
-  return json(res, 200, {
-    ok: true,
-    bok: bok.status === "fulfilled" ? bok.value : null,   // null = 그 사전에 연결하지 못함
-    wto: wto.status === "fulfilled" ? wto.value : null,
-  });
+  let B = bok.status === "fulfilled" ? bok.value : null;   // null = 그 사전에 연결하지 못함
+  let W = wto.status === "fulfilled" ? wto.value : null;
+  let via = null;
+  const jamo = /^[ㄱ-ㅎ\s]+$/.test(q);
+  if (jamo || ((B && B.length === 0) || (W && W.length === 0))) {
+    const ex = await expand(q);
+    if (ex.ko.length || ex.en.length) {
+      via = { ko: ex.ko, en: ex.en };
+      if (B && B.length === 0 && ex.ko.length) {
+        const more = await Promise.allSettled(ex.ko.map(searchBok));
+        B = uniq(more.flatMap((m) => (m.status === "fulfilled" ? m.value : [])), "word").slice(0, 8).map((x) => ({ ...x, guess: true }));
+      }
+      if (W && W.length === 0 && ex.en.length) {
+        const more = await Promise.allSettled(ex.en.map(searchWto));
+        W = uniq(more.flatMap((m) => (m.status === "fulfilled" ? m.value : [])), "word").slice(0, 8).map((x) => ({ ...x, guess: true }));
+      }
+    }
+  }
+  return json(res, 200, { ok: true, bok: B, wto: W, via });
 }
