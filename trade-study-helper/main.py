@@ -89,4 +89,6 @@ def 질문_받기(본문: 질문본문):
 
 
 # 화면 파일은 맨 마지막에 붙입니다 (/api/ 주소가 먼저 처리되도록)
-app.mount("/", StaticFiles(directory=BASE_DIR / "public", html=True), name="public")
+# 화면 파일이 있을 때만 붙입니다 (배포 환경에서 파일이 빠져도 서버가 죽지 않게)
+if (BASE_DIR / "public").is_dir():
+    app.mount("/", StaticFiles(directory=BASE_DIR / "public", html=True), name="public")
