@@ -349,9 +349,11 @@ button{font:inherit;color:inherit;cursor:pointer}
       <input type="file" accept="application/pdf" id="file">
       <small data-t="up.note"></small>
     </label>
+    <div id="my-result" aria-live="polite"></div>
   </section>
 </main>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="data/reports.js"></script>
 <script>
 /* ---------- 글자 (한 / EN) ---------- */
@@ -368,7 +370,7 @@ const T = {
     yes:"적혀 있음",no:"보고서에 없음",hard:"판단 어려움",
     c1:"기준 기간 · 자료 시점이 적혀 있나?",c2:"전망의 가정이 적혀 있나?",c3:"다루지 않은 나라 · 품목이 있나?",c4:"숫자가 추정치인지 확정치인지?",
     "up.title":"내 PDF 요약","up.body":"PDF를 끌어다 놓거나 골라 주세요","up.btn":"PDF 고르기","up.note":"파일과 요약은 저장하지 않습니다 · 결과에는 ‘자동 요약 · 검수 전’ 표시",
-    picked:f=>`${f} · 시안이라 요약은 아직 연결되지 않았습니다` },
+    picked:f=>`${f} · 글자를 읽는 중…`, reading:(n,m)=>`쪽 글자 읽는 중 ${n}/${m}`, summarizing:"요약하는 중… (30초 안팎)", notPdf:"PDF 파일만 올릴 수 있습니다.", noText:"글자를 읽을 수 없는 PDF입니다 (스캔본 · 그림 · 글꼴 문제). 글자가 들어 있는 PDF로 다시 시도해 주세요.", tooBig:(m)=>`너무 깁니다. ${m}쪽 이하로 줄여 주세요. (앞 ${m}쪽만 요약하려면 파일을 나눠 주세요)`, sumFail:"요약하지 못했습니다. 잠시 뒤 다시 시도해 주세요.", noKey:"요약 기능이 아직 설정되지 않았습니다 (서버 키 없음).", autoBadge:"자동 요약 · 사람이 검수하지 않음", myPage:"PDF 쪽" },
   en:{ "nav.shelf":"Shelf","nav.request":"Request a report","rq.title":"Request a report","rq.lede":"Tell us which report you want summarized. The most requested go on the shelf first.","rq.f.title":"Report title","rq.f.org":"Institution","rq.f.purpose":"What it is for","rq.f.url":"Link to original (optional)","rq.f.reason":"Why you need it (optional)","rq.p1":"Assignment","rq.p2":"Study group","rq.p3":"Work","rq.etc":"Other","rq.send":"Send request","rq.sending":"Sending…","rq.note":"No names or emails collected. Requests are public.","rq.ok":"Request received.","rq.bad":"Please check: ","rq.fail":"Could not save. Please try again shortly.","rq.empty":"No requests yet. Be the first.","rq.offline":"Could not load requests. (Works on the deployed site only)","rq.want":"Me too",rqf:{title:"title (2–200 chars)",org:"institution",url:"link (https://)",reason:"reason (≤200 chars)",purpose:"purpose"},"nav.glossary":"Glossary","nav.calendar":"Calendar",soon:"soon",upload:"Summarize my PDF",lang:"한국어",
     strip:"Draft · covers and content are fictional","strip.try":"Try my PDF",
     lede:["Trade reports from international bodies, KITA and KOTRA, in plain words.","Tap a cover to see its claims, evidence and limits — with page numbers."],
@@ -381,7 +383,7 @@ const T = {
     yes:"Stated",no:"Not in report",hard:"Unclear",
     c1:"Is the reference period stated?",c2:"Are the forecast assumptions stated?",c3:"Are any countries or products left out?",c4:"Are figures estimates or final?",
     "up.title":"Summarize my PDF","up.body":"Drop a PDF here or choose one","up.btn":"Choose PDF","up.note":"Files and summaries are not stored · results are marked ‘auto summary · not reviewed’",
-    picked:f=>`${f} · draft only, summarizing is not connected yet` }
+    picked:f=>`${f} · reading text…`, reading:(n,m)=>`Reading page text ${n}/${m}`, summarizing:"Summarizing… (about 30 seconds)", notPdf:"Only PDF files can be used.", noText:"This PDF has no readable text (scan, images or font issue). Please try a PDF with text.", tooBig:(m)=>`Too long. Please use ${m} pages or fewer.`, sumFail:"Could not summarize. Please try again shortly.", noKey:"Summarizing is not set up yet (no server key).", autoBadge:"Auto summary · not reviewed by a person", myPage:"PDF page" }
 };
 const TERM = { ko:{w:"교역 물량",d:"가격 변화를 뺀 교역의 양. 금액이 아니라 실제로 오간 양을 본다."}, en:{w:"trade volume",d:"The quantity of trade with price changes removed — what moved, not what it cost."} };
 
@@ -571,8 +573,51 @@ work.addEventListener("click", e => {
 const drop = $("#drop"), file = $("#file");
 ["dragenter","dragover"].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add("is-over"); }));
 ["dragleave","drop"].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove("is-over"); }));
-drop.addEventListener("drop", e => { const f = e.dataTransfer.files[0]; if (f) $("#drop-msg").textContent = t("picked", f.name); });
-file.addEventListener("change", () => { if (file.files[0]) $("#drop-msg").textContent = t("picked", file.files[0].name); });
+const MAX_PDF_PAGES = 60;
+const normQ = x => String(x || "").normalize("NFKC").replace(/-\s*\n\s*/g, "").replace(/[‘’]/g, "'").replace(/[“”]/g, '"').replace(/[–—]/g, "-").replace(/\s+/g, " ").trim().toLowerCase();
+let mySum = null, myBusy = false;
+async function summarizePdf(f){
+  if (myBusy || !f) return;
+  const msg = $("#drop-msg"), out = $("#my-result");
+  if (!/\.pdf$/i.test(f.name) && f.type !== "application/pdf"){ msg.textContent = t("notPdf"); return; }
+  myBusy = true; out.innerHTML = ""; mySum = null; msg.textContent = t("picked", f.name);
+  try {
+    if (!window.pdfjsLib) throw new Error("pdfjs");
+    pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+    const doc = await pdfjsLib.getDocument({data: await f.arrayBuffer()}).promise;   // 파일은 브라우저 안에서만 연다
+    if (doc.numPages > MAX_PDF_PAGES){ msg.textContent = t("tooBig", MAX_PDF_PAGES); return; }
+    const pages = [];
+    for (let i = 1; i <= doc.numPages; i++){
+      msg.textContent = t("reading", i, doc.numPages);
+      const tc = await (await doc.getPage(i)).getTextContent();
+      pages.push({p: String(i), text: tc.items.map(x => x.str + (x.hasEOL ? "\n" : " ")).join("")});
+    }
+    if (pages.reduce((a, x) => a + x.text.trim().length, 0) < 200){ msg.textContent = t("noText"); return; }
+    msg.textContent = t("summarizing");
+    const r = await fetch("/api/summarize", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({pages})});
+    const j = await r.json().catch(() => ({}));
+    if (r.status === 413){ msg.textContent = t("tooBig", MAX_PDF_PAGES); return; }
+    if (j.error === "no_key"){ msg.textContent = t("noKey"); return; }
+    if (j.error === "no_text"){ msg.textContent = t("noText"); return; }
+    if (!r.ok || !j.ok) throw new Error("api");
+    const byPage = Object.fromEntries(pages.map(x => [x.p, normQ(x.text)]));
+    j.items.forEach(it => { it.found = !!it.quote && !!byPage[it.page] && byPage[it.page].includes(normQ(it.quote)); });   // 근거 구절 대조
+    mySum = {name: f.name, ...j}; msg.textContent = f.name; drawMySum();
+  } catch(e){ msg.textContent = t("sumFail"); }
+  finally { myBusy = false; file.value = ""; }
+}
+function drawMySum(){
+  const out = $("#my-result"); if (!mySum) return;
+  const col = role => `<section><h3><span class="chip chip--${role}">${t(role)}</span></h3><ol>${mySum.items.filter(i => i.role === role).map(i =>
+    `<li>${escH(i.ko)}<div class="row"><span class="pg">${t("myPage")} ${escH(i.page)}${i.found ? "" : ` <span class="miss">${t("needCheck")}</span>`}</span></div>${i.found ? `<div class="pop">“${escH(i.quote)}”</div>` : ""}</li>`).join("")}</ol></section>`;
+  out.innerHTML = `<div class="head" style="margin-top:16px"><div class="head__txt"><div class="head__org">${escH(mySum.name)}</div>
+      <h2 class="head__title">${escH(mySum.title || mySum.name)}</h2>
+      <div class="head__meta"><span class="badge badge--auto">${t("autoBadge")}</span></div>
+      <p style="margin:10px 0 0;font-size:14.5px;color:var(--ink-2);max-width:70ch">${escH(mySum.gist)}</p></div></div>
+    <div class="digest" style="margin-top:14px">${col("claim")}${col("evidence")}${col("limit")}</div>`;
+}
+drop.addEventListener("drop", e => summarizePdf(e.dataTransfer.files[0]));
+file.addEventListener("change", () => summarizePdf(file.files[0]));
 
 /* ---------- 전망 추적 ---------- */
 const FC = (window.TD_FORECASTS || {indicators:[]});
