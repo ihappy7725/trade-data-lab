@@ -25,8 +25,18 @@ create table if not exists shelf_reports (
   category_id text not null references categories(id),
   url         text not null unique check (url ~ '^https://' and char_length(url) <= 500),
   status      text not null default '확인 전' check (status in ('확인 전','확인됨','숨김')),
+  added_by    text check (added_by is null or added_by ~ '^[0-9a-f-]{36}$'),   -- 브라우저 익명 번호 (하루 횟수 제한용)
   created_at  timestamptz not null default now()
 );
+
+-- 2-1) 공용 서가 신고: 서로 다른 브라우저 3곳이 신고하면 status = '숨김'
+create table if not exists shelf_flags (
+  report_id  bigint not null references shelf_reports(id) on delete cascade,
+  flagged_by text not null check (flagged_by ~ '^[0-9a-f-]{36}$'),
+  created_at timestamptz not null default now(),
+  primary key (report_id, flagged_by)
+);
+-- 손으로 숨기기: update shelf_reports set status = '숨김' where id = <번호>;
 
 -- 3) 내 서재 (서가 보고서든 외부 보고서든 담기)
 create table if not exists library_items (
