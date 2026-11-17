@@ -228,6 +228,126 @@
         "page": "xiii",
         "quote": "commodity markets remain vulnerable"
       }
+    },
+    {
+      "id": "basis-points",
+      "ko": "베이시스 포인트 (bp)",
+      "en": "Basis points",
+      "def_ko": "금리·수익률 변화를 잴 때 쓰는 단위로, 1bp는 0.01%포인트다. 25bp는 0.25%포인트다.",
+      "def_en": "A unit for rate changes: one basis point is a hundredth of a percentage point; 25 bp is 0.25 point.",
+      "src": {
+        "report": "imf-weo-2026-10",
+        "page": "vi",
+        "quote": "“Basis points” refers to hundredths of 1 percentage point"
+      }
+    },
+    {
+      "id": "net-energy-exports",
+      "ko": "에너지 순수출",
+      "en": "Net energy exports",
+      "def_ko": "원유·정제유·천연가스·석탄 등의 수출에서 수입을 뺀 값이다. 플러스면 에너지를 파는 나라, 마이너스면 사는 나라다.",
+      "def_en": "Exports minus imports of crude oil, refined oil, natural gas, coal and similar fuels; positive means a net energy seller.",
+      "src": {
+        "report": "imf-weo-2026-10",
+        "page": "2",
+        "quote": "“Net energy exports” are defined as exports minus imports of crude oil, refined oil, natural gas, coal, coke, and lignite"
+      }
+    },
+    {
+      "id": "front-month",
+      "ko": "근월물 가격 (선물)",
+      "en": "Front-month price",
+      "def_ko": "선물 계약 가운데 만기가 가장 가까운 계약의 가격이다. 원유 등 원자재 가격 기사에서 흔히 쓰인다.",
+      "def_en": "The price of the futures contract with the nearest maturity, often quoted for oil and other commodities.",
+      "src": {
+        "report": "imf-weo-2026-10",
+        "page": "38",
+        "quote": "Front-month price refers to the price of futures contracts for the nearest available maturity"
+      }
+    },
+    {
+      "id": "fiscal-export-tax",
+      "ko": "재정 수출세",
+      "en": "Fiscal export tax",
+      "def_ko": "국경에서 걷지는 않지만 수출용 상품에만 매기거나 수출품을 불리하게 대하는 세금이다. 일반 수출세와 구분된다.",
+      "def_en": "A tax not levied at the border but applied only to, or against, goods intended for export.",
+      "src": {
+        "report": "oecd-crm-export-restrictions-2026",
+        "page": "25",
+        "quote": "A fiscal export tax refers to a tax that is not levied at the border but applies exclusively to, or discriminates against, goods or commodities intended for export"
+      }
+    },
+    {
+      "id": "digital-infrastructure",
+      "ko": "디지털 인프라",
+      "en": "Digital infrastructure",
+      "def_ko": "통신 서비스와 통신망을 함께 부르는 말이다. 사람·장소·사물을 이어 디지털 기술을 쓸 수 있게 하는 바탕이다.",
+      "def_en": "Connectivity services and networks that let people, places and things use digital technology.",
+      "src": {
+        "report": "oecd-deso-2026",
+        "page": "37",
+        "quote": "Connectivity services and infrastructures, also known as “digital infrastructure”"
+      }
+    },
+    {
+      "id": "ai-compute",
+      "ko": "AI 컴퓨트",
+      "en": "AI compute",
+      "def_ko": "AI를 개발하고 쓰는 데 필요한 전용 계산 설비(반도체·데이터센터 등)를 말한다.",
+      "def_en": "The specialised computing infrastructure needed to develop and run AI.",
+      "src": {
+        "report": "oecd-deso-2026",
+        "page": "71",
+        "quote": "rely on specialised infrastructure known as AI compute"
+      }
+    },
+    {
+      "id": "hyperscalers",
+      "ko": "하이퍼스케일러",
+      "en": "Hyperscalers",
+      "def_ko": "초대형 애플리케이션을 운영하는 초대형 데이터센터(또는 그 운영 기업)다. 일반 데이터센터와 같은 방식이지만 규모가 훨씬 크다.",
+      "def_en": "Hyperscale data centres for very large applications, built like ordinary data centres but at much larger scale.",
+      "src": {
+        "report": "oecd-deso-2026",
+        "page": "83",
+        "quote": "Hyperscalers can be defined as “hyperscale data centres primarily used to deliver and manage mega-sized applications"
+      }
+    },
+    {
+      "id": "moores-law",
+      "ko": "무어의 법칙",
+      "en": "Moore’s Law",
+      "def_ko": "반도체 칩 하나에 들어가는 트랜지스터 수가 약 2년마다 두 배가 된다는 관찰이다. 계산 능력이 빠르게 늘어난 배경으로 쓰인다.",
+      "def_en": "The observation that transistors on a chip double about every two years, driving fast growth in computing power.",
+      "src": {
+        "report": "oecd-deso-2026",
+        "page": "83",
+        "quote": "the number of transistors on a microchip doubles approximately every two years"
+      }
+    },
+    {
+      "id": "foreign-ict-va",
+      "ko": "해외 ICT 부가가치",
+      "en": "Foreign ICT value added",
+      "def_ko": "한 나라의 ICT(정보통신) 수요 가운데 해외에서 만들어진 몫이다. 디지털 분야의 해외 의존도를 보여 준다.",
+      "def_en": "The share of a country's ICT demand that originates abroad, a gauge of reliance on foreign digital inputs.",
+      "src": {
+        "report": "oecd-deso-2026",
+        "page": "104",
+        "quote": "Foreign ICT value added is measured as the share of domestic ICT demand that originates abroad"
+      }
+    },
+    {
+      "id": "public-saving",
+      "ko": "공공 저축",
+      "en": "Public saving",
+      "def_ko": "정부 등 공공부문이 번 돈 가운데 쓰고 남긴 총저축이다. 경상수지와 저축·투자 분석에 쓰인다.",
+      "def_en": "Gross saving of the public sector, used in saving–investment and current account analysis.",
+      "src": {
+        "report": "imf-esr-2026",
+        "page": "4",
+        "quote": "Public saving refers to gross saving of the public sector"
+      }
     }
   ]
 }

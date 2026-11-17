@@ -35,7 +35,8 @@ create table if not exists library_items (
   ref_id     text check (ref_id is null or char_length(ref_id) <= 80),          -- 서가 보고서 id (외부면 비움)
   title      text not null check (char_length(title) between 2 and 200),
   org        text check (org is null or char_length(org) <= 40),
-  url        text not null check (url ~ '^https://' and char_length(url) <= 500),
+  url        text check (url ~ '^https://' and char_length(url) <= 500),     -- 내 PDF 요약은 링크 없이 담을 수 있음
+  summary    jsonb check (summary is null or pg_column_size(summary) <= 20000), -- 내 PDF 자동 요약 (요지 · 항목)
   created_at timestamptz not null default now(),
   unique (owner_key, url)
 );
