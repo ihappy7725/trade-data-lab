@@ -5,11 +5,12 @@
 
 | # | 폴더 | 서비스 | 상태 |
 |---|---|---|---|
-| 1 | [policy-tracker/](policy-tracker/) | 정책 발표 → 무역 변화 추적기 | 대기 |
-| 2 | [trade-news-room/](trade-news-room/) | **Trade News Room** · 뉴스 속 무역 공부방 (글로벌 정책 브리핑 Fact Desk를 이 안의 기능으로) | 배포됨 · https://trade-news-room.vercel.app/ |
+| 1 | [policy-tracker/](policy-tracker/) | **Policyline** · 정책 발표 → 무역 변화 추적기 | 대기 |
+| 2 | [trade-news-room/](trade-news-room/) | **Trade News Room** · 뉴스 속 무역 공부방 | 배포됨 · https://trade-news-room.vercel.app/ |
 | 3 | [trade-weave/](trade-weave/) | **Tradeweave** · 국가별 무역 의존도 지도 | 진행 중 |
 | 4 | [trade-digest/](trade-digest/) | **Trade Digest** · 국제기구·KITA·KOTRA 보고서 쉬운 말 요약 | 기획 중 |
-| 5 | [data-notes/](data-notes/) | 이슈 하나 깊게 파는 데이터 노트 | 대기 |
+| 5 | [alignment-lens/](alignment-lens/) | **Alignment Lens** (가칭) · 외교 거리 × 교역 비중 | 기획 중 |
+| 6 | [mirror-gap/](mirror-gap/) | **Mirror Gap** (가칭) · 두 나라가 신고한 교역 통계의 차이 | 기획 중 |
 
 ## 배포
 
@@ -22,9 +23,10 @@ trade-data-lab/
 ├── CLAUDE.md          프로젝트 공통 규칙 (Claude Code가 읽음)
 ├── README.md          이 파일
 ├── docs/              프로젝트 전체 문서 (아이디어 목록, 결정 기록)
+├── policy-tracker/    ① Policyline (정책·무역 변화 추적기)
+├── trade-news-room/   ② Trade News Room
 ├── trade-weave/       ③ Tradeweave
-├── policy-tracker/    ① 정책·무역 변화 추적기
-├── trade-news-room/   ② Trade News Room (+ Fact Desk)
 ├── trade-digest/      ④ Trade Digest (보고서 쉬운 말 요약)
-└── data-notes/        ⑤ 데이터 노트
+├── alignment-lens/    ⑤ Alignment Lens (외교 거리 × 교역)
+└── mirror-gap/        ⑥ Mirror Gap (거울 통계 차이)
 ```

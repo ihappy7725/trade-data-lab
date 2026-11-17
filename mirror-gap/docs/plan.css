@@ -1,0 +1,106 @@
+/* 기획서 인쇄용 스타일 (A4). Chrome으로 PDF를 만든다. */
+@page {
+  size: A4;
+  margin: 20mm 18mm 20mm 18mm;
+  @bottom-center { content: counter(page); font: 9pt "Apple SD Gothic Neo", sans-serif; color: #8a8f98; }
+}
+@page :first { @bottom-center { content: none; } }
+
+:root {
+  --ink: #1d2430;
+  --muted: #5b6472;
+  --line: #d9dde3;
+  --soft: #f3f5f8;
+  --accent: #1f4e79;
+  --accent-soft: #e6eef6;
+  --fact: #1f6f4a;
+  --fact-soft: #e5f3ec;
+  --interp: #8a5a00;
+  --interp-soft: #fbf1dc;
+  --unsure: #8b2f3a;
+  --unsure-soft: #f8e6e8;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+body {
+  margin: 0;
+  font-family: "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+  font-size: 10pt;
+  line-height: 1.62;
+  color: var(--ink);
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+/* 표지 */
+.cover { height: 257mm; display: flex; flex-direction: column; justify-content: space-between; break-after: page; }
+.cover .band { border-top: 6px solid var(--accent); padding-top: 14mm; }
+.cover .kicker { font-size: 10pt; letter-spacing: .12em; color: var(--accent); font-weight: 700; }
+.cover h1 { font-size: 34pt; line-height: 1.15; margin: 6mm 0 3mm; letter-spacing: -.01em; }
+.cover .sub { font-size: 14pt; color: var(--muted); margin: 0; }
+.cover .lead { font-size: 12pt; margin-top: 14mm; max-width: 150mm; }
+.cover dl { display: grid; grid-template-columns: 32mm 1fr; gap: 2mm 6mm; font-size: 10pt; border-top: 1px solid var(--line); padding-top: 6mm; margin: 0; }
+.cover dt { color: var(--muted); }
+.cover dd { margin: 0; }
+
+/* 목차 */
+.toc { break-after: page; }
+.toc ol { padding-left: 0; list-style: none; counter-reset: t; columns: 1; }
+.toc li { counter-increment: t; padding: 1.6mm 0; border-bottom: 1px dotted var(--line); display: flex; gap: 4mm; }
+.toc li::before { content: counter(t, decimal-leading-zero); color: var(--accent); font-weight: 700; width: 9mm; }
+
+/* 본문 */
+h2 { font-size: 16pt; margin: 0 0 4mm; padding-top: 2mm; color: var(--accent); break-after: avoid; }
+h2 .no { color: var(--muted); font-weight: 400; margin-right: 3mm; }
+h3 { font-size: 11.5pt; margin: 6mm 0 2mm; break-after: avoid; }
+h4 { font-size: 10pt; margin: 4mm 0 1mm; color: var(--muted); break-after: avoid; }
+section { margin-bottom: 8mm; }
+section.page { break-before: page; }
+p { margin: 0 0 2.4mm; }
+ul, ol { margin: 0 0 3mm; padding-left: 5mm; }
+li { margin-bottom: 1mm; }
+strong { font-weight: 700; }
+code, .mono { font-family: "SF Mono", Menlo, monospace; font-size: 8.6pt; background: var(--soft); padding: .2mm 1.2mm; border-radius: 1mm; }
+pre { font-family: "SF Mono", Menlo, monospace; font-size: 8.2pt; line-height: 1.5; background: var(--soft); border: 1px solid var(--line); border-radius: 2mm; padding: 3mm 4mm; white-space: pre-wrap; break-inside: avoid; margin: 0 0 3mm; }
+a { color: var(--accent); text-decoration: none; }
+.small { font-size: 8.6pt; color: var(--muted); }
+
+table { width: 100%; border-collapse: collapse; margin: 1mm 0 4mm; font-size: 9pt; break-inside: auto; }
+th, td { border-bottom: 1px solid var(--line); padding: 1.8mm 2mm; text-align: left; vertical-align: top; }
+th { background: var(--soft); font-weight: 700; border-top: 1px solid var(--line); }
+tr { break-inside: avoid; }
+
+.box { border: 1px solid var(--line); border-radius: 2.5mm; padding: 4mm 5mm; margin: 0 0 4mm; break-inside: avoid; }
+.box.accent { background: var(--accent-soft); border-color: #c7d7e8; }
+.box .label { font-size: 8.4pt; font-weight: 700; letter-spacing: .08em; color: var(--accent); margin-bottom: 1mm; }
+.formula { white-space: pre-line; font-family: "SF Mono", Menlo, monospace; font-size: 9.6pt; background: var(--soft); border-left: 3px solid var(--accent); padding: 2.5mm 4mm; margin: 0 0 3mm; break-inside: avoid; }
+
+.three { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 3mm; margin: 0 0 4mm; break-inside: avoid; }
+.three > div { border-radius: 2.5mm; padding: 3mm 4mm; font-size: 9pt; }
+.three .fact { background: var(--fact-soft); }
+.three .interp { background: var(--interp-soft); }
+.three .unsure { background: var(--unsure-soft); }
+.three b { display: block; margin-bottom: 1mm; }
+.three .fact b { color: var(--fact); }
+.three .interp b { color: var(--interp); }
+.three .unsure b { color: var(--unsure); }
+
+.summary { display: grid; grid-template-columns: 30mm 1fr; gap: 0; border: 1px solid var(--line); border-radius: 2.5mm; overflow: hidden; margin-bottom: 4mm; }
+.summary > div { padding: 2.4mm 4mm; border-bottom: 1px solid var(--line); }
+.summary > div:nth-child(odd) { background: var(--soft); font-weight: 700; color: var(--muted); }
+.summary > div:nth-last-child(-n+2) { border-bottom: 0; }
+
+/* 화면 뼈대 그림 (가상) */
+.wire { border: 1.5px solid #9aa3ae; border-radius: 3mm; padding: 4mm; margin: 0 0 2mm; background: #fff; break-inside: avoid; position: relative; }
+.wire .tag { position: absolute; top: 2mm; right: 3mm; font-size: 7.6pt; color: var(--unsure); font-weight: 700; }
+.wire .bar { height: 7mm; border-radius: 1.5mm; background: var(--soft); border: 1px dashed #b5bcc6; margin-bottom: 2.5mm; display: flex; align-items: center; padding: 0 3mm; font-size: 8.4pt; color: var(--muted); }
+.wire .row { display: flex; gap: 3mm; margin-bottom: 2.5mm; }
+.wire .blk { flex: 1; min-height: 22mm; border-radius: 1.5mm; background: var(--soft); border: 1px dashed #b5bcc6; padding: 2mm 3mm; font-size: 8.4pt; color: var(--muted); }
+.wire .blk.tall { min-height: 44mm; }
+.wire .blk.short { min-height: 12mm; }
+.wire .btn { display: inline-block; border: 1.5px solid var(--accent); color: var(--accent); border-radius: 5mm; padding: .6mm 4mm; font-size: 8.4pt; margin-right: 2mm; }
+.caption { font-size: 8.4pt; color: var(--muted); margin: 0 0 5mm; }
+
+.check li { list-style: none; margin-left: -5mm; }
+.check li::before { content: "□ "; color: var(--accent); }
