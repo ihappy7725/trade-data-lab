@@ -604,7 +604,13 @@ async function summarizePdf(f){
     if (j.error === "no_text"){ msg.textContent = t("noText"); return; }
     if (!r.ok || !j.ok) throw new Error("api");
     const byPage = Object.fromEntries(pages.map(x => [x.p, normQ(x.text)]));
-    j.items.forEach(it => { it.found = !!it.quote && !!byPage[it.page] && byPage[it.page].includes(normQ(it.quote)); });   // 근거 구절 대조
+    j.items.forEach(it => {   // 근거 구절 대조: 끝 문장부호는 빼고, 적힌 쪽에 없으면 다른 쪽도 찾아 쪽수를 바로잡는다
+      const q = normQ(it.quote).replace(/[.,;:!?…]+$/, "").trim();
+      it.found = false; if (q.length < 12) return;
+      if (byPage[it.page] && byPage[it.page].includes(q)) { it.found = true; return; }
+      const hit = Object.keys(byPage).find(k => byPage[k].includes(q));
+      if (hit) { it.page = hit; it.found = true; }
+    });
     mySum = {name: f.name, ...j}; msg.textContent = f.name; drawMySum();
   } catch(e){ msg.textContent = t("sumFail"); }
   finally { myBusy = false; file.value = ""; }

@@ -13,7 +13,8 @@ const SYSTEM = `너는 국제기구·무역기관 보고서를 쉬운 한국어�
 - claim(주장) 2~4개, evidence(근거: 숫자·사실) 2~5개, limit(한계: 가정·위험·불확실성) 2~4개.
 - 보고서 주장은 "보고서는 ~라고 본다"처럼 쓰고, 단정하지 않는다.
 - 숫자는 원문에 있는 값만 쓰고, 단위와 연도를 붙인다.
-- quote는 반드시 해당 page의 글자에서 그대로 복사한다. 찾지 못하면 그 항목을 넣지 않는다.`;
+- quote는 반드시 해당 page의 글자에서 그대로 복사한다. 찾지 못하면 그 항목을 넣지 않는다.
+- quote는 문장 중간에서 끝나도 되며, 원문에 없는 마침표나 따옴표를 붙이지 않는다.`;
 
 function json(res, status, body) {
   res.status(status).setHeader("Content-Type", "application/json; charset=utf-8");
