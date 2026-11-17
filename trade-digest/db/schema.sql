@@ -20,6 +20,8 @@ on conflict (id) do nothing;
 create table if not exists shelf_reports (
   id          bigint generated always as identity primary key,
   title       text not null check (char_length(title) between 2 and 200),
+  title_ko    text check (title_ko is null or char_length(title_ko) <= 200),   -- 추가할 때 자동 번역해 둔 제목
+  title_en    text check (title_en is null or char_length(title_en) <= 200),
   org         text not null check (org in ('WTO','IMF','OECD','World Bank','UNCTAD','KIEP','KITA','KOTRA','기타')),
   published   text not null check (published ~ '^\d{4}(-\d{2}){0,2}$'),           -- 2026 · 2026-10 · 2026-10-08
   category_id text not null references categories(id),

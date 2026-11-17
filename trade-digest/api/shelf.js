@@ -31,6 +31,23 @@ function badTitle(t) {
   return letters < t.length * 0.5;                                          // 기호 투성이
 }
 
+// 제목을 한국어 · 영어 둘 다 갖추기 (영문 화면에서도 읽히게). 실패하면 원래 제목만 쓴다
+async function bothTitles(t) {
+  const isKo = /[가-힣]/.test(t);
+  if (!process.env.OPENAI_API_KEY) return { ko: isKo ? t : null, en: isKo ? null : t };
+  const ctl = new AbortController(); const tm = setTimeout(() => ctl.abort(), 8000);
+  try {
+    const r = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST", signal: ctl.signal,
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${process.env.OPENAI_API_KEY}` },
+      body: JSON.stringify({ model: process.env.OPENAI_MODEL || "gpt-4o-mini", temperature: 0,
+        messages: [{ role: "system", content: `Translate this report title into ${isKo ? "English" : "Korean"}. Keep codes like [TF 25호] as natural equivalents. Reply with the title only.` }, { role: "user", content: t }] }),
+    });
+    const out = r.ok ? String((await r.json()).choices[0].message.content || "").trim().replace(/^["“]|["”]$/g, "").slice(0, 200) : "";
+    return isKo ? { ko: t, en: out || null } : { ko: out || null, en: t };
+  } catch { return { ko: isKo ? t : null, en: isKo ? null : t }; } finally { clearTimeout(tm); }
+}
+
 // ③ 링크가 정말 열리는지 (공식 사이트가 프로그램 접근을 막는 401 · 403 · 429는 통과)
 async function linkOpens(u) {
   const ctl = new AbortController(); const tm = setTimeout(() => ctl.abort(), 7000);
@@ -48,7 +65,7 @@ export default async function handler(req, res) {
   try {
     if (req.method === "GET") {
       const rows = await sql`
-        select id, title, org, published, category_id, url, status
+        select id, title, title_ko, title_en, org, published, category_id, url, status
         from shelf_reports where status <> '숨김' order by created_at desc limit 200`;
       return json(res, 200, { ok: true, reports: rows });
     }
@@ -88,9 +105,10 @@ export default async function handler(req, res) {
     if (dup.length) return json(res, 409, { ok: false, error: "duplicate" });
     if (!(await linkOpens(f.url))) return json(res, 422, { ok: false, error: "dead_link" });
 
+    const tt = await bothTitles(f.title);
     const [row] = await sql`
-      insert into shelf_reports (title, org, published, category_id, url, added_by)
-      values (${f.title}, ${f.org}, ${f.published}, ${f.category}, ${f.url}, ${key}) returning id`;
+      insert into shelf_reports (title, title_ko, title_en, org, published, category_id, url, added_by)
+      values (${f.title}, ${tt.ko}, ${tt.en}, ${f.org}, ${f.published}, ${f.category}, ${f.url}, ${key}) returning id`;
     return json(res, 201, { ok: true, id: row.id });
   } catch (e) {
     console.error("shelf", e.message);
