@@ -102,15 +102,11 @@ body.is-gl{background:var(--night);background-image:radial-gradient(rgba(243,239
 .wall-arrow{pointer-events:auto;position:absolute;top:0;transform:translateY(-50%);width:52px;height:52px;border-radius:50%;border:1px solid rgba(243,239,229,.28);background:rgba(11,26,20,.55);color:var(--slab-ink);display:grid;place-items:center;cursor:pointer;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);transition:background .2s,transform .2s var(--ease-out),opacity .2s}
 .wall-arrow:hover{background:rgba(243,239,229,.16)}
 .wall-arrow:active{transform:translateY(-50%) scale(.94)}
-.wall-arrow:disabled{opacity:.28;cursor:default}
 .wall-arrow--l{left:max(16px,2.4vw)} .wall-arrow--r{right:max(16px,2.4vw)}
-.wall-dots{pointer-events:auto;position:absolute;left:50%;top:calc(17vw + 40px);transform:translateX(-50%);display:flex;gap:8px}
-.wall-dots button{width:8px;height:8px;border-radius:50%;border:0;padding:0;background:rgba(243,239,229,.3);cursor:pointer}
-.wall-dots button[aria-current="true"]{background:var(--slab-ink);width:22px;border-radius:4px}
 .flag-row{margin:10px 0 0}
 .flag{border:1px solid var(--line-2);background:transparent;color:var(--ink-2);border-radius:6px;padding:4px 10px;font:inherit;font-size:13px;cursor:pointer}
 .flag:hover{border-color:var(--limit);color:var(--limit)}
-@media (max-width:760px){.wall-arrow{width:42px;height:42px}.wall-dots{top:calc(32vw + 40px)}}
+@media (max-width:760px){.wall-arrow{width:42px;height:42px}}
 .my-save{margin-top:16px}
 .my-save [hidden]{display:none!important}
 .my-save .btn{height:42px;padding:0 18px;font-size:14.5px;cursor:pointer}
@@ -149,7 +145,8 @@ body.is-gl{background:var(--night);background-image:radial-gradient(rgba(243,239
   box-shadow:0 18px 40px -18px rgba(0,0,0,.6)}
 .wall.is-open .slot{opacity:1;transform:translate(-50%,-50%) translateX(var(--x)) perspective(900px) rotateY(var(--ry)) scale(1);
   transition:transform 1500ms var(--ease-out) var(--d),opacity 500ms var(--ease-out) var(--d),filter 300ms,box-shadow 300ms}
-.wall.is-open.is-settled .slot{transition:transform 420ms var(--ease-out),opacity 300ms,filter 300ms,box-shadow 300ms}
+.wall.is-open.is-settled .slot{transition:transform 560ms var(--ease-in-out),width 560ms var(--ease-in-out),height 560ms var(--ease-in-out),opacity 400ms,filter 300ms,box-shadow 300ms}
+.wall.is-open .slot.is-off{opacity:0;pointer-events:none}
 .wall.is-open .slot:hover{transform:translate(-50%,-50%) translateX(var(--x)) perspective(900px) rotateY(var(--ry)) scale(1.04)}
 .wall.has-pick .slot:not([aria-pressed="true"]){filter:saturate(.5) brightness(.8)}
 .slot[aria-pressed="true"]{box-shadow:0 0 0 3px var(--white),0 24px 48px -20px rgba(0,0,0,.6)}
@@ -352,7 +349,6 @@ body.is-gl{background:var(--night);background-image:radial-gradient(rgba(243,239
     <div class="wall-nav" id="wall-nav" hidden>
       <button type="button" class="wall-arrow wall-arrow--l" id="wall-prev" data-tp="wall.prev" aria-label="prev"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
       <button type="button" class="wall-arrow wall-arrow--r" id="wall-next" data-tp="wall.next" aria-label="next"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
-      <div class="wall-dots" id="wall-dots"></div>
     </div>
     <div class="cta">
       <button class="btn btn--primary" id="go" data-t="cta.open"></button>
@@ -534,41 +530,55 @@ const t = (k, ...a) => { const v = T[lang][k]; return typeof v === "function" ? 
 const pageOf = (r, f) => Math.max(1, Math.round(r.pages * f));
 
 /* ---------- 표지 벽 ---------- */
-const PER = 11; let wp = 0, wPages = 1;   // 표지 벽은 11권씩, 좌우로 넘긴다
-function drawWallNav(){
-  const nav = $("#wall-nav"); if (!nav) return;
-  nav.hidden = wPages < 2;
-  $("#wall-prev").disabled = wp === 0; $("#wall-next").disabled = wp >= wPages - 1;
-  $("#wall-dots").innerHTML = Array.from({length: wPages}, (_, i) => `<button type="button" data-wp="${i}" aria-label="${i + 1}" aria-current="${i === wp}"></button>`).join("");
+let off = 0, ring = false;   // 공용 서가가 11권을 넘으면 표지들이 벽의 곡선을 따라 좌우로 돈다
+const VIS = 5;               // 가운데 기준 좌우 5칸씩 = 11칸
+function slotFor(rel){
+  if (Math.abs(rel) <= VIS) return {...SLOTS[rel + VIS], off: false};
+  const e = SLOTS[rel < 0 ? 0 : SLOTS.length - 1], more = Math.abs(rel) - VIS;
+  return {x: e.x + Math.sign(rel) * .14 * Math.min(more, 2), h: e.h, ry: e.ry, off: true};   // 화면 밖 대기 자리
 }
-function turnWall(n){
-  if (n < 0 || n >= wPages || n === wp) return;
-  wp = n; pick = null; work.hidden = true;
-  wall.classList.remove("has-pick","is-open","is-settled"); buildWall(); applyLangWall(); unfold();
+function placeWall(){
+  const vw = innerWidth, k = vw < 760 ? 1.9 : 1, N = REPORTS.length;
+  const ORDER = [5,6,4,7,3,8,2,9,1,10,0];
+  [...wall.children].forEach((b, i) => {
+    let s, rel;
+    if (ring){ rel = ((i - off) % N + N) % N; if (rel > N / 2) rel -= N; s = slotFor(rel); }
+    else { s = {...SLOTS[ORDER[i]], off: false}; rel = ORDER[i] - VIS; }
+    b.classList.toggle("is-off", s.off);
+    b.tabIndex = s.off ? -1 : 0;
+    b.style.zIndex = String(Math.round(Math.abs(s.x) * 100));
+    b.style.setProperty("--x", `${s.x*vw*k*1.1}px`); b.style.setProperty("--w", `${s.h/1.414*vw*k}px`);
+    b.style.setProperty("--h", `${s.h*vw*k}px`); b.style.setProperty("--ry", `${s.ry}deg`);
+    b.style.setProperty("--d", `${reduce ? 0 : Math.min(Math.abs(rel), 6) * 90}ms`);
+  });
+  const nav = $("#wall-nav"); if (nav) nav.hidden = !ring;
+}
+function spin(step){
+  if (!ring || !step) return;
+  off = ((off + step) % REPORTS.length + REPORTS.length) % REPORTS.length;
+  placeWall();
 }
 function applyLangWall(){ [...wall.children].forEach((el, i) => { el.querySelector(".cv__title").textContent = REPORTS[i][lang]; el.querySelector(".cv__tag").textContent = tagOf(REPORTS[i]); }); }
 function buildWall(){
-  const vw = innerWidth, k = vw < 760 ? 1.9 : 1;     // 좁은 화면에서는 표지를 키우고 바깥은 화면 밖으로
   wall.innerHTML = "";
-  const ORDER = [5,6,4,7,3,8,2,9,1,10,0];
   REPORTS = ALL.filter(r => (fCat==="all"||r.category===fCat) && (fOrg==="all"||r.org.includes(fOrg)) &&
       (!fQ || (r.ko+" "+r.en+" "+r.org).toLowerCase().includes(fQ.toLowerCase())))
     .sort((a,b) => (b.real?1:0)-(a.real?1:0) || b.published.localeCompare(a.published));
-  wPages = Math.max(1, Math.ceil(REPORTS.length / PER)); wp = Math.min(wp, wPages - 1);
-  REPORTS = REPORTS.slice(wp * PER, wp * PER + PER);
-  drawWallNav();
+  ring = REPORTS.length > SLOTS.length;
+  if (!ring) REPORTS = REPORTS.slice(0, SLOTS.length);
+  off = Math.min(off, Math.max(0, REPORTS.length - 1));
   $("#shelf-empty").hidden = REPORTS.length > 0;
   REPORTS.forEach((r, i) => {
-    const s = SLOTS[ORDER[i]], b = document.createElement("button");
+    const b = document.createElement("button");
     b.className = "slot";
-        b.style.zIndex = String(Math.round(Math.abs(s.x) * 100));
-    b.style.cssText += `;--x:${s.x*vw*k*1.1}px;--w:${s.h/1.414*vw*k}px;--h:${s.h*vw*k}px;--ry:${s.ry}deg;--c:${r.c};--d:${reduce?0:i*45}ms`;
+    b.style.setProperty("--c", r.c);
     b.setAttribute("aria-pressed", String(i === pick));
     b.innerHTML = `${ART[r.art]}<span class="cv"><span class="cv__org">${r.org}</span><span class="cv__title">${r[lang]}</span><span class="cv__year">${r.year}</span></span><span class="cv__tag">${tagOf(r)}</span>`;
     b.setAttribute("aria-label", `${r[lang]} ${r.year}`);
     b.addEventListener("click", () => choose(i));
     wall.appendChild(b);
   });
+  placeWall();
 }
 function unfold(){
   if (reduce){ wall.classList.add("is-open","is-settled"); return; }
@@ -905,7 +915,7 @@ function drawFilters(){
   fQIn.placeholder = t("search");
   document.querySelectorAll("[data-tp]").forEach(el => { const v = t(el.dataset.tp); if (el.tagName === "INPUT") el.placeholder = v; else { el.setAttribute("aria-label", v); el.title = v; } });
 }
-function refilter(){ wp = 0; pick = null; work.hidden = true; wall.classList.remove("has-pick","is-open","is-settled"); buildWall(); unfold(); }
+function refilter(){ off = 0; pick = null; work.hidden = true; wall.classList.remove("has-pick","is-open","is-settled"); buildWall(); unfold(); }
 chips.addEventListener("click", e => { const b = e.target.closest("[data-cat]"); if (!b) return; fCat = b.dataset.cat; drawFilters(); refilter(); });
 fOrgSel.addEventListener("change", () => { fOrg = fOrgSel.value; refilter(); });
 let qT; fQIn.addEventListener("input", () => { clearTimeout(qT); qT = setTimeout(() => { fQ = fQIn.value.trim(); refilter(); }, 250); });
@@ -1007,19 +1017,25 @@ navLinks.forEach(a => a.addEventListener("click", e => {
 addEventListener("hashchange", route);
 route();
 
-$("#wall-prev").addEventListener("click", () => turnWall(wp - 1));
-$("#wall-next").addEventListener("click", () => turnWall(wp + 1));
-$("#wall-dots").addEventListener("click", e => { const d = e.target.closest("[data-wp]"); if (d) turnWall(Number(d.dataset.wp)); });
-let wheelLock = 0;   // 트랙패드 · 마우스로 옆으로 밀면 넘긴다
+let holdT;   // 화살표: 한 번 누르면 한 칸, 누르고 있으면 쭈루룩
+function holdSpin(btn, step){
+  const stop = () => clearInterval(holdT);
+  btn.addEventListener("pointerdown", e => { e.preventDefault(); spin(step); stop(); holdT = setInterval(() => spin(step), 230); });
+  ["pointerup","pointerleave","pointercancel","blur"].forEach(ev => btn.addEventListener(ev, stop));
+  btn.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " "){ e.preventDefault(); spin(step); } });
+}
+holdSpin($("#wall-prev"), -1); holdSpin($("#wall-next"), 1);
+let wheelAcc = 0;   // 트랙패드 · 마우스로 옆으로 밀면 민 만큼 돈다
 document.querySelector(".hero").addEventListener("wheel", e => {
-  if (wPages < 2 || Math.abs(e.deltaX) < Math.abs(e.deltaY) * 1.2 || Math.abs(e.deltaX) < 25) return;
-  e.preventDefault(); const now = Date.now(); if (now - wheelLock < 900) return; wheelLock = now;
-  turnWall(wp + (e.deltaX > 0 ? 1 : -1));
+  if (!ring || Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
+  e.preventDefault(); wheelAcc += e.deltaX;
+  while (Math.abs(wheelAcc) >= 70){ spin(Math.sign(wheelAcc)); wheelAcc -= Math.sign(wheelAcc) * 70; }
 }, {passive: false});
-let tx = null;   // 휴대폰: 손가락으로 옆으로 밀기
+let tx = null;   // 휴대폰: 손가락으로 밀면 민 만큼
 wall.addEventListener("touchstart", e => { tx = e.touches[0].clientX; }, {passive: true});
-wall.addEventListener("touchend", e => { if (tx === null) return; const dx = e.changedTouches[0].clientX - tx; tx = null; if (Math.abs(dx) > 50) turnWall(wp + (dx < 0 ? 1 : -1)); });
-addEventListener("keydown", e => { if (!document.querySelector("main").hidden && !/INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName) && scrollY < innerHeight * .6){ if (e.key === "ArrowRight") turnWall(wp + 1); if (e.key === "ArrowLeft") turnWall(wp - 1); } });
+wall.addEventListener("touchmove", e => { if (tx === null || !ring) return; const dx = e.touches[0].clientX - tx; if (Math.abs(dx) >= 55){ spin(dx < 0 ? 1 : -1); tx = e.touches[0].clientX; } }, {passive: true});
+wall.addEventListener("touchend", () => { tx = null; });
+addEventListener("keydown", e => { if (ring && !document.querySelector("main").hidden && !/INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName) && scrollY < innerHeight * .6){ if (e.key === "ArrowRight") spin(1); if (e.key === "ArrowLeft") spin(-1); } });
 
 buildWall(); applyLang();
 setTimeout(unfold, 250);
