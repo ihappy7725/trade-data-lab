@@ -36,7 +36,11 @@ async function linkOpens(u) {
   const ctl = new AbortController(); const tm = setTimeout(() => ctl.abort(), 7000);
   try {
     const r = await fetch(u, { method: "GET", redirect: "follow", signal: ctl.signal, headers: { "User-Agent": "Mozilla/5.0 (TradeDigest link check)", Range: "bytes=0-1023" } });
-    return r.status < 400 || [401, 403, 429].includes(r.status);
+    if ([401, 403, 429].includes(r.status)) return true;
+    if (r.status >= 400) return false;
+    if (/(^|[\/_.-])(404|not[-_]?found|error)([\/_.-]|$)/i.test(new URL(r.url).pathname)) return false;   // 오류 페이지로 넘긴 경우
+    const head = (await r.text()).slice(0, 4000);
+    return !/<title>[^<]*(404|not found|page not found|찾을 수 없)[^<]*<\/title>/i.test(head);
   } catch { return false; } finally { clearTimeout(tm); }
 }
 
