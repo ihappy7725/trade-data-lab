@@ -217,7 +217,6 @@ body.is-gl{background:var(--night);background-image:radial-gradient(rgba(243,239
 .shelf-tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:center}
 .shelf-tools select,.shelf-tools input{font:inherit;font-size:13.5px;height:34px;border-radius:8px;border:1px solid rgba(243,239,229,.22);background:rgba(11,26,20,.55);color:var(--slab-ink);padding:0 10px}
 .shelf-tools input{width:min(260px,60vw)} .shelf-tools input::placeholder{color:rgba(243,239,229,.5)}
-#shelf-count{font-size:12.5px;color:rgba(243,239,229,.6)}
 #shelf-empty{margin:4px 0 0;font-size:14px;color:rgba(243,239,229,.8)}
 .pending{background:var(--surface);border-radius:12px;padding:22px;display:grid;gap:12px;justify-items:start}
 .pending p{margin:0;color:var(--ink-2)}
@@ -313,7 +312,6 @@ body.is-gl{background:var(--night);background-image:radial-gradient(rgba(243,239
     <nav class="nav">
       <a href="#" data-t="nav.shelf"></a>
       <a href="#tracker" data-t="nav.tracker"></a>
-      <a href="#add" data-t="nav.add"></a>
       <a href="#library" data-t="nav.library"></a>
       <a href="#glossary" data-t="nav.glossary"></a>
     </nav>
@@ -331,7 +329,6 @@ body.is-gl{background:var(--night);background-image:radial-gradient(rgba(243,239
       <div class="shelf-tools">
         <select id="f-org" aria-label="Institution"></select>
         <input id="f-q" type="search" data-tp="search">
-        <span id="shelf-count"></span>
       </div>
       <p id="shelf-empty" hidden data-t="empty"></p>
     </div>
@@ -355,25 +352,6 @@ body.is-gl{background:var(--night);background-image:radial-gradient(rgba(243,239
     </div>
   </section>
 
-
-  <section class="up" id="add">
-    <h2 data-t="ad.title"></h2>
-    <p class="rq-lede" data-t="ad.lede"></p>
-    <form class="rq-form" id="ad-form" novalidate>
-      <label><span data-t="ad.f.title"></span><input name="title" maxlength="200" required></label>
-      <div class="rq-2">
-        <label><span data-t="ad.f.org"></span><select name="org"><option>WTO</option><option>IMF</option><option>OECD</option><option>World Bank</option><option>UNCTAD</option><option>KIEP</option><option>KITA</option><option>KOTRA</option><option value="기타" data-t="rq.etc"></option></select></label>
-        <label><span data-t="ad.f.cat"></span><select name="category" id="ad-cat"></select></label>
-      </div>
-      <div class="rq-2">
-        <label><span data-t="ad.f.pub"></span><input name="published" placeholder="2026-10" maxlength="10" required></label>
-        <label><span data-t="ad.f.url"></span><input name="url" type="url" maxlength="500" placeholder="https://" required></label>
-      </div>
-      <button class="btn btn--primary" type="submit" id="ad-send" data-t="ad.send"></button>
-      <p class="rq-msg" id="ad-msg" role="status"></p>
-      <small class="rq-note" data-t="ad.note"></small>
-    </form>
-  </section>
 
 
 </main>
@@ -523,7 +501,6 @@ function buildWall(){
   REPORTS = ALL.filter(r => (fCat==="all"||r.category===fCat) && (fOrg==="all"||r.org.includes(fOrg)) &&
       (!fQ || (r.ko+" "+r.en+" "+r.org).toLowerCase().includes(fQ.toLowerCase())))
     .sort((a,b) => (b.real?1:0)-(a.real?1:0) || b.published.localeCompare(a.published)).slice(0, 11);
-  $("#shelf-count").textContent = t("count", REPORTS.length, ALL.length);
   $("#shelf-empty").hidden = REPORTS.length > 0;
   REPORTS.forEach((r, i) => {
     const s = SLOTS[ORDER[i]], b = document.createElement("button");
@@ -801,7 +778,7 @@ const fieldMsg = j => (j.fields||[]).map(f => T[lang].fld[f] || f).join(", ");
 let KEY = null; try{ KEY = localStorage.getItem("td-key"); if (!KEY){ KEY = crypto.randomUUID(); localStorage.setItem("td-key", KEY); } }catch(e){ KEY = crypto.randomUUID(); }
 let LIB = null, libFailed = false;
 const libBtn = r => `<button class="btn btn--white" data-lib>${LIB && LIB.some(x => x.url === r.url) ? t("lb.added") : t("lb.add")}</button>`;
-async function loadShelf(){ try{ const r = await fetch("/api/shelf"); const j = await r.json(); if (j.ok){ addShelf(j.reports); buildWall(); wall.classList.add("is-open","is-settled"); $("#shelf-count").textContent = t("count", REPORTS.length, ALL.length); drawFilters(); } }catch(e){} }
+async function loadShelf(){ try{ const r = await fetch("/api/shelf"); const j = await r.json(); if (j.ok){ addShelf(j.reports); buildWall(); wall.classList.add("is-open","is-settled"); drawFilters(); } }catch(e){} }
 async function loadLib(){ try{ const r = await fetch("/api/library?key=" + KEY); const j = await r.json(); if (!j.ok) throw 0; LIB = j.items; libFailed = false; }catch(e){ libFailed = true; } drawLib(); renderWork(); }
 function drawLib(){
   const box = $("#lib-list"); if ($("#my-n")) $("#my-n").textContent = LIB && LIB.length ? LIB.length : "";
@@ -842,16 +819,6 @@ function guard(form, btn, label, fn){ let busy = false;           // 빠르게 �
   form.addEventListener("submit", async e => { e.preventDefault(); if (busy) return; busy = true; btn.disabled = true; btn.textContent = t("sb.sending");
     await fn(); busy = false; btn.disabled = false; btn.textContent = t(label); }); }
 guard($("#lb-form"), $("#lb-send"), "lb.send", async () => { const f = $("#lb-form"); const ok = await libAdd(Object.fromEntries(new FormData(f)), $("#lb-msg")); if (ok) f.reset(); });
-guard($("#ad-form"), $("#ad-send"), "ad.send", async () => {
-  const f = $("#ad-form"), m = $("#ad-msg"); m.className = "rq-msg"; m.textContent = "";
-  try{ const r = await post("/api/shelf", Object.fromEntries(new FormData(f))); const j = await r.json().catch(() => ({}));
-    if (r.status === 201){ m.className = "rq-msg ok"; m.textContent = t("ad.ok"); f.reset(); await loadShelf(); }
-    else if (r.status === 409){ m.className = "rq-msg err"; m.textContent = t("ad.dup"); }
-    else if (r.status === 400){ m.className = "rq-msg err"; m.textContent = t("sb.bad") + fieldMsg(j); }
-    else throw 0;
-  }catch(e){ m.className = "rq-msg err"; m.textContent = t("sb.fail"); }
-});
-function drawAddCats(){ $("#ad-cat").innerHTML = CAT.categories.map(c => `<option value="${c.id}">${c[lang]}</option>`).join(""); }
 loadShelf(); loadLib();
 
 /* ---------- 서가 필터 ---------- */
@@ -928,7 +895,7 @@ function applyLang(){
   document.querySelectorAll("[data-t]").forEach(el => el.textContent = t(el.dataset.t));
   $("#lang").textContent = t("lang");
   [...wall.children].forEach((el, i) => { el.querySelector(".cv__title").textContent = REPORTS[i][lang]; el.querySelector(".cv__tag").textContent = tagOf(REPORTS[i]); });
-  drawTracker(); drawFilters(); drawAddCats(); drawLib(); drawGlossary(); $("#shelf-count").textContent = t("count", REPORTS.length, ALL.length);
+  drawTracker(); drawFilters(); drawLib(); drawGlossary();
   renderWork();
 }
 $("#lang").addEventListener("click", () => { lang = lang === "ko" ? "en" : "ko"; try{ localStorage.setItem("td-lang", lang); }catch(e){} applyLang(); });
