@@ -145,8 +145,10 @@ body.is-gl{background:var(--night);background-image:radial-gradient(rgba(243,239
   box-shadow:0 18px 40px -18px rgba(0,0,0,.6)}
 .wall.is-open .slot{opacity:1;transform:translate(-50%,-50%) translateX(var(--x)) perspective(900px) rotateY(var(--ry)) scale(1);
   transition:transform 1500ms var(--ease-out) var(--d),opacity 500ms var(--ease-out) var(--d),filter 300ms,box-shadow 300ms}
-.wall.is-open.is-settled .slot{transition:transform 560ms var(--ease-in-out),width 560ms var(--ease-in-out),height 560ms var(--ease-in-out),opacity 400ms,filter 300ms,box-shadow 300ms}
-.wall.is-open .slot.is-off{opacity:0;pointer-events:none}
+.wall.is-open.is-settled .slot{--spin:900ms cubic-bezier(.22,.61,.36,1);transition:transform var(--spin),width var(--spin),height var(--spin),filter 300ms,box-shadow 300ms}
+.wall.is-open.is-settled .slot .cv__title,.wall.is-open.is-settled .slot .cv__year{transition:font-size 900ms cubic-bezier(.22,.61,.36,1)}
+.wall.is-open .slot.is-off{pointer-events:none}
+.wall .slot.no-tr,.wall .slot.no-tr .cv__title,.wall .slot.no-tr .cv__year{transition:none!important}
 .wall.is-open .slot:hover{transform:translate(-50%,-50%) translateX(var(--x)) perspective(900px) rotateY(var(--ry)) scale(1.04)}
 .wall.has-pick .slot:not([aria-pressed="true"]){filter:saturate(.5) brightness(.8)}
 .slot[aria-pressed="true"]{box-shadow:0 0 0 3px var(--white),0 24px 48px -20px rgba(0,0,0,.6)}
@@ -535,7 +537,7 @@ const VIS = 5;               // 가운데 기준 좌우 5칸씩 = 11칸
 function slotFor(rel){
   if (Math.abs(rel) <= VIS) return {...SLOTS[rel + VIS], off: false};
   const e = SLOTS[rel < 0 ? 0 : SLOTS.length - 1], more = Math.abs(rel) - VIS;
-  return {x: e.x + Math.sign(rel) * .14 * Math.min(more, 2), h: e.h, ry: e.ry, off: true};   // 화면 밖 대기 자리
+  return {x: e.x + Math.sign(rel) * .3 * Math.min(more, 2), h: e.h, ry: e.ry, off: true};   // 화면 밖 대기 자리
 }
 function placeWall(){
   const vw = innerWidth, k = vw < 760 ? 1.9 : 1, N = REPORTS.length;
@@ -544,12 +546,17 @@ function placeWall(){
     let s, rel;
     if (ring){ rel = ((i - off) % N + N) % N; if (rel > N / 2) rel -= N; s = slotFor(rel); }
     else { s = {...SLOTS[ORDER[i]], off: false}; rel = ORDER[i] - VIS; }
+    const prev = b.dataset.rel === undefined ? rel : Number(b.dataset.rel);
+    const jump = ring && Math.abs(rel - prev) > 1;   // 끝에서 끝으로 도는 표지
+    if (jump) b.classList.add("no-tr");
+    b.dataset.rel = rel;
     b.classList.toggle("is-off", s.off);
     b.tabIndex = s.off ? -1 : 0;
     b.style.zIndex = String(Math.round(Math.abs(s.x) * 100));
     b.style.setProperty("--x", `${s.x*vw*k*1.1}px`); b.style.setProperty("--w", `${s.h/1.414*vw*k}px`);
     b.style.setProperty("--h", `${s.h*vw*k}px`); b.style.setProperty("--ry", `${s.ry}deg`);
     b.style.setProperty("--d", `${reduce ? 0 : Math.min(Math.abs(rel), 6) * 90}ms`);
+    if (jump){ void b.offsetWidth; requestAnimationFrame(() => b.classList.remove("no-tr")); }
   });
   const nav = $("#wall-nav"); if (nav) nav.hidden = !ring;
 }
@@ -1020,7 +1027,7 @@ route();
 let holdT;   // 화살표: 한 번 누르면 한 칸, 누르고 있으면 쭈루룩
 function holdSpin(btn, step){
   const stop = () => clearInterval(holdT);
-  btn.addEventListener("pointerdown", e => { e.preventDefault(); spin(step); stop(); holdT = setInterval(() => spin(step), 230); });
+  btn.addEventListener("pointerdown", e => { e.preventDefault(); spin(step); stop(); holdT = setInterval(() => spin(step), 420); });
   ["pointerup","pointerleave","pointercancel","blur"].forEach(ev => btn.addEventListener(ev, stop));
   btn.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " "){ e.preventDefault(); spin(step); } });
 }
