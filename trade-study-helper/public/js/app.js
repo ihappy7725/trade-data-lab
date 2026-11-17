@@ -6,12 +6,19 @@
 
 // ---------- 공통 ----------
 const 기록키 = "muma-history-v3";
-const 나라_위치 = {
-  // 학습용 대략 좌표 [경도, 위도] (위치 표시용, 정확한 국경 아님)
-  "베트남": [106, 16], "태국": [101, 15], "스웨덴": [18, 62], "한국": [127.8, 36.5],
-  "미국": [-98, 39], "중국": [104, 35], "일본": [138, 36], "독일": [10, 51],
-  "싱가포르": [103.8, 1.35], "인도": [78, 21], "브라질": [-52, -10], "영국": [-2, 54],
+// 답에 나온 한국어 나라 이름 -> 지도 데이터(world-atlas)의 영문 이름
+const 나라_영문 = {
+  "한국": "South Korea", "일본": "Japan", "중국": "China", "대만": "Taiwan",
+  "베트남": "Vietnam", "태국": "Thailand", "싱가포르": "Singapore", "말레이시아": "Malaysia",
+  "인도네시아": "Indonesia", "필리핀": "Philippines", "인도": "India", "방글라데시": "Bangladesh",
+  "파키스탄": "Pakistan", "터키": "Turkey", "사우디": "Saudi Arabia", "아랍에미리트": "United Arab Emirates",
+  "이집트": "Egypt", "러시아": "Russia", "독일": "Germany", "프랑스": "France", "영국": "United Kingdom",
+  "이탈리아": "Italy", "스페인": "Spain", "네덜란드": "Netherlands", "스웨덴": "Sweden", "폴란드": "Poland",
+  "그리스": "Greece", "미국": "United States of America", "캐나다": "Canada", "멕시코": "Mexico",
+  "브라질": "Brazil", "칠레": "Chile", "아르헨티나": "Argentina", "콜롬비아": "Colombia",
+  "호주": "Australia", "뉴질랜드": "New Zealand", "남아공": "South Africa", "나이지리아": "Nigeria", "케냐": "Kenya",
 };
+let 나라_영역 = {};   // 영문 이름 -> 지도 모양 (준비되면 채워짐)
 const 라디안 = Math.PI / 180;
 const 이즈 = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 const 섞기 = (a, b, t) => a + (b - a) * t;
@@ -37,6 +44,10 @@ let 준비됨 = false;
 
 async function 지도_준비하기() {
   const 세계 = await (await fetch("https://cdn.jsdelivr.net/npm/world-atlas@2.0.2/land-50m.json")).json();
+  const 나라_파일 = await (await fetch("https://cdn.jsdelivr.net/npm/world-atlas@2.0.2/countries-50m.json")).json();
+  for (const 모양 of topojson.feature(나라_파일, 나라_파일.objects.countries).features) {
+    나라_영역[모양.properties.name] = 모양;
+  }
   const 육지 = topojson.feature(세계, 세계.objects.land);
   const 간격 = 1.2;
 
@@ -138,32 +149,28 @@ function 지구_그리기(시각) {
     const 평면_투명 = 0.28;
     const 지구_투명 = 앞 ? 0.18 + 0.82 * Math.pow(b * 0.85 + 0.15, 1.1) : 0.035;
     const 투명 = 섞기(평면_투명, 지구_투명, e);
-    const 크기 = 섞기(1.25, 0.8 + 1.2 * Math.max(g.z, 0) + 0.4, e);
+    const 크기 = 섞기(1.25, 0.8 + 1.2 * Math.max(g.z, 0) + 0.4, e) * (p.빛 > 0.5 ? 1.25 : 1);
 
-    if (p.빛 > 0.01 && (e < 0.5 || 앞)) {
-      const 맥박 = 0.75 + 0.25 * Math.sin(시각 / 420 + p.lon * 0.07);
-      ctx.fillStyle = `rgba(31, 111, 107, ${0.22 * 맥박 * (앞 ? 1 : 0.3)})`;
-      ctx.beginPath();
-      ctx.arc(x, y, 크기 * 3.2, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.fillStyle = `rgba(31, 111, 107, ${Math.min(1, 0.7 + 0.3 * 맥박)})`;
+    if (p.빛 > 0.5 && (e < 0.5 || 앞)) {
+      // 답에 나온 나라의 국토 점: 청록색으로 변함
+      ctx.fillStyle = `rgba(31, 111, 107, ${앞 ? 0.95 : 0.35})`;
     } else {
       const 색 = Math.round(섞기(200, 23, 앞 ? b : 0.2));
       ctx.fillStyle = `rgba(${색}, ${색}, ${Math.round(색 * 1.02)}, ${투명})`;
     }
     ctx.fillRect(x - 크기 / 2, y - 크기 / 2, 크기, 크기);
   }
+
 }
 
 function 빛_정하기(나라_이름들) {
-  const 나라들 = 나라_이름들.map((이름) => 나라_위치[이름]).filter(Boolean);
+  // 답에 나온 나라의 실제 국토 모양 안에 있는 점만 빛나게 함
+  const 영역들 = 나라_이름들
+    .map((이름) => 나라_영문[이름])
+    .filter((영문) => 나라_영역[영문])
+    .map((영문) => 나라_영역[영문]);
   for (const p of 육지점) {
-    let 최고 = 0;
-    for (const [경, 위] of 나라들) {
-      const 거리 = Math.hypot(p.lon - 경, p.lat - 위);
-      if (거리 < 7) 최고 = Math.max(최고, 1 - 거리 / 7);
-    }
-    p.빛 = 최고;
+    p.빛 = 영역들.some((모양) => d3.geoContains(모양, [p.lon, p.lat])) ? 1 : 0;
   }
 }
 
@@ -304,7 +311,7 @@ function 과정_글(결과) {
 }
 
 function 나라_찾기(글) {
-  return Object.keys(나라_위치).filter((이름) => 글.includes(이름));
+  return Object.keys(나라_영문).filter((이름) => 글.includes(이름));
 }
 
 function 한_번_보여주기(항목) {
