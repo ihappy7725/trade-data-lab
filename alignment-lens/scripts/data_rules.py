@@ -1,4 +1,4 @@
-"""Evidence-based identity and descriptive-comparison rules for Alignment Lens.
+"""Evidence-based identity and descriptive-comparison rules for PARALLEL.
 
 No vote estimates are changed or interpolated here. Aggregates retain their raw
 identity so their flows can remain in other countries' trade denominators.

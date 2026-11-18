@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Stage 1: inspect official sources; never calculate or publish website data.
 
-Run from alignment-lens: python3 scripts/inspect_sources.py [--fetch]
+Run from the service folder: python3 scripts/inspect_sources.py [--fetch]
 All downloads and reports stay inside this service. No third-party packages.
 """
 
@@ -247,7 +247,7 @@ def audit():
 
 
 def markdown(r):
-    lines = ["# Alignment Lens — 자료 확인", "", f"확인 시각: {r['checked_at']}", "",
+    lines = ["# PARALLEL — 자료 확인", "", f"확인 시각: {r['checked_at']}", "",
         "## 확정된 원자료", "", f"- UN: Dataverse 39.0 ({r['dataverse_released_at']}); 사용자 선택: `{SELECTED}`.",
         f"- UN 원파일 {r['unga_rows']}행, 회기 {r['unga_sessions'][0]}–{r['unga_sessions'][1]}. `year` 열 없음.",
         "- BACI: HS92 V202601, 공식 ZIP의 연도별 파일명 기준 1995–2024.",
@@ -284,7 +284,7 @@ def markdown(r):
         "데이터 빌드 스크립트와 쌍 화면은 다음 단계. 수치 대조 검수는 아직 수행하지 않음.", "",
         "## 공식 출처", "", f"- [Harvard Dataverse]({DOI})", f"- [CEPII BACI]({CEPII})", f"- [BACI 문서]({DOC})",
         "- [제78차 회기 일정](https://public.e-delegate.un.org/reports/ga78_schedule.html)", "",
-        "## 작업 범위", "", "변경은 alignment-lens/ 내부로 한정. 커밋·브랜치 생성·push·배포 없음.",
+        "## 작업 범위", "", "변경은 서비스 폴더 내부로 한정. 커밋·브랜치 생성·push·배포 없음.",
         "작업 전 기존 변경: trade-digest/api/shelf.js, trade-digest/db/schema.sql. 수정하지 않음.", ""]
     text = "\n".join(lines)
     meta_path = DATA / "meta.json"

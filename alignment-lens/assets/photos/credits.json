@@ -11,6 +11,7 @@
     "license_url": "https://creativecommons.org/licenses/by-sa/3.0/",
     "modifications": [
       "Responsive CSS crop",
+      "CSS rotation to a horizontal composition",
       "Dark overlay for text contrast"
     ],
     "purpose": "Illustrative logistics photograph, not the selected pair or observation year"
@@ -30,5 +31,35 @@
       "Dark overlay for text contrast"
     ],
     "purpose": "Illustrative logistics photograph, not the selected pair or observation year"
+  },
+  {
+    "id": "assembly",
+    "filename": "assembly.jpg",
+    "title": "United Nations General Assembly Hall (3)",
+    "author": "Basil D Soufi",
+    "date": "2011-04-23",
+    "source": "https://commons.wikimedia.org/wiki/File:United_Nations_General_Assembly_Hall_(3).jpg",
+    "license": "CC BY-SA 3.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+    "modifications": [
+      "Responsive CSS crop",
+      "Dark overlay"
+    ],
+    "purpose": "Illustrative institutional photograph, not a data observation"
+  },
+  {
+    "id": "earth",
+    "filename": "earth.jpg",
+    "title": "Earth Eastern Hemisphere",
+    "author": "NASA",
+    "date": "2002-02-08",
+    "source": "https://commons.wikimedia.org/wiki/File:Earth_Eastern_Hemisphere.jpg",
+    "license": "Public domain (NASA)",
+    "license_url": "https://commons.wikimedia.org/wiki/File:Earth_Eastern_Hemisphere.jpg#Licensing",
+    "modifications": [
+      "Responsive CSS crop",
+      "Colour and brightness adjustment in CSS"
+    ],
+    "purpose": "Illustrative Earth image, not plotted data or geographical positions of the country cards"
   }
 ]

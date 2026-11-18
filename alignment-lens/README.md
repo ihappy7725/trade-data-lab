@@ -1,4 +1,6 @@
-# Alignment Lens — 외교 거리 × 교역 비중
+# PARALLEL — 외교 거리 × 교역 비중
+
+현재 폴더 이름은 `alignment-lens`이며 요청한 `parallel` 이름 변경은 OS 권한 오류로 미완료다. 배경 영상은 생성하지 않았고 제작 프롬프트와 연결 방법을 제공한다.
 
 두 나라를 고르면 유엔총회 투표로 잰 외교 거리와 교역 비중이 1995년부터 어떻게 함께 움직였는지 나란히 보여 주는 정적 서비스. 원인은 단정하지 않는다. 쌍 비교, 한 나라 탐색, 방법·출처, 한국어·영어, 밝은·어두운 화면을 제공한다. 로컬 구현과 검증을 마쳤으며 공개 배포는 아직 하지 않았다.
 
@@ -84,3 +86,17 @@ cd alignment-lens/docs && "/Applications/Google Chrome.app/Contents/MacOS/Google
 ## 연결 서비스
 
 사용자가 2026-11-17 확인한 Tradeweave 주소는 `https://trade-data-lab.vercel.app/`다. 상세 화면에서 `#see/{ISO3}/export`로 연결하며 해당 서비스의 2024년 기준을 명시한다. 국가 탐색 연도를 외부 서비스에 지원되지 않는 연도로 전달하지 않는다.
+
+## PARALLEL 이름과 홈페이지
+
+2026-11-17 사용자가 PARALLEL을 선택했다. 첫 화면의 긴 소개·예시 쌍·출처 배지는 제거했다. 출처와 라이선스는 출처 페이지, 관측값의 판과 연도는 그래프에 둔다. 사진 캐러셀·지구 국가 선택·넓은 탐색 패널을 추가했으며 기업실적·채용·기업 미디어는 제외했다.
+
+배경 영상 프롬프트와 연결 방법은 `docs/hero-video-prompt.md`를 따른다. 영상은 아직 생성되지 않았다. 유료 생성도 수행하지 않았다.
+
+요청한 최종 폴더명은 `parallel`이며 Vercel 전용 프로젝트의 Root Directory도 이름 변경 후 `parallel`이어야 한다. 현재 환경에서 폴더 자체 rename은 Operation not permitted로 거부되어 실제 폴더는 아직 `alignment-lens`다. 위의 실행 명령은 현재 경로를 유지한다. 이름을 직접 바꾸려면 저장소 부모 폴더에서 다음을 실행한다. 대상 폴더가 이미 있으면 실행하지 않는다.
+
+```sh
+mv "/Users/j/Desktop/vscode 작업/trade-data-lab/alignment-lens" "/Users/j/Desktop/vscode 작업/trade-data-lab/parallel"
+```
+
+변경 후 실행·데이터 명령의 경로만 `parallel`로 바꾸면 된다. 스크립트는 자신의 파일 위치를 기준으로 동작한다. 원자료·가상환경·검증 결과도 폴더 안에 함께 이동한다. 저장소 루트 문서와 다른 서비스 설정은 수정하지 않았다.

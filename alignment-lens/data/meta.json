@@ -317,9 +317,13 @@
     "always_show_actual_windows": true
   },
   "design": {
-    "selection": "C",
-    "selected_on": "2026-11-17",
-    "motion_and_logistics_photos": true
+    "selection": "User-annotated globe-first comparison landing",
+    "selected_on": "2026-11-18",
+    "intro_ms": 1300,
+    "intro_fade_ms": 350,
+    "corporate_sections": false,
+    "ship_hero": false,
+    "services_remain_separate": true
   },
   "localization": {
     "names": "Intl.DisplayNames Korean labels from same-version BACI ISO2 codes; documented historical names and user-requested KOR/TWN display labels",
@@ -351,5 +355,18 @@
       "observed_reference_year": 2024
     }
   },
-  "ui_verified_on": "2026-11-17"
+  "ui_verified_on": "2026-11-17",
+  "service_name": "PARALLEL",
+  "requested_directory": "parallel",
+  "method_example": {
+    "year": 2023,
+    "session": 78,
+    "country_a": "KOR",
+    "country_b": "CHN",
+    "score_a": 0.9971089,
+    "score_b": -0.8006785,
+    "distance": 1.7977874,
+    "source_file": "IdealpointestimatesAll_Jun2024.csv",
+    "source_version": "39.0"
+  }
 }
