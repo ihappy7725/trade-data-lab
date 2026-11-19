@@ -19,7 +19,7 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600&family=Noto+Serif+KR:wght@600;700&display=swap"
     />
-    <link rel="stylesheet" href="assets/studio.css?v=4" />
+    <link rel="stylesheet" href="assets/studio.css?v=5" />
   </head>
   <body>
     <a class="skip-link" href="#main-content">본문으로 이동</a>
@@ -399,7 +399,8 @@
                   type="button"
                 >
                   지도 PNG</button
-                ><button
+                ><button class="btn btn-secondary" id="open-report" type="button">분석 보고서</button>
+                  <button
                   class="btn btn-secondary"
                   id="print-analysis"
                   type="button"
@@ -646,6 +647,7 @@
                   <p class="caption" id="comparison-source"></p>
                 </section>
                 <div class="trend-plot" id="trend-plot"></div>
+                <section id="number-explanation" class="explanation-card" aria-label="비중 변화 해석"></section>
                 <div class="panel summary-panel" id="analysis-summary">
                   <section
                     class="concentration"
@@ -731,7 +733,15 @@
                   두 연도 모두 교역 기록이 있는 상대국만 차이를 계산합니다.
                   신규·미기록은 별도로 표시합니다.
                 </p>
+                <div class="explore-controls">
+                  <label>상대국 검색<input id="change-query" type="search" placeholder="국가 이름 또는 코드" /></label>
+                  <label>변화 방향<select id="change-direction"><option value="all">전체</option><option value="up">증가</option><option value="down">감소</option><option value="same">변화 없음</option></select></label>
+                  <label>최소 절대 변화량 (%p)<input id="change-min" type="number" min="0" max="100" step="any" value="0" /></label>
+                  <label>비교연도<select id="change-year"></select></label>
+                </div>
+                <p id="change-count" class="caption" role="status"></p>
                 <div id="change-list" class="change-list"></div>
+                <div class="pagination"><button id="change-prev" class="btn btn-secondary" type="button">이전</button><span id="change-page" class="caption"></span><button id="change-next" class="btn btn-secondary" type="button">다음</button><button id="change-all" class="btn btn-text" type="button" aria-pressed="false">전체 펼치기</button></div>
                 <details class="method-details">
                   <summary>신규·미기록 상대국</summary>
                   <div id="change-missing"></div>
@@ -848,6 +858,17 @@
                   같은 색 구간을 사용합니다.
                 </p>
                 <div class="country-cards" id="country-cards"></div>
+                <section class="matrix-section" aria-labelledby="matrix-title">
+                  <h3 id="matrix-title">동일 상대국 비교</h3>
+                  <p class="caption">각 열은 보고국의 해당 연도·품목·방향 합계를 분모로 씁니다. 색은 모든 열에 같은 비중 구간을 적용합니다.</p>
+                  <div class="explore-controls">
+                    <label>상대국 검색<input id="matrix-query" type="search" placeholder="국가 이름 또는 코드" /></label>
+                    <label>정렬 기준<select id="matrix-sort"></select></label>
+                    <button id="matrix-csv" class="btn btn-secondary" type="button">상대국 비교 CSV</button>
+                  </div>
+                  <p id="matrix-count" class="caption" role="status"></p>
+                  <div id="matrix-table" class="table-scroll" role="region" aria-label="동일 상대국 비교표" tabindex="0"></div>
+                </section>
               </section>
             </div>
             <section
@@ -1064,9 +1085,16 @@
     </div>
     <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 
-    <script defer src="assets/app.js?v=4"></script>
+    <script defer src="assets/app.js?v=6"></script>
     <script defer src="assets/analysis.js?v=1"></script>
-    <script defer src="assets/studio.js?v=3"></script>
+    <script defer src="assets/studio.js?v=5"></script>
+    <dialog id="report-dialog" class="sheet-dialog" aria-labelledby="report-title">
+      <div class="dialog-heading"><h2 id="report-title">분석 보고서</h2><button type="button" class="icon-btn" data-close-dialog aria-label="보고서 닫기">×</button></div>
+      <label class="control-label">메모<textarea id="report-note" rows="4" maxlength="2000" placeholder="보고서에 남길 해석이나 질문을 적으세요."></textarea></label>
+      <p id="report-scope" class="caption"></p>
+      <p class="caption">지도, 연도별 수치, 구조 변화 전체 표, 동일 상대국 비교표, 출처를 하나의 HTML 파일에 담습니다. 저장한 파일을 브라우저에서 열어 인쇄하거나 PDF로 저장할 수 있습니다.</p>
+      <button id="download-report" type="button" class="btn btn-primary">보고서 HTML 저장</button>
+    </dialog>
     <dialog id="product-dialog" class="sheet-dialog">
       <div class="dialog-heading">
         <div>

@@ -1,4 +1,6 @@
-# Mirrorline — 무역 숫자 대조·근거 기록 (정식 이름 확정 전)
+# CrossCite (크로스사이트) — 무역 숫자 대조·근거 기록
+
+서로 다른 출처를 교차 대조(Cross-check)한 뒤 근거를 갖춰 인용(Cite)한다는 이름이다.
 
 사용자가 직접 자료를 고르고 비교 조건을 점검한 뒤, 출처가 붙은 근거 노트를 저장·다시 여는 정적 웹서비스다. 새 대조가 첫 화면이며 기존 미·중 사례는 예제로 보존했다. 현재 실제 폴더 이름은 alignment-lens다.
 
@@ -73,4 +75,8 @@ JSON은 재열기용, CSV·Markdown은 읽기·인용용이다. 노트 형식·�
 
 서비스 전용 Vercel Root Directory=alignment-lens에서 정적으로 실행한다. 원자료·스크립트·검증·이전 UNGA/BACI 대용량 파일은 .vercelignore로 배포에서 제외한다. 별도 Site 호스팅이나 다른 서비스의 프로젝트를 사용하지 않는다. 이번 작업에서 공개 배포·stage·commit·push·폴더 이름 변경은 하지 않았다.
 
-PARALLEL 원형은 parallel-archive.html 및 기존 자료, 문서에 보관한다. Mirrorline 사례의 이전 README는 docs/mirrorline-case-readme.md에 있다. 다른 서비스와 저장소 루트 파일은 수정하지 않는다.
+PARALLEL 원형은 parallel-archive.html 및 기존 자료, 문서에 보관한다. 이전 Mirrorline 사례의 README는 docs/mirrorline-case-readme.md에 있다. 다른 서비스와 저장소 루트 파일은 수정하지 않는다.
+
+## CrossCite 아이콘
+
+사용자 제공 원본: assets/brand/crosscite.svg (gemini-svg.svg와 동일). favicon.svg, favicon-32x32.png, favicon.ico를 제공하며 Apple touch 아이콘은 apple-touch-icon.png다. site.webmanifest의 앱 이름은 CrossCite, 앱 아이콘은 assets/brand/icon-192.png 및 icon-512.png다. 기존의 다른 이름으로 만든 노트도 계속 열 수 있다. 웹앱 manifest는 오프라인 기능을 보장한다는 뜻이 아니다.

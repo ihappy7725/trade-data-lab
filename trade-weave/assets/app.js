@@ -143,7 +143,16 @@
     return path + (query ? "?" + query : "");
   }
 
+  const tabForSection = {
+    partners: "partners",
+    comparison: "trends",
+    concentration: "trends",
+    sources: "trends",
+  };
+
   function resultRoute(iso, flow, section, partner, context) {
+    const destinationTab = tabForSection[section];
+    if (destinationTab) context = { ...(context || selection), tab: destinationTab };
     return scopedPath(
       "see/" + iso + "/" + flow + (section ? "/" + section : ""),
       partner,
@@ -154,7 +163,7 @@
   function setBusy(busy) {
     document
       .querySelectorAll(
-        '[data-search] input, [data-search] button[type="submit"], [data-year], [data-product], [data-rflow], [data-hflow], #compare-year, #comparison-csv, #save-analysis, #export-image, #countries-csv, #changes-csv, #peer-one, #peer-two',
+        '[data-search] input, [data-search] button[type="submit"], [data-year], [data-product], [data-rflow], [data-hflow], #compare-year, #comparison-csv, #save-analysis, #export-image, #countries-csv, #changes-csv, #peer-one, #peer-two, #change-year, #matrix-csv, #open-report',
       )
       .forEach(function (el) {
         el.disabled = busy;
@@ -1258,12 +1267,6 @@
 
   function focusResultSection() {
     if (!selection.section) return;
-    var tabForSection = {
-      partners: "partners",
-      comparison: "trends",
-      concentration: "trends",
-      sources: "trends",
-    };
     if (tabForSection[selection.section] && window.TWStudio) {
       selection.tab = tabForSection[selection.section];
       history.replaceState(
@@ -1400,6 +1403,12 @@
       )
         ? parameters.get("tab")
         : "trends";
+      // Recover links saved by earlier versions with a conflicting tab and anchor.
+      if (match && parameters.get("tab") === tab && tabForSection[match[3]] &&
+          tabForSection[match[3]] !== tab) {
+        match[3] = "";
+        name = "see/" + match[1] + "/" + match[2];
+      }
       var context = {
         year: year,
         product: product,
@@ -1957,6 +1966,14 @@
     concentration: concentration,
     name: nameOf,
     normalize: normalize,
+    matchesCountry: function (code, query) {
+      const term = normalize(query);
+      const exactCode = canonicalCode(term);
+      if (Object.hasOwn(CATALOG.countries, exactCode)) return code === exactCode;
+      const country = CATALOG.countries[code];
+      return [code, country?.ko, country?.en, ...(aliases[code] || [])]
+        .some(name => name && normalize(name).includes(term));
+    },
     canonical: canonicalCode,
     pct: fmtPct,
     usd: fmtUsd,
@@ -1971,19 +1988,17 @@
     csvQuote: csvQuote,
     say: say,
     setTab: function (tab, peers) {
+      const changedTab = tab !== selection.tab;
+      const manualTab = !peers;
+      if (manualTab) selection.section = "";
       selection.tab = tab;
       if (peers) selection.peers = peers;
-      history.replaceState(
-        null,
-        "",
-        "#" +
-          resultRoute(
-            selection.iso,
-            selection.flow,
-            selection.section,
-            selection.partner,
-          ),
+      const hash = "#" + resultRoute(
+        selection.iso, selection.flow, selection.section, selection.partner,
       );
+      if (hash === location.hash) return;
+      if (manualTab && changedTab) history.pushState(null, "", hash);
+      else history.replaceState(null, "", hash);
     },
     chooseProduct: function (product) {
       var context = Object.assign({}, selection, { product: product });

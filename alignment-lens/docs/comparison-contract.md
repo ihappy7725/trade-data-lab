@@ -1,6 +1,6 @@
 # 직접 대조 도구: 데이터 계약과 검사 규칙
 
-현재 이름 Mirrorline은 임시 유지한다. 기존 서비스 폴더 alignment-lens 안에서만 개발한다.
+정식 이름은 CrossCite(크로스사이트)다. 기존 서비스 폴더 alignment-lens 안에서만 개발한다.
 
 ## 첫 지원 범위
 

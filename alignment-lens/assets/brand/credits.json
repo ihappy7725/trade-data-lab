@@ -1,0 +1,8 @@
+{
+  "name": "CrossCite",
+  "origin": "User-provided SVG",
+  "original_filename": "gemini-svg.svg",
+  "source_sha256": "1812ac49fddc41b1fabffc9df21a865c88d2f2706fe9532fc825fa0e1e6d8d37",
+  "adaptations": "Original SVG preserved. White background and padding added for favicon and touch/app icons; artwork colors and paths unchanged.",
+  "license": "Not specified by the provider; no third-party license claim is made."
+}

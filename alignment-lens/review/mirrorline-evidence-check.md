@@ -1,4 +1,4 @@
-# Mirrorline — US–China trade deficit comparison
+# CrossCite — US–China trade deficit comparison
 
 2017 goods trade, United States→China: exporter 129,797,515,346 USD (FOB), importer 154,441,855,874 USD (CIF). Unadjusted difference (imports−exports): 24,644,340,528 USD. Source: UN Comtrade, HS 2017 / TOTAL, fixed snapshot 2026-11-19. Valuation is not harmonised; this does not establish the causes of the gap.
 https://comtradeapi.un.org/public/v1/preview/C/A/HS?period=2017&reporterCode=842&cmdCode=TOTAL&flowCode=X%2CM&partnerCode=156&partner2Code=0&customsCode=C00&motCode=0&maxRecords=500
