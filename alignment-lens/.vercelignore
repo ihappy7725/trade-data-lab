@@ -10,3 +10,14 @@ __pycache__/
 .git/
 .DS_Store
 PROMPT.md
+
+node_modules/
+parallel-archive.html
+assets/photos/
+data/country/
+data/meta.json
+data/countries.json
+data/code-fixes.json
+data/interpretations.json
+README.md
+DESIGN.md

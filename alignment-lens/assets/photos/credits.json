@@ -10,8 +10,7 @@
     "license": "CC BY-SA 3.0",
     "license_url": "https://creativecommons.org/licenses/by-sa/3.0/",
     "modifications": [
-      "Responsive CSS crop",
-      "CSS rotation to a horizontal composition",
+      "Responsive CSS crop in the feature menu",
       "Dark overlay for text contrast"
     ],
     "purpose": "Illustrative logistics photograph, not the selected pair or observation year"

@@ -256,7 +256,14 @@ def build(force=False):
         dump(DATA / "interpretations.json", {})
     now = datetime.now(ZoneInfo("Asia/Seoul")).isoformat(timespec="seconds")
     meta["generated_at"], meta["status"], meta["pending"] = now, "data_ready_pair_review", ["pair_screen_review"]
-    meta["design"] = dict(selection="C", selected_on="2026-11-17", motion_and_logistics_photos=True)
+    meta.setdefault("design", dict(selection="User-annotated globe-first comparison landing", selected_on="2026-11-18", ship_hero=False, services_remain_separate=True))
+    meta["service_name"] = "PARALLEL"
+    example_year = meta["period"]["vote_end"]
+    if ("KOR",example_year) in scores and ("CHN",example_year) in scores:
+        score_a, score_b = scores[("KOR",example_year)], scores[("CHN",example_year)]
+        meta["method_example"] = dict(year=example_year, country_a="KOR", country_b="CHN", score_a=float(score_a), score_b=float(score_b), distance=float(abs(score_a-score_b)), source_file=meta["sources"]["unga"]["filename"], source_version=meta["sources"]["unga"]["version"])
+    else:
+        meta.pop("method_example", None)
     meta["sources"]["baci"]["trade_downloaded_on"] = datetime.fromtimestamp(archive_path.stat().st_mtime,ZoneInfo("Asia/Seoul")).date().isoformat()
     meta["sources"]["baci"]["archive_sha256"] = hashlib.file_digest(archive_path.open("rb"),"sha256").hexdigest()
     meta["value_unit"] = "thousand USD"

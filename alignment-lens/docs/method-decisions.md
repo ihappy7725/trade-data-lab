@@ -96,3 +96,9 @@
 ## 동의 점수 보조 그래프
 
 원저자의 [DyadicAgreementScores.R](https://github.com/evoeten/United-Nations-General-Assembly-Votes-and-Ideal-Points/blob/master/DyadicAgreementScores.R)를 2026-11-17 확인했다. agree는 단순 동일 투표 비율이 아닌 `1 - abs(vote1-vote2)/2`의 회기별 평균이다. 결석·비회원 및 만장일치 표결을 제외한다. 원자료 agree를 0–1 눈금 그대로 표시하며 100을 곱해 동일 투표 백분율로 부르지 않는다.
+
+## 외교 거리 쉬운 설명 · 2026-11-18
+
+[Bailey, Strezhnev & Voeten (2017)](https://doi.org/10.1177/0022002715595700)의 추정된 단일 차원 투표 위치 간격이라는 점을 먼저 설명한다. 친밀도·동일표결 비율·양국 관계 전체의 계량치로 소개하지 않는다. 원저자는 이 축을 미국 주도 국제질서에 대한 입장과 연결해 해석한다. 추정 점수의 단위는 투표 횟수나 외교 관계의 물리 단위가 아니다.
+
+원 CSV의 session=78, iso3c=KOR/CHN 행을 직접 확인했다. KOR 0.9971089, CHN -0.8006785, 절대 차이 1.7977874. 화면에는 각각 1.00, -0.80, 약 1.80으로 반올림하고 기준연도 2023, Dataverse 39.0, Jun2024 파일을 표시한다. 실제 계산은 원 점수를 쓴다. 회기와 달력 연도의 연결은 개념 설명과 분리해 펼침 영역에 둔다.

@@ -1,0 +1,12 @@
+{
+  "checked_on": "2026-11-19",
+  "records": 38,
+  "directed_comparisons": 44,
+  "note_roundtrips": 44,
+  "decimal_precision": true,
+  "mismatch_and_missing_blocked": true,
+  "zero_preserved": true,
+  "untrusted_note_validation": true,
+  "imported_computed_values_ignored": true,
+  "status": "passed"
+}

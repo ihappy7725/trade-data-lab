@@ -1,102 +1,76 @@
-# PARALLEL — 외교 거리 × 교역 비중
+# Mirrorline — 무역 숫자 대조·근거 기록 (정식 이름 확정 전)
 
-현재 폴더 이름은 `alignment-lens`이며 요청한 `parallel` 이름 변경은 OS 권한 오류로 미완료다. 배경 영상은 생성하지 않았고 제작 프롬프트와 연결 방법을 제공한다.
+사용자가 직접 자료를 고르고 비교 조건을 점검한 뒤, 출처가 붙은 근거 노트를 저장·다시 여는 정적 웹서비스다. 새 대조가 첫 화면이며 기존 미·중 사례는 예제로 보존했다. 현재 실제 폴더 이름은 alignment-lens다.
 
-두 나라를 고르면 유엔총회 투표로 잰 외교 거리와 교역 비중이 1995년부터 어떻게 함께 움직였는지 나란히 보여 주는 정적 서비스. 원인은 단정하지 않는다. 쌍 비교, 한 나라 탐색, 방법·출처, 한국어·영어, 밝은·어두운 화면을 제공한다. 로컬 구현과 검증을 마쳤으며 공개 배포는 아직 하지 않았다.
+## 현재 제공
 
-## 독립 실행
+- 한국·중국·미국, 2017·2018·2023년의 국가 간 연간 상품 전체. 연속 시계열·최신 전 세계 자료를 뜻하지 않는다.
+- UN Comtrade 양측 수출입 집계 36개와 별도로 보존한 2017년 미·중 Census 참고 2개.
+- 지원 목록에서 국가·방향·연도·기록 A/B 선택, 같은 교역의 신고국 간 또는 같은 흐름의 기관 간 대조.
+- 방향·기간·품목·통화·단위·품목분류·가격·조회일·자료 발표/개정일·상대국 기준·집계 체계·원분류 상태 검사.
+- 각 항목은 일치/차이 있음/확인 불가다. 조회일이 같아도 원자료 발표 판이 같다는 뜻은 아니다. 신뢰도 점수·정상/비정상 등급은 없다.
+- 가격 미조정 B−A 차액. 정확한 소수 연산, 결측과 0 구분, 필수 조건 불일치 시 계산 보류.
+- JSON 근거 노트 저장·재열기·메모 보존·원래 조회본 대응 확인. 현재 내장자료와 다시 대조해도 과거 값을 덮어쓰지 않음.
+- CSV 및 인용용 Markdown, 한/영·다크/라이트·모바일. 개인정보·분석·외부 폰트·AI·서버 업로드·localStorage 없음.
 
-이 폴더만으로 실행한다. 다른 서비스의 파일·패키지·데이터를 연결하지 않는다.
+## 실행
 
 ```sh
 cd "/Users/j/Desktop/vscode 작업/trade-data-lab/alignment-lens"
 python3 -m http.server 8768 --bind 127.0.0.1
 ```
 
-브라우저에서 `http://127.0.0.1:8768/` 또는 `http://127.0.0.1:8768/#pair/KOR/CHN`을 연다. 프런트엔드 빌드 과정은 없다. 실제 데이터 파일이 아직 없으면 먼저 아래 절차를 실행한다.
+http://127.0.0.1:8768/ 에서 시작한다. JSON을 읽으므로 HTML 파일을 file://로 직접 열지 않는다. 빌드·패키지 설치·API 키가 필요 없다. 브라우저는 내장 JSON만 읽고 외부 통계 API에 요청하지 않는다.
 
-## 원자료와 데이터 다시 만들기
+- `#/`: 새 대조
+- `#compare?from=KOR&to=USA&year=2023&a=un-KOR-USA-2023-X&b=un-USA-KOR-2023-M`: 선택 조건을 담은 주소. 메모나 노트 파일 내용은 주소에 넣지 않음.
+- `#note`: 불러온 노트. 새로고침하면 파일을 다시 열어야 함.
+- `#method`, `#sources`, `#about`
+- `mirrorline-case.html#case/usa-chn-2017`: 기존 미·중 사례 예제. 사용법 참고이며 자유 대조 자료와 문서 인용값을 혼합하지 않음.
 
-검수 환경은 Python 3.13이다. 의존성은 서비스 내부 가상환경에만 설치한다.
+## 자료 다시 만들기
+
+Python 3 표준 라이브러리와 시스템 curl을 사용한다. 무료 공개 preview API의 제한 안에서 국가·연도별로 순서대로 수집한다. 기간 복수 지정은 preview에서 거절되므로 한 요청에 한 연도만 사용한다. 실패·잘린 응답·중복·범위 변화는 오류로 중단한다.
 
 ```sh
 cd "/Users/j/Desktop/vscode 작업/trade-data-lab/alignment-lens"
-python3 -m venv .venv
-.venv/bin/python -m pip install --no-cache-dir -r scripts/requirements.txt
-.venv/bin/python -B scripts/inspect_sources.py --fetch --with-agreement
-.venv/bin/python -u -B scripts/download_baci.py
-.venv/bin/python -u -B scripts/build_data.py
-.venv/bin/python -B scripts/add_rank_metrics.py
-.venv/bin/python -u -B scripts/validate_data.py
-.venv/bin/python -B scripts/check_data_rules.py
+python3 -B scripts/build_catalog.py --fetch
+node review/verify_workbench.cjs
 ```
 
-받는 파일:
+- 원본: raw/workbench/YYYY-MM-DD/{156,410,842}-{2017,2018,2023}.json 및 manifest.json. raw/는 Git·배포에서 제외한다.
+- API: https://comtradeapi.un.org/public/v1/preview/C/A/HS
+- 조건: period 1개, reporterCode 1개, partnerCode 나머지 두 나라, flowCode X,M, cmdCode TOTAL, partner2Code 0, customsCode C00, motCode 0, maxRecords 500. 국가·연도마다 기대되는 4개 기록과 primaryValue/가격 필드 일치 여부를 검사한다.
+- API 판 번호는 제공되지 않아 조회일과 원본 SHA-256으로 조회본을 식별한다. 사용한 HS 판과 원분류 여부는 응답 그대로 남긴다.
+- 출력: data/workbench/catalog.json, data/workbench/snapshots/{내용 해시}.json. 이전 보존 조회본은 삭제하지 않는다.
+- Census 참고값은 기존 data/cases/usa-chn-2017.json의 당시 조회본을 가져온다. 새 Comtrade 수집일로 Census 조회일을 바꿔 쓰지 않는다. Census 자체를 새로 받으려면 기존 사례 수집 절차를 실행하고 변화 내용을 검토한다(docs/mirrorline-case-readme.md).
 
-- Harvard Dataverse DOI `10.7910/DVN/LEJUQZ`, 39.0판의 `IdealpointestimatesAll_Jun2024.csv`, `AgreementScoresAll_Jun2024.csv`. 이전 점수 파일을 유지하도록 사용자가 선택했다. 최신 최종 표결 전용 점수로 자동 교체하지 않는다.
-- CEPII `BACI_HS92_V202601.zip`. ZIP 안의 `BACI_HS92_Y1995_V202601.csv`부터 `BACI_HS92_Y2024_V202601.csv`, `country_codes_V202601.csv`를 사용한다. 원 CSV를 직접 읽되 디스크에 모두 풀 필요는 없다.
-- 같은 Dataverse의 `IdealpointestimatesFP_2026FP.csv`는 inspect_sources가 검수용으로 함께 받는다. 코드 식별 열 대조 전용이며 새 점수를 계산에 섞지 않는다. `raw/comtrade-reporters-2026-11-17.json`은 최초 방법 검토 때 보존한 참고 응답이며 재빌드 필수 입력이 아니다. 날짜 근거와 URL은 방법 기록·코드 예외에 보존했다.
-
-`download_baci.py`는 공식 ZIP을 HTTP byte range로 이어받는다. `raw/baci-download-parts/`를 보존하면 중단 후 같은 명령으로 재개할 수 있다. 모든 조각 길이를 확인한 뒤 ZIP을 조립한다. 빌드에서 ZIP 파일별 CRC32와 기존 공식 메타데이터를 대조한다.
-
-`build_data.py`는 원자료 금액의 소수 표기를 Decimal 50자리 연산으로 그대로 합산한다. 일부 행의 긴 소수 표현도 자르거나 세 자리로 반올림하지 않는다. 음수·비유한 값 등 자료 정의와 충돌하는 값은 중단한다. 재실행 시 CRC·파일 길이·계산 버전이 일치하는 `raw/aggregates/`의 중간 결과를 사용한다. 원 CSV를 모두 다시 읽으려면 `--force`를 붙인다.
-
-`validate_data.py`는 빌드의 캐시나 금액 파서를 사용하지 않고 원 CSV를 다시 스캔해 Decimal로 계산한다. 예시 3쌍과 고정 시드로 뽑은 7쌍을 양방향으로 대조한다. 보고서는 `review/independent-validation.json`과 `.md`에 기록한다. 이를 사람이 수행한 손 계산이라고 표시하지 않는다. 분자·분모와 두 원점수를 보고서에 공개해 수동 대조가 가능하게 한다.
-
-자료 판이나 코드가 달라지면 `review/source-conflict.json`을 확인한다. 과거 국가를 현대 국가로 자동 합치거나 기록이 없는 값을 0으로 만들어 통과시키지 않는다. 선택한 판·확인일·다운로드일·생성일·집계 정밀도·판정 상수는 `data/meta.json`에 둔다.
-
-## 계산과 한계
-
-- 외교 거리: 원자료의 전체 투표 점수 차이 절댓값. 회기–연도는 같은 판의 동의 비율 파일로 연결한다. 회기는 다음 달력 연도까지 이어질 수 있다.
-- 교역 비중: 상대국과의 양방향 BACI 기록 합 ÷ 기준국의 전체 수출·수입 기록 합 × 100. 합산 지역도 분모에서 제거하지 않는다.
-- 쌍 기록이 없으면 null, 실제 계산값 0과 구분한다. 선을 보간하지 않는다.
-- 처음·마지막 3년 평균은 같은 집계 범위의 최신 연속 구간에서 비교하며 최소 6년을 요구한다. 전환기와 빠진 연도를 건너지 않는다.
-- 상대 5%라는 동등성 경계는 사용하지 않는다. 아주 작은 비영 변화도 방향과 표시 단위 미만임을 보존한다.
-- 0.01%는 화면 표시 필터일 뿐, 분모·사실·CSV·상관의 계산 제외 기준이 아니다.
-- 자세한 근거는 `docs/method-decisions.md`, 코드 예외는 `data/code-fixes.json`에 있다.
-
-## 디자인·사진·개인정보
-
-사용자가 선택한 C안과 추가 요청한 물류 사진·모션을 `DESIGN.md`에 기록했다. 사진은 `assets/photos/credits.json`에 저자·출처·라이선스·표시 변경 내용을 기록하고 화면에도 인용한다. 사진은 선택한 국가 쌍의 실제 교역 현장을 뜻하지 않는다.
-
-로그인·방문자 추적·분석 스크립트·API 키가 없다. 마지막으로 본 쌍만 localStorage에 기록하며 실패해도 계속 동작한다. 모션 정지 버튼과 `prefers-reduced-motion`을 지원한다.
-
-## 배포 범위
-
-이 서비스 전용 Vercel 프로젝트의 Root Directory는 `alignment-lens`로 둔다. 원자료·스크립트·검수·문서는 `.vercelignore`로 제외한다. 나라별 JSON 합계는 약 141 MB이며, 숫자를 반올림해 용량을 줄이지 않았다. [Vercel 공식 한도](https://vercel.com/docs/limits#static-file-uploads)는 CLI 업로드를 Hobby 100 MB, Pro 1 GB로 제한하므로 현재 파일을 Hobby CLI로 곧바로 배포하면 한도를 넘는다. Git 연결 배포를 사용할 때는 이 서비스 전용 프로젝트에서 확인한다. 이 문서 작성 시점에는 배포하지 않았다. 커밋·push·다른 서비스 설정 변경은 수행하지 않는다.
-
-## 기존 기획 문서
-
-| 파일 | 내용 |
-|---|---|
-| `docs/Alignment-Lens-기획서.pdf` | 상세 기획서 (A to Z) |
-| `docs/plan.html`, `docs/plan.css` | 기획서 원본. 고친 뒤 Chrome으로 PDF를 다시 만든다 |
-| `PROMPT.md` | AI 도구에 넣는 구현 프롬프트 |
-
-기획서 PDF 다시 만들기:
-
-```bash
-cd alignment-lens/docs && "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless=new --no-pdf-header-footer --print-to-pdf="Alignment-Lens-기획서.pdf" "file://$PWD/plan.html"
-```
-
-## 검수 해석 입력
-
-`data/interpretations.json`은 현재 빈 객체다. 정렬한 ISO3 두 코드를 하이픈으로 연결한 키(예: `CHN-KOR`)를 사용한다. 항목에는 `reviewed: true`, `summary: {ko, en}`, `source_title: {ko, en}`, HTTPS `url`, 실제 확인일 `checked_on: YYYY-MM-DD`를 넣는다. 선택 항목 `uncertainties: {ko: [문장], en: [문장]}`로 쌍별 불확실을 추가할 수 있다. 영어 검수문이 없으면 영어 해석을 자동 생성하지 않는다. 여기의 필드 설명은 입력 형식이며 실제 해석이나 확인일을 만들어 넣지 않는다.
-
-## 연결 서비스
-
-사용자가 2026-11-17 확인한 Tradeweave 주소는 `https://trade-data-lab.vercel.app/`다. 상세 화면에서 `#see/{ISO3}/export`로 연결하며 해당 서비스의 2024년 기준을 명시한다. 국가 탐색 연도를 외부 서비스에 지원되지 않는 연도로 전달하지 않는다.
-
-## PARALLEL 이름과 홈페이지
-
-2026-11-17 사용자가 PARALLEL을 선택했다. 첫 화면의 긴 소개·예시 쌍·출처 배지는 제거했다. 출처와 라이선스는 출처 페이지, 관측값의 판과 연도는 그래프에 둔다. 사진 캐러셀·지구 국가 선택·넓은 탐색 패널을 추가했으며 기업실적·채용·기업 미디어는 제외했다.
-
-배경 영상 프롬프트와 연결 방법은 `docs/hero-video-prompt.md`를 따른다. 영상은 아직 생성되지 않았다. 유료 생성도 수행하지 않았다.
-
-요청한 최종 폴더명은 `parallel`이며 Vercel 전용 프로젝트의 Root Directory도 이름 변경 후 `parallel`이어야 한다. 현재 환경에서 폴더 자체 rename은 Operation not permitted로 거부되어 실제 폴더는 아직 `alignment-lens`다. 위의 실행 명령은 현재 경로를 유지한다. 이름을 직접 바꾸려면 저장소 부모 폴더에서 다음을 실행한다. 대상 폴더가 이미 있으면 실행하지 않는다.
+원본을 다시 받지 않고 동일한 원본으로 생성:
 
 ```sh
-mv "/Users/j/Desktop/vscode 작업/trade-data-lab/alignment-lens" "/Users/j/Desktop/vscode 작업/trade-data-lab/parallel"
+python3 -B scripts/build_catalog.py
 ```
 
-변경 후 실행·데이터 명령의 경로만 `parallel`로 바꾸면 된다. 스크립트는 자신의 파일 위치를 기준으로 동작한다. 원자료·가상환경·검증 결과도 폴더 안에 함께 이동한다. 저장소 루트 문서와 다른 서비스 설정은 수정하지 않았다.
+raw 최신 포인터·manifest 해시가 일치해야 한다. 예전 조회본이 없으면 과거의 값을 복원할 수 있다고 표시하지 않는다.
+
+## 노트 파일
+
+JSON은 금액·조건·출처·메모를 포함하며 브라우저 안에서만 처리한다. 재열기 시 파일의 계산 결과를 가져오지 않고 두 기록에서 다시 계산한다. 내장/보존 조회본과 관측값 전체가 일치하는지 확인한다. 확인 불가인 파일은 외부 원자료의 진위가 확인된 것처럼 표시하지 않는다.
+
+JSON은 재열기용, CSV·Markdown은 읽기·인용용이다. 노트 형식·크기·금액·출처를 검사하고 잘못된 파일을 열어도 현재 작업을 유지한다. 노트의 메모는 사람의 검수 해석으로 취급하지 않는다.
+
+## 검증과 경계
+
+`node review/verify_workbench.cjs`: 현재 38개 공통 기록 검증, 44개 순서 있는 지원 대조/노트 왕복, 소수 정밀도, 결측·조건 불일치·0, 잘못된 파일·출처·위조된 계산 결과 검증.
+
+기존 사례 검증: `node review/verify_mirrorline.cjs`.
+
+데이터 계약은 docs/comparison-contract.md, 목적과 중단 기준은 docs/product-rationale.md, 실제 검증 결과는 review/workbench-validation.md에 기록한다. 실제 사용자 수요가 검증됐다고 주장하지 않는다.
+
+월별·품목별 탐색, 임의 CSV 가져오기, 정치적 해석, 원인 기여액, 자동 가격 보정, 실시간 갱신은 아직 제공하지 않는다.
+
+## 배포·보관
+
+서비스 전용 Vercel Root Directory=alignment-lens에서 정적으로 실행한다. 원자료·스크립트·검증·이전 UNGA/BACI 대용량 파일은 .vercelignore로 배포에서 제외한다. 별도 Site 호스팅이나 다른 서비스의 프로젝트를 사용하지 않는다. 이번 작업에서 공개 배포·stage·commit·push·폴더 이름 변경은 하지 않았다.
+
+PARALLEL 원형은 parallel-archive.html 및 기존 자료, 문서에 보관한다. Mirrorline 사례의 이전 README는 docs/mirrorline-case-readme.md에 있다. 다른 서비스와 저장소 루트 파일은 수정하지 않는다.

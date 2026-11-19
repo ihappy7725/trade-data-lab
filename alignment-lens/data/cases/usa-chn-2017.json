@@ -1,0 +1,183 @@
+{
+  "id": "usa-chn-2017",
+  "year": 2017,
+  "retrieved_on": "2026-11-19",
+  "edition": "UN Comtrade public API / fixed retrieval snapshot 2026-11-19",
+  "version_note": "The API response provides no dataset release number. Retrieval date and SHA-256 identify this snapshot; it is not a reconstruction of the 2018 release.",
+  "scope": {
+    "type": "Goods",
+    "frequency": "Annual",
+    "currency": "USD",
+    "classification": "HS 2017 (H5)",
+    "commodity": "TOTAL",
+    "adjustment": "No CIF/FOB adjustment, time shift, interpolation, or reconciliation"
+  },
+  "statements": [
+    {
+      "id": "us",
+      "source_id": "ustr",
+      "published_on": "2018-03-30",
+      "locator": "China / Trade Summary / printed p.91, PDF p.99",
+      "quote": "The U.S. goods trade deficit with China was $375.2 billion in 2017",
+      "quoted_amount_usd": "375200000000",
+      "quote_kind": "Reported 2018 statement, not recalculated from current data"
+    },
+    {
+      "id": "cn",
+      "source_id": "china",
+      "published_on": "2018-09",
+      "reposted_on": "2018-10-15",
+      "locator": "II. Clarifications / statistical divergence paragraph",
+      "quote": "US statistics exaggerate its deficit in trade in goods with China.",
+      "quoted_china_surplus_usd": "275800000000",
+      "quoted_us_deficit_usd": "395800000000",
+      "quote_kind": "Attributed position; quoted figures preserved as published, not verified as a common-basis comparison"
+    }
+  ],
+  "records": [
+    {
+      "id": "chn-m",
+      "reporter": "CHN",
+      "partner": "USA",
+      "flow": "M",
+      "value_usd": "154441855874",
+      "basis": "CIF",
+      "year": 2017,
+      "classification": "H5",
+      "commodity": "TOTAL",
+      "source_id": "chn",
+      "is_reported": false,
+      "is_aggregate": true
+    },
+    {
+      "id": "chn-x",
+      "reporter": "CHN",
+      "partner": "USA",
+      "flow": "X",
+      "value_usd": "430328146524",
+      "basis": "FOB",
+      "year": 2017,
+      "classification": "H5",
+      "commodity": "TOTAL",
+      "source_id": "chn",
+      "is_reported": false,
+      "is_aggregate": true
+    },
+    {
+      "id": "usa-m",
+      "reporter": "USA",
+      "partner": "CHN",
+      "flow": "M",
+      "value_usd": "525764714470",
+      "basis": "CIF",
+      "year": 2017,
+      "classification": "H5",
+      "commodity": "TOTAL",
+      "source_id": "usa",
+      "is_reported": false,
+      "is_aggregate": true
+    },
+    {
+      "id": "usa-x",
+      "reporter": "USA",
+      "partner": "CHN",
+      "flow": "X",
+      "value_usd": "129797515346",
+      "basis": "FOB",
+      "year": 2017,
+      "classification": "H5",
+      "commodity": "TOTAL",
+      "source_id": "usa",
+      "is_reported": false,
+      "is_aggregate": true
+    }
+  ],
+  "flows": [
+    {
+      "id": "chn-usa",
+      "export_id": "chn-x",
+      "import_id": "usa-m",
+      "gap_usd": "95436567946"
+    },
+    {
+      "id": "usa-chn",
+      "export_id": "usa-x",
+      "import_id": "chn-m",
+      "gap_usd": "24644340528"
+    }
+  ],
+  "census": {
+    "export_usd": "129997200000",
+    "import_usd": "505165100000",
+    "deficit_usd": "375167900000"
+  },
+  "interpretation": {
+    "human_reviewed": false,
+    "text": null
+  },
+  "sources": [
+    {
+      "id": "ustr",
+      "url": "https://ustr.gov/sites/default/files/files/Press/Reports/2018%20National%20Trade%20Estimate%20Report.pdf",
+      "file": "ustr-2018.pdf",
+      "sha256": "1f8b766e4e444259e83250563060cd8ac106dd16ccbd61c55d14090b53c3042e",
+      "retrieved_on": "2026-11-19"
+    },
+    {
+      "id": "china",
+      "url": "https://na.china-embassy.gov.cn/eng/sgxw/201810/t20181015_6554556.htm",
+      "file": "china-whitepaper-2018.html",
+      "sha256": "b0fed0ce15b3addd796d13fdac77ac6068e52992eda2b02e9bfe581ce61f536f",
+      "retrieved_on": "2026-11-19"
+    },
+    {
+      "id": "census",
+      "url": "https://www.census.gov/foreign-trade/balance/c5700.html",
+      "file": "census-china.html",
+      "sha256": "e63958a1d31c4f44c86a68e0a7374b0067131648f858b077f9da196584bf8a17",
+      "retrieved_on": "2026-11-19"
+    },
+    {
+      "id": "un-method",
+      "url": "https://uncomtrade.org/docs/bilateral-asymmetries/",
+      "file": "comtrade-asymmetries.html",
+      "sha256": "5791504541f45b80508a6a1228917f69754555c934ae2b291fb7101a590fd030",
+      "retrieved_on": "2026-11-19"
+    },
+    {
+      "id": "census-method",
+      "url": "https://www.census.gov/foreign-trade/reference/guides/tradestatsinfo.html",
+      "file": "census-method.html",
+      "sha256": "48c3c0446e8fe2b88861961c4af51fca63ac9f54e5e8b779cec6e2541c9612c6",
+      "retrieved_on": "2026-11-19"
+    },
+    {
+      "id": "api-method",
+      "url": "https://uncomtrade.org/docs/un-comtrade-api/",
+      "file": "comtrade-api.html",
+      "sha256": "735cf54285413f83954c8daf54697131adfc4cf466b26e3d6eb006801b51b20a",
+      "retrieved_on": "2026-11-19"
+    },
+    {
+      "id": "joint",
+      "url": "https://www.census.gov/foreign-trade/reconciliation/recon_china_080910.pdf",
+      "file": "joint-reconciliation-2012.pdf",
+      "sha256": "1678c0ee104b686539c08b89636e26d148fb190616b0a690674cecd71f100aa4",
+      "retrieved_on": "2026-11-19"
+    },
+    {
+      "id": "chn",
+      "url": "https://comtradeapi.un.org/public/v1/preview/C/A/HS?period=2017&reporterCode=156&cmdCode=TOTAL&flowCode=X%2CM&partnerCode=842&partner2Code=0&customsCode=C00&motCode=0&maxRecords=500",
+      "file": "chn-2017.json",
+      "sha256": "cb7f24e0aba8e9c9c621ecb6b1f1e67b08caea5e39389c1d25101654301017e6",
+      "retrieved_on": "2026-11-19"
+    },
+    {
+      "id": "usa",
+      "url": "https://comtradeapi.un.org/public/v1/preview/C/A/HS?period=2017&reporterCode=842&cmdCode=TOTAL&flowCode=X%2CM&partnerCode=156&partner2Code=0&customsCode=C00&motCode=0&maxRecords=500",
+      "file": "usa-2017.json",
+      "sha256": "cb16834daf7943698d95dcbbf81e0dcd5f8039ac5a94274c788d6030a9ca5cab",
+      "retrieved_on": "2026-11-19"
+    }
+  ]
+}

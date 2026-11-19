@@ -4,18 +4,18 @@
 import fs from "node:fs";
 import { createRequire } from "node:module";
 const require = createRequire(process.cwd() + "/");
-const { geoEqualEarth, geoPath } = require("d3-geo");
+const { geoEquirectangular, geoPath } = require("d3-geo");
 const { feature } = require("topojson-client");
 const [tradePath, outPath] = process.argv.slice(2);
 const trade = JSON.parse(fs.readFileSync(tradePath, "utf8")).countries;
 const want = new Map(Object.entries(trade).map(([iso3, c]) => [c.num, iso3]));
 
-const W = 960, H = 470;
+const W = 960, H = 420;
 const t110 = require("world-atlas/countries-110m.json");
 const t50 = require("world-atlas/countries-50m.json");
 const f110 = feature(t110, t110.objects.countries).features.filter(f => f.id !== "010");
 const f50 = feature(t50, t50.objects.countries).features.filter(f => f.id !== "010");
-const proj = geoEqualEarth().fitExtent([[4, 4], [W - 4, H - 4]], { type: "FeatureCollection", features: f110 });
+const proj = geoEquirectangular().fitExtent([[4, 4], [W - 4, H - 4]], { type: "FeatureCollection", features: f110 });
 const path = geoPath(proj).digits(1);
 
 const shapes = [];   // [iso3 또는 null, path]
@@ -36,5 +36,5 @@ for (const f of f50) {
   seen.add(iso3);
 }
 const missing = Object.keys(trade).filter(k => !seen.has(k));
-fs.writeFileSync(outPath, JSON.stringify({ w: W, h: H, projection: "Equal Earth", source: "Natural Earth via world-atlas 2.0.2", shapes, dots }));
+fs.writeFileSync(outPath, JSON.stringify({ w: W, h: H, projection: "Equirectangular", source: "Natural Earth via world-atlas 2.0.2", shapes, dots }));
 console.log("shapes", shapes.length, "dots", dots.length, "not on map", missing.join(" "));
