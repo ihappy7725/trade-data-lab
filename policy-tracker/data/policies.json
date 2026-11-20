@@ -1,6 +1,6 @@
 {
  "meta": {
-  "fetched": "2026-11-16",
+  "fetched": "2026-11-20",
   "note": "Values are as reported by each source; not edited or estimated. Months with no record are null."
  },
  "policies": [
@@ -172,7 +172,7 @@
      "reporters": 1
     }
    ],
-   "fetched": "2026-11-16"
+   "fetched": "2026-11-20"
   },
   {
    "id": "us-auto-232-2025",
@@ -342,7 +342,7 @@
      "reporters": 1
     }
    ],
-   "fetched": "2026-11-16"
+   "fetched": "2026-11-20"
   },
   {
    "id": "us-steel-232-2025",
@@ -512,7 +512,7 @@
      "reporters": 1
     }
    ],
-   "fetched": "2026-11-16"
+   "fetched": "2026-11-20"
   },
   {
    "id": "cn-us-ga-ban-2024",
@@ -682,7 +682,7 @@
      "reporters": 1
     }
    ],
-   "fetched": "2026-11-16"
+   "fetched": "2026-11-20"
   },
   {
    "id": "eu-bev-cvd-2024",
@@ -826,7 +826,7 @@
      "v": 493104764
     }
    ],
-   "fetched": "2026-11-16"
+   "fetched": "2026-11-20"
   },
   {
    "id": "us-ev-301-2024",
@@ -996,7 +996,7 @@
      "reporters": 1
     }
    ],
-   "fetched": "2026-11-16"
+   "fetched": "2026-11-20"
   },
   {
    "id": "cn-ga-ge-2023",
@@ -1166,7 +1166,7 @@
      "reporters": 1
     }
    ],
-   "fetched": "2026-11-16"
+   "fetched": "2026-11-20"
   },
   {
    "id": "us-semi-2022",
@@ -1336,7 +1336,7 @@
      "reporters": 1
     }
    ],
-   "fetched": "2026-11-16"
+   "fetched": "2026-11-20"
   },
   {
    "id": "jp-kr-2019",
