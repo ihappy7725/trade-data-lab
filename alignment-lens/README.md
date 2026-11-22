@@ -73,10 +73,22 @@ JSON은 재열기용, CSV·Markdown은 읽기·인용용이다. 노트 형식·�
 
 ## 배포·보관
 
-서비스 전용 Vercel Root Directory=alignment-lens에서 정적으로 실행한다. 원자료·스크립트·검증·이전 UNGA/BACI 대용량 파일은 .vercelignore로 배포에서 제외한다. 별도 Site 호스팅이나 다른 서비스의 프로젝트를 사용하지 않는다. 이번 작업에서 공개 배포·stage·commit·push·폴더 이름 변경은 하지 않았다.
+서비스 전용 Vercel Root Directory=alignment-lens에서 정적으로 실행한다. 원자료·스크립트·검증·이전 UNGA/BACI 대용량 파일은 .vercelignore로 배포에서 제외한다. 별도 Site 호스팅이나 다른 서비스의 프로젝트를 사용하지 않는다. 배포 프로젝트는 crosscite이며 Root Directory는 alignment-lens다. 폴더 이름은 유지한다. Git 자동 배포는 끄고 아래의 공개 파일 목록으로 수동 배포한다.
 
 PARALLEL 원형은 parallel-archive.html 및 기존 자료, 문서에 보관한다. 이전 Mirrorline 사례의 README는 docs/mirrorline-case-readme.md에 있다. 다른 서비스와 저장소 루트 파일은 수정하지 않는다.
 
 ## CrossCite 아이콘
 
 사용자 제공 원본: assets/brand/crosscite.svg (gemini-svg.svg와 동일). favicon.svg, favicon-32x32.png, favicon.ico를 제공하며 Apple touch 아이콘은 apple-touch-icon.png다. site.webmanifest의 앱 이름은 CrossCite, 앱 아이콘은 assets/brand/icon-192.png 및 icon-512.png다. 기존의 다른 이름으로 만든 노트도 계속 열 수 있다. 웹앱 manifest는 오프라인 기능을 보장한다는 뜻이 아니다.
+
+
+## 운영 배포
+
+검증 후 `python3 -B scripts/prepare_deploy.py`로 실행 파일·계산 JSON·아이콘만 `raw/deploy-stage/alignment-lens/`에 복사한다. 준비 단계는 소스의 빌드·번들링이 아니며 사이트 자체는 빌드 없는 정적 파일이다. 다른 서비스·원자료·문서·검증 결과는 업로드하지 않는다. `raw/deploy-manifest.json`에 업로드 파일의 SHA-256을 남긴다.
+
+```sh
+python3 -B scripts/prepare_deploy.py
+vercel --cwd raw/deploy-stage --prod --yes
+```
+
+Vercel CLI 로그인이 필요하며 새 프로젝트로 다시 연결하지 않는다. 준비 스크립트가 CrossCite 전용 프로젝트와 Root Directory를 지정한다. Git 푸시만으로는 공개 배포되지 않는다. 배포 후 홈·아이콘·자료 JSON의 응답과 원자료·문서·검증 경로의 404를 확인한다.
