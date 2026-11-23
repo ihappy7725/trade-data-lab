@@ -635,7 +635,7 @@
           if (!response.ok) throw new Error("catalog");
           return response.json();
         }),
-        fetch("data/world-map.json?v=equirectangular-1").then(
+        fetch("data/world-map.json?v=equirectangular-atlas-2").then(
           function (response) {
             if (!response.ok) throw new Error("map");
             return response.json();

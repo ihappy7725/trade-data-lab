@@ -453,6 +453,7 @@
     var scene = c.svg.querySelector(".map-scene"),
       from = "translate(" + c.x + "px," + c.y + "px) scale(" + c.k + ")",
       to = "translate(" + x + "px," + y + "px) scale(" + k + ")";
+    c.stage.dataset.zoomed = String(k > 1.5);
     c.k = k;
     c.x = x;
     c.y = y;

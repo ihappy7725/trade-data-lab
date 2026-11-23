@@ -34,6 +34,16 @@ async function boot({
     virtualConsole: vc,
   });
   const w = dom.window;
+  // jsdom parses CSS but does not apply viewport media queries; mobile focus tests use DOM state only.
+  for (const file of small ? [] : ["studio.css", "research.css", "atlas.css"]) {
+    const style = w.document.createElement("style");
+    style.textContent = fs.readFileSync(
+      path.join(base, "assets", file),
+      "utf8",
+    );
+    w.document.head.append(style);
+  }
+
   w.scrollTo = () => {};
   w.matchMedia = (q) => ({
     matches: q.includes("850px") ? small : false,
@@ -85,6 +95,8 @@ async function boot({
     "workspace-state.js",
     "studio.js",
     "research.js",
+    "atlas-model.js",
+    "atlas.js",
   ])
     w.eval(fs.readFileSync(base + "/assets/" + file, "utf8"));
   const $ = (id) => w.document.getElementById(id),
@@ -92,15 +104,18 @@ async function boot({
       $(id).value = value;
       $(id).dispatchEvent(new w.Event(type, { bubbles: true }));
     };
-  await waitFor(() => !$("r-body").hidden);
+  await waitFor(() =>
+    hash.startsWith("#see/") ? !$("r-body").hidden : !$("hero-map-body").hidden,
+  );
   assert.equal(
-    $("r-body").hidden,
+    hash.startsWith("#see/") ? $("r-body").hidden : $("hero-map-body").hidden,
     false,
     "Selected year appears before delayed histories",
   );
   assert.equal($("series-notice").hidden, false);
   assert.ok(
-    !requests.some((file) => file.endsWith("/all.json")),
+    !hash.includes("product=8542") ||
+      !requests.some((file) => file.endsWith("/all.json")),
     "No eager unrelated default product",
   );
   return {
@@ -136,6 +151,52 @@ async function boot({
   await waitFor(() => $("series-notice").hidden);
   assert.equal($("series-notice").hidden, true);
   assert.equal(w.document.querySelectorAll(".insight-card").length, 3);
+  assert.equal(
+    w.document.querySelectorAll("#r-map .connection-layer").length,
+    1,
+  );
+  assert.match(
+    w.document.querySelector("#r-map .callout-country").textContent,
+    /중국/,
+  );
+  assert.equal(
+    w.getComputedStyle(w.document.querySelector("#r-map .connection-arc")).fill,
+    "none",
+    "The original map path rule must not fill the connection curve",
+  );
+  const selectedPartner = w.Tradeweave.state.partner;
+  w.document
+    .querySelector('#r-rank [data-partner="S19"]')
+    .dispatchEvent(new w.MouseEvent("pointerover", { bubbles: true }));
+  await tick(30);
+  assert.equal(
+    w.Tradeweave.state.partner,
+    selectedPartner,
+    "Hover preview does not mutate the analysis selection",
+  );
+  assert.equal(
+    w.document.querySelector("#r-map .callout-country").textContent,
+    w.Tradeweave.name("S19"),
+  );
+  w.document
+    .querySelector('#r-rank [data-partner="S19"]')
+    .dispatchEvent(new w.MouseEvent("pointerout", { bubbles: true }));
+  await tick(30);
+  assert.match(
+    w.document.querySelector("#r-map .callout-country").textContent,
+    /중국/,
+  );
+  w.document.querySelector("#view-see [data-connection-toggle]").click();
+  assert.equal(
+    w.document.querySelectorAll("#r-map .connection-layer").length,
+    0,
+  );
+  w.document.querySelector("#view-see [data-connection-toggle]").click();
+  assert.equal(
+    w.document.querySelectorAll("#r-map .connection-layer").length,
+    1,
+  );
+
   assert.match($("insight-cards").textContent, /27.8%/);
   $("toggle-periods").click();
   assert.equal($("period-content").hidden, false);
@@ -277,6 +338,41 @@ async function boot({
   );
   assert.equal(rapid.errors.length, 0, rapid.errors.map(String).join("\n"));
   rapid.dom.window.close();
+  const absent = await boot({
+    hash: "#see/KOR/export?product=8542&partner=PRK",
+  });
+  absent.releaseHistory();
+  await tick(60);
+  assert.equal(
+    absent.w.document.querySelectorAll("#r-map .connection-layer").length,
+    0,
+    "No line for an unrecorded trade",
+  );
+  absent.dom.window.close();
+  const home = await boot({ hash: "#?product=8542" });
+  home.releaseHistory();
+  await tick(80);
+  assert.equal(
+    home.w.document.querySelectorAll("#hero-map .connection-layer").length,
+    1,
+  );
+  assert.equal(home.w.document.querySelectorAll(".feature").length, 4);
+  assert.match(home.$("atlas-focus-copy").textContent, /중국/);
+  const direction = home.w.Tradeweave.state.flow;
+  home.w.document
+    .querySelector('#hero-rank [data-partner="S19"]')
+    .dispatchEvent(new home.w.MouseEvent("pointerover", { bubbles: true }));
+  await tick(30);
+  assert.match(home.$("atlas-focus-copy").textContent, /대만/);
+  assert.equal(home.w.Tradeweave.state.flow, direction);
+  home.w.document
+    .querySelector('#hero-rank [data-partner="S19"]')
+    .dispatchEvent(new home.w.MouseEvent("pointerout", { bubbles: true }));
+  await tick(30);
+  assert.match(home.$("atlas-focus-copy").textContent, /중국/);
+  assert.ok(home.$("example-compare-link").hash.includes("tab=countries"));
+  assert.equal(home.errors.length, 0, home.errors.map(String).join("\n"));
+  home.dom.window.close();
   const mobile = await boot({ small: true });
   mobile.releaseHistory();
   await waitFor(() => mobile.$("series-notice").hidden);
@@ -326,7 +422,7 @@ async function boot({
   assert.equal(mobile.errors.length, 0, mobile.errors.map(String).join("\n"));
   mobile.dom.window.close();
   console.log(
-    "PASS: selected-year-first loading, evidence summaries, correct year labels, CSV/report/backup downloads, metric switching, memo isolation/restoration, version guard, handoff metadata, partial failure/retry, mobile detail states",
+    "PASS: selected-year-first loading, evidence summaries, correct year labels, CSV/report/backup downloads, metric switching, memo isolation/restoration, version guard, handoff metadata, partial failure/retry, mobile detail states, atlas hover/toggle/no-record states and CSS parsing",
   );
 })().catch((error) => {
   console.error(error);

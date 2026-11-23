@@ -25,6 +25,7 @@
     />
     <link rel="stylesheet" href="assets/studio.css?v=6" />
     <link rel="stylesheet" href="assets/research.css?v=1" />
+    <link rel="stylesheet" href="assets/atlas.css?v=1" />
   </head>
   <body>
     <a class="skip-link" href="#main-content">본문으로 이동</a>
@@ -71,12 +72,18 @@
           <div class="hero">
             <div class="hero-copy">
               <div class="hero-title">
-                <p class="eyebrow">THE GEOGRAPHY OF TRADE</p>
-                <h1>세계 교역의 연결을 읽다<span class="title-dot">.</span></h1>
+                <div class="atlas-edition">
+                  <span class="edition-mark" aria-hidden="true"></span
+                  ><span>GLOBAL TRADE ATLAS</span>
+                </div>
+                <h1>
+                  세계 교역의
+                  <span class="hero-emphasis"
+                    >연결을 읽다<span class="title-dot">.</span></span
+                  >
+                </h1>
               </div>
-              <p class="hero-note">
-                국가에서 상대국으로.<br />지도로 살펴보는 교역의 구조.
-              </p>
+              <p class="hero-note">국가에서 상대국으로. 지도에서 분석으로.</p>
             </div>
             <figure class="atlas" aria-labelledby="hero-map-title">
               <div class="atlas-head search-head">
@@ -142,9 +149,21 @@
                 </div>
               </div>
               <div class="atlas-caption">
+                <p class="section-kicker">WORLD TRADE MAP</p>
                 <h2 id="hero-map-title">교역 상대국 지도</h2>
                 <p class="caption" id="hero-scope"></p>
                 <p class="scope-description" data-scope-description></p>
+                <button
+                  class="map-layer-toggle"
+                  data-connection-toggle
+                  type="button"
+                  aria-pressed="true"
+                >
+                  <span class="connection-toggle-icon" aria-hidden="true"
+                    >⌁</span
+                  >
+                  교역 관계 표시
+                </button>
               </div>
               <p class="atlas-status" id="hero-status" role="status">
                 교역 지도를 불러오는 중입니다.
@@ -159,14 +178,24 @@
                   >
                     <desc id="hero-map-desc">교역 상대국 지도</desc>
                   </svg>
+                  <a
+                    id="atlas-focus-link"
+                    class="atlas-focus-link"
+                    href="#see/KOR/export"
+                    ><span class="focus-dot" aria-hidden="true"></span
+                    ><span id="atlas-focus-copy">교역 관계를 선택해 보세요</span
+                    ><span aria-hidden="true">↗</span></a
+                  >
                   <p id="hero-readout" aria-live="polite">
                     지도에서 상대국을 선택하면 비중과 금액을 확인할 수 있습니다.
                   </p>
                 </div>
                 <div class="atlas-side">
-                  <h3 id="hero-rank-title">상위 5개 상대국</h3>
+                  <div class="atlas-rank-heading">
+                    <h3 id="hero-rank-title">상위 5개 상대국</h3>
+                    <div class="home-insight" id="home-insight"></div>
+                  </div>
                   <ol class="rank" id="hero-rank"></ol>
-                  <div class="home-insight" id="home-insight"></div>
                   <a
                     class="btn btn-text"
                     href="#see/KOR/export"
@@ -177,6 +206,10 @@
                 </div>
               </div>
               <figcaption class="atlas-foot">
+                <p class="connection-explainer">
+                  핀은 지도상의 대표 위치입니다. 연결선은 선택한 교역 관계이며
+                  실제 운송 경로가 아닙니다.
+                </p>
                 <div
                   class="legend"
                   aria-label="기준국의 전체 수출 또는 수입에서 차지하는 비중"
@@ -218,7 +251,11 @@
               <p data-period></p>
             </div>
             <div class="features">
-              <a class="feature" id="example-kor-link" href="#see/KOR/export"
+              <a
+                class="feature"
+                data-case="01"
+                id="example-kor-link"
+                href="#see/KOR/export"
                 ><h3>한국은 주로 어디에 팔까?</h3>
                 <p id="example-kor">
                   한국의 실제 수출 상대국과 상위 5개국 비중을 확인합니다.
@@ -227,6 +264,7 @@
               >
               <a
                 class="feature"
+                data-case="02"
                 id="example-vnm-link"
                 href="#see/VNM/import/concentration"
                 ><h3>베트남의 수입은 얼마나 쏠려 있을까?</h3>
@@ -237,6 +275,7 @@
               >
               <a
                 class="feature"
+                data-case="03"
                 id="example-qat-link"
                 href="#see/QAT/export/sources"
                 ><h3>보고서에 쓸 숫자는 어디서 확인할까?</h3>
@@ -245,6 +284,15 @@
                   상대국 전체 CSV를 내려받습니다.
                 </p>
                 <span class="more">카타르 데이터 확인하기 →</span></a
+              >
+              <a
+                class="feature"
+                data-case="04"
+                id="example-compare-link"
+                href="#see/KOR/export?tab=countries"
+                ><h3>다른 나라도 같은 곳에 팔까?</h3>
+                <p>세 나라의 동일 상대국 비중·금액·순위를 나란히 살펴봅니다.</p>
+                <span class="more">국가별 교역 비교하기 →</span></a
               >
             </div>
             <p class="caption examples-source" data-source-line></p>
@@ -480,8 +528,21 @@
             <div class="result-grid workspace" id="r-body" hidden>
               <div class="panel map-panel">
                 <div class="map-caption">
-                  <span class="section-kicker">TRADE ATLAS</span
-                  ><span class="caption">색의 진하기 = 상대국 비중</span>
+                  <span class="section-kicker">TRADE ATLAS</span>
+                  <div class="map-caption-actions">
+                    <span class="caption">색의 진하기 = 상대국 비중</span
+                    ><button
+                      class="map-layer-toggle"
+                      data-connection-toggle
+                      type="button"
+                      aria-pressed="true"
+                    >
+                      <span class="connection-toggle-icon" aria-hidden="true"
+                        >⌁</span
+                      >
+                      교역 관계 표시
+                    </button>
+                  </div>
                 </div>
                 <div class="map-stage">
                   <svg
@@ -494,6 +555,9 @@
                   </svg>
                 </div>
                 <p class="readout" id="r-readout" aria-live="polite"></p>
+                <p id="r-connection-caption" class="connection-explainer">
+                  연결선은 선택한 교역 관계이며 실제 운송 경로가 아닙니다.
+                </p>
                 <p class="caption">
                   <i class="partner-marker" aria-hidden="true"></i>테두리는
                   선택한 상대국입니다. 지도나 표에서 상대국을 고르면 상세가
@@ -1298,11 +1362,13 @@
     </div>
     <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 
-    <script defer src="assets/app.js?v=7"></script>
+    <script defer src="assets/app.js?v=8"></script>
     <script defer src="assets/analysis.js?v=2"></script>
     <script defer src="assets/workspace-state.js?v=1"></script>
-    <script defer src="assets/studio.js?v=6"></script>
+    <script defer src="assets/studio.js?v=7"></script>
     <script defer src="assets/research.js?v=1"></script>
+    <script defer src="assets/atlas-model.js?v=1"></script>
+    <script defer src="assets/atlas.js?v=1"></script>
     <dialog id="note-dialog" class="sheet-dialog" aria-labelledby="note-title">
       <div class="dialog-heading">
         <h2 id="note-title">분석 메모</h2>

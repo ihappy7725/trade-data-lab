@@ -156,3 +156,12 @@ DOM 통합 검증은 별도 jsdom 설치가 필요합니다. 실제 브라우저
 npm install --prefix /tmp/tradeweave-tests --cache /tmp/tradeweave-npm-cache jsdom@31.0.1
 NODE_PATH=/tmp/tradeweave-tests/node_modules node scripts/test-research-dom.cjs
 ```
+
+
+### Open Atlas 디자인 · 2026-11-23
+
+사용자 디자인 레퍼런스를 반영해 밝은 쿨 화이트와 안개색 지형, 넓게 펼친 홈 지도·수평 순위 카드·두 열 탐색 질문으로 정비했습니다. 분석 화면·표·상세·대화상자도 같은 시각 체계를 사용합니다. 지도 도법·5개 비중 구간·BACI 수치는 유지합니다.
+
+홈은 기본 1위 상대국, 결과는 선택 상대국의 실제 교역 관계에 핀·연결선·수치 라벨을 표시합니다. 가리키기/초점은 임시 미리보기이며 분석 선택값을 바꾸지 않습니다. ‘교역 관계 표시’로 끄고 켤 수 있습니다. 선은 운송 경로가 아니며 핀은 지도상의 대표 위치입니다. 미기록이나 대표점 없는 지역에는 선을 만들지 않습니다. 작은 화면에서는 SVG 라벨 대신 HTML 관계 정보/상세를 사용합니다.
+
+대표점은 `scripts/build_map.mjs`에서 기존 지도와 같은 투영으로 재생성합니다. `assets/atlas-model.js`는 관계선 기하, `atlas.js`는 시각 상호작용, `atlas.css`는 레퍼런스를 반영한 시각 체계입니다. `node scripts/test-atlas.cjs`로 대표점·방향·라벨 경계를 추가 검증합니다. 실제 브라우저의 전체 화면/모션/모바일 시각 검수는 별도로 필요합니다.
