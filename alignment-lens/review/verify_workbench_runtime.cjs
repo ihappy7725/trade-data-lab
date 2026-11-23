@@ -4,13 +4,33 @@ const nodes=new Map(),events={},requests=[];
 function node(key){if(!nodes.has(key))nodes.set(key,{textContent:'',innerHTML:'',dataset:{},hidden:true,value:'',handlers:{},addEventListener(name,fn){this.handlers[name]=fn;},setAttribute(){},focus(){},scrollIntoView(){}});return nodes.get(key);}
 const context={TradeCompare:C,document:{documentElement:{dataset:{}},querySelector:node,querySelectorAll:()=>[],addEventListener:(k,fn)=>events[k]=fn},matchMedia:()=>({matches:false,addEventListener(){}}),location:{hash:'#/'},history:{replaceState(_a,_b,hash){context.location.hash=hash;}},window:{addEventListener(){},scrollTo(){}},URL,URLSearchParams,Intl,setTimeout:()=>0,clearTimeout(){},requestAnimationFrame:fn=>fn(),fetch:async url=>{requests.push(url);assert.ok(url.startsWith('data/workbench/'));return {ok:true,json:async()=>structuredClone(cat)};}};
 for(const target of [context,context.window])Object.defineProperty(target,'localStorage',{get(){throw Error('Storage access is blocked');}});
-const script=fs.readFileSync(path.join(root,'assets/workbench.js'),'utf8').replace(/\}\)\(\);\s*$/,'globalThis.test={render,openNote,getNote,evidence,setLang:v=>{lang=v}};})();');
+const script=fs.readFileSync(path.join(root,'assets/workbench.js'),'utf8').replace(/\}\)\(\);\s*$/,'globalThis.test={render,openNote,getNote,evidence,citation,copyCitation,setLang:v=>{lang=v}};})();');
 vm.createContext(context);vm.runInContext(script,context);
 (async()=>{
  for(let i=0;i<12;i++)await Promise.resolve();
  const t=context.test;
  for(const lang of ['ko','en']){t.setLang(lang);for(const hash of ['#/','#compare?from=KOR&to=USA&year=2023&a=un-KOR-USA-2023-X&b=un-USA-KOR-2023-M','#about','#method','#sources']){context.location.hash=hash;t.render();assert.ok(node('#content').innerHTML.length>500);assert.doesNotMatch(node('#content').innerHTML,/undefined|NaN/);if(lang==='en')assert.doesNotMatch(node('#content').innerHTML,/[가-힣]/);}}
  t.setLang('en');context.location.hash='#compare?from=KOR&to=USA&year=2023&a=un-KOR-USA-2023-X&b=un-USA-KOR-2023-M';t.render();
+ const result=node('#content').innerHTML;
+ assert.match(result,/Conditions to check before citing/);
+ assert.match(result,/amount-track/);
+ assert.match(result,/View all comparison conditions/);
+ let copied;
+ context.navigator={clipboard:{writeText:async value=>{copied=value;}}};
+ await t.copyCitation();
+ assert.match(copied,/116,290,387,484 USD/);
+ assert.match(copied,/119,716,388,241 USD/);
+ assert.match(copied,/3,426,000,757 USD/);
+ assert.match(copied,/FOB/);
+ assert.match(copied,/CIF/);
+ assert.match(copied,/Unconfirmed conditions/);
+ assert.match(copied,/https:\/\/comtradeapi\.un\.org/);
+ context.navigator.clipboard.writeText=async()=>{throw Error('permission');};
+ let selected=false;
+ node('#citation-text').select=()=>{selected=true;};
+ await t.copyCitation();
+ assert.equal(node('#citation-preview').open,true);
+ assert.equal(selected,true);
  const n=t.getNote();n.memo='<img src=x onerror=alert(1)>';await t.openNote({size:JSON.stringify(n).length,text:async()=>JSON.stringify(n)});context.location.hash='#note';t.render();
  assert.ok(node('#content').innerHTML.includes('&lt;img'));assert.ok(!node('#content').innerHTML.includes('<img src=x'));
  const before=JSON.stringify(t.getNote());await t.openNote({size:20,text:async()=>'{bad'});assert.equal(JSON.stringify(t.getNote()),before);

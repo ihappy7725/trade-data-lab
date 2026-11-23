@@ -22,28 +22,81 @@ function chrome(){
  $('.skip').textContent=L('본문으로','Skip to content');$('#note-file').setAttribute('aria-label',L('근거 노트 JSON 파일','Evidence note JSON file'));$('header nav').setAttribute('aria-label',L('주 메뉴','Main navigation'));
  document.title='CrossCite · '+L('무역 숫자 대조·근거 기록','Trade comparison and evidence notes');
 }
+const exampleHash = '#compare?from=KOR&to=USA&year=2023&a=un-KOR-USA-2023-X&b=un-USA-KOR-2023-M';
+const recordName = r => r.flow === 'X'
+ ? L(country(r.reporter)+'의 수출 기록', country(r.reporter)+' export record')
+ : L(country(r.reporter)+'의 수입 기록', country(r.reporter)+' import record');
+
+function conditionSummary(audit){
+ const items = status => audit.checks.filter(c => c.status === status);
+ const basis = {FOB:L('FOB는 수출 쪽에서 가격을 매기는 기준입니다. 수입항까지의 국제 운임과 보험료는 포함하지 않습니다.','FOB values goods at export and excludes international freight and insurance to the importing port.'), CIF:L('CIF는 수입항까지의 운임과 보험료를 포함합니다.','CIF includes freight and insurance to the port of import.')};
+ const price = audit.checks.find(c => c.key === 'valuation');
+ const guidance = price.status === 'different'
+  ? [...new Set([price.a,price.b])].map(key => Object.hasOwn(basis,key) ? basis[key] : '').filter(Boolean).join(' ')
+  : '';
+ return `<section class="condition-summary"><h3>${L('인용 전에 확인할 조건','Conditions to check before citing')}</h3>
+ <dl><dt>${L('차이 있음','Different')}</dt><dd>${items('different').map(c=>E(L(...descriptions[c.key]))+': '+E(show(c.a))+' / '+E(show(c.b))).join(' · ')||L('확인된 차이 없음','No differences found')}</dd>
+ <dt>${L('확인 불가','Unknown')}</dt><dd>${items('unknown').map(c=>E(L(...descriptions[c.key]))).join(' · ')||L('없음','None')}</dd></dl>
+ ${guidance ? `<p>${guidance}</p>` : ''}
+ ${items('unknown').length ? `<p>${L('인용에 필요한 미확인 조건은 출처에서 추가로 확인하세요.','Check the original sources for any missing conditions relevant to your citation.')}</p>` : ''}</section>`;
+}
+
+function citation(audit){
+ const {a,b,gap} = audit;
+ const unit = r => r.currency + (r.unit === '1' ? '' : ' × '+r.unit);
+ const scope = r => r.commodity === 'TOTAL' ? L('상품 전체','all goods') : r.commodity;
+ const records = [a,b].map((r,i) => L(
+  `${'AB'[i]}. ${r.year}년 ${country(r.origin)} → ${country(r.destination)} (${scope(r)}): ${recordName(r)} ${r.value===null?'금액 미확인':num(r.value)+' '+unit(r)} (가격 기준 ${show(r.valuation)}). 출처: ${r.publisher}, ${r.edition}, ${r.retrieved_on} 조회. ${r.source_url}`,
+  `${'AB'[i]}. ${r.year}, ${country(r.origin)} → ${country(r.destination)} (${scope(r)}): ${recordName(r)}, ${r.value===null?'amount unavailable':num(r.value)+' '+unit(r)} (valuation: ${show(r.valuation)}). Source: ${r.publisher}, ${r.edition}, retrieved ${r.retrieved_on}. ${r.source_url}`));
+ const difference = gap === null
+  ? L('비교 조건이 맞지 않거나 금액이 빠진 경우 차액 계산을 보류합니다.','The difference is withheld because the amounts or required comparison conditions do not support calculation.')
+  : L(`단순 차액(B−A)은 ${num(gap)} ${unit(a)}입니다. 가격·신고 기준을 조정하지 않은 값이며, 차이의 원인이나 통계 오류는 이 계산으로 판단할 수 없습니다.`,`The unadjusted difference (B−A) is ${num(gap)} ${unit(a)}. Valuation and reporting bases were not adjusted, and the calculation cannot establish causes or statistical errors.`);
+ const differences = audit.checks.filter(c=>c.status==='different').map(c=>L(...descriptions[c.key]));
+ if(differences.length) records.push(L('서로 다른 조건: ','Conditions that differ: ')+differences.join(', ')+'.');
+ const unknown = audit.checks.filter(c=>c.status==='unknown').map(c=>L(...descriptions[c.key]));
+ if(unknown.length) records.push(L('확인되지 않은 조건: ','Unconfirmed conditions: ')+unknown.join(', ')+'.');
+ if(imported && !imported.verified) records.push(L('불러온 파일의 기록이며, 출처와 금액을 보존 조회본으로 확인하지 못했습니다.','These records came from an imported file and could not be verified against a preserved snapshot.'));
+ return [...records,difference].join('\n\n');
+}
+
 function builder(){
  const origins=catalog.countries.filter(c=>catalog.records.some(r=>r.origin===c.iso3));
  const destinations=catalog.countries.filter(c=>catalog.records.some(r=>r.origin===state.origin&&r.destination===c.iso3));
  const years=[...new Set(catalog.records.filter(r=>r.origin===state.origin&&r.destination===state.destination).map(r=>r.year))].sort();
  const list=records(),a=list.find(r=>r.id===state.left),b=list.find(r=>r.id===state.right);
- return `<section class="workspace-intro"><p class="eyeline">${L('무역 데이터 대조·점검','Trade data comparison')}</p><h1>${L('숫자를 쓰기 전에,<br>기준부터 확인하세요.','Before citing a number,<br>check what it measures.')}</h1><p class="hero-sub">${L('자료를 고르고, 비교 조건을 확인하고, 근거까지 보관하세요.','Choose records, check their conditions, and keep the evidence.')}</p></section>
- <section class="builder-layout"><div class="builder-panel"><div class="section-heading"><h2>${L('새 대조 만들기','Create a comparison')}</h2><a class="source" href="mirrorline-case.html#case/usa-chn-2017">${L('미·중 사례 읽기','Read the US–China example')}</a></div>
+ const coverage = [catalog.countries.map(c=>country(c.iso3)).join(' · '),
+  [...new Set(catalog.records.map(r=>r.year))].sort().join(' · '), L('연간 상품 전체','Annual totals for all goods')];
+ return `<section class="workspace-intro"><h1>${L('무역 기록 대조','Compare trade records')}</h1>
+ <p class="hero-sub">${L('같은 교역의 두 기록을 비교하고 인용 근거를 남깁니다.','Compare two records of the same trade flow and keep the evidence for citation.')}</p></section>
+ <section class="builder-layout"><div class="builder-panel"><div class="section-heading"><h2>${L('새 대조 만들기','Create a comparison')}</h2></div>
+ <p class="coverage">${coverage.map(E).join(' / ')}</p>
  <form id="compare-form"><div class="form-grid"><label>${L('물건을 보내는 나라','Goods leave from')}<select name="origin" id="origin" required>${options(origins.map(c=>[c.iso3,country(c.iso3)]),state.origin,L('나라 선택','Select country'))}</select></label><label>${L('물건을 받는 나라','Goods arrive in')}<select name="destination" id="destination" required ${!state.origin?'disabled':''}>${options(destinations.map(c=>[c.iso3,country(c.iso3)]),state.destination,L('나라 선택','Select country'))}</select></label><label>${L('기준연도','Reference year')}<select name="year" id="year" required ${!state.destination?'disabled':''}>${options(years.map(y=>[y,y]),state.year,L('연도 선택','Select year'))}</select></label><div class="scope-field"><span>${L('지원 범위','Available scope')}</span><strong>${L('상품 전체 · 연간','All goods · annual')}</strong><small>${L('품목별·월별 대조는 아직 제공하지 않습니다.','Product-level and monthly comparisons are not available yet.')}</small></div></div>
  <fieldset class="record-fields" ${!state.year?'disabled':''}><legend>${L('대조할 기록','Records to compare')}</legend><label>${L('기록 A','Record A')}<select id="left" required>${options(list.map(r=>[r.id,label(r)]),state.left,L('기록 선택','Select a record'))}</select></label><label>${L('기록 B','Record B')}<select id="right" required>${options(list.filter(r=>r.id!==state.left).map(r=>[r.id,label(r)]),state.right,L('다른 기록 선택','Select another record'))}</select></label></fieldset>
  ${a&&b?`<p class="source selected-summary">${country(a.origin)} → ${country(a.destination)} · ${a.year} · ${L('기록 A와 B의 가격 기준을 결과에서 점검합니다.','Valuation bases are checked in the results.')}</p>`:''}
  <button type="submit" class="primary" ${!a||!b?'disabled':''}>${L('조건 점검하고 대조하기','Check conditions and compare')}</button></form></div>
- <aside class="builder-aside"><h3>${L('저장한 근거가 있나요?','Have an evidence note?')}</h3><p>${L('노트 파일을 열면 당시 금액과 조건으로 다시 계산합니다. 파일은 서버로 보내지 않습니다.','Open a note to recalculate its preserved amounts and conditions. The file stays in your browser.')}</p><button data-action="open">${L('노트 파일 열기','Open note file')}</button><details><summary>${L('현재 지원하는 자료','Available datasets')}</summary><p class="source">${catalog.countries.map(c=>country(c.iso3)).join(' · ')}<br>${[...new Set(catalog.records.map(r=>r.year))].sort().join(' · ')}<br>UN Comtrade / ${L('미·중 일부 Census 참고값','selected US–China Census reference records')}</p><p class="source">${L('지원 조합은 실제 수집된 자료만 표시합니다. 최신·전 세계 자료를 뜻하지 않습니다.','Only collected combinations are shown. This is not live or worldwide coverage.')}</p><a href="#sources">${L('조회본과 출처','Snapshots and sources')}</a></details></aside></section>`;
+ <aside class="builder-aside"><h3>${L('실제 대조 예시','Try a real comparison')}</h3>
+ <p>${L('같은 교역을 한국은 수출로, 미국은 수입으로 기록합니다. 두 금액과 가격 기준을 확인해 보세요.','Korea records the flow as an export, and the US as an import. See how their amounts and valuation bases compare.')}</p>
+ <a class="example-link" href="${exampleHash}">${L('한국 → 미국 · 2023년','Korea → US · 2023')} <span aria-hidden="true">↗</span></a>
+ <div class="aside-links"><button data-action="open">${L('노트 파일 열기','Open a saved note')}</button><a class="source" href="mirrorline-case.html#case/usa-chn-2017">${L('미·중 사례 읽기','Read the US–China case')}</a></div></aside></section>`;
+
 }
 function result(){
  const {a,b}=current,r=C.audit(a,b);
- return `<section id="result" class="section result-section"><div class="section-heading"><div><p class="eyeline">${r.comparison_kind==='mirror'?L('같은 교역의 수출·수입 기록 대조','Exporter / importer comparison'):L('같은 흐름의 자료 간 대조','Same-flow source comparison')}</p><h2>${country(a.origin)} → ${country(a.destination)} · ${a.year}</h2></div><button data-action="swap">${L('기록 A·B 바꾸기','Swap records A and B')}</button></div>
+ const max = r.blocked ? 0 : Math.max(Number(a.value),Number(b.value));
+ const bar = value => r.blocked ? '' : `<div class="amount-track" aria-hidden="true"><span style="width:${max ? Number(value)/max*100 : 0}%"></span></div>`;
+ return `<section id="result" class="section result-section"><div class="section-heading"><div><p class="eyeline">${r.comparison_kind==='mirror'?L('같은 교역의 수출·수입 기록 대조','Exporter / importer comparison'):L('같은 흐름의 자료 간 대조','Same-flow source comparison')}</p><h2 tabindex="-1">${country(a.origin)} → ${country(a.destination)} · ${a.year}</h2></div><div class="result-actions"><button data-action="edit">${L('조건 바꾸기','Edit selection')}</button><button data-action="swap">${L('기록 A·B 바꾸기','Swap records A and B')}</button></div></div>
  ${imported?`<div class="note import-banner"><strong>${imported.verified?L('파일의 두 기록이 보존된 서비스 조회본과 일치합니다.','The two file records match a preserved service snapshot.'):L('파일에 담긴 기록을 불러왔습니다. 원자료 진위는 확인하지 않았습니다.','Records loaded from the file. Source authenticity has not been verified.')}</strong><p>${L('검사 결과와 차액은 이 화면에서 다시 계산했습니다.','Conditions and differences have been recalculated here.')}</p><button data-action="recheck">${L('현재 내장자료와 다시 대조','Compare with the current catalog')}</button></div>`:''}
- <div class="record-pair">${[a,b].map((x,i)=>`<article><p class="eyeline">${L('기록','Record')} ${'AB'[i]}</p><h3>${E(label(x))}</h3><div class="record-amount">${readable(x.value)} <small>${L('십억','billion')}${x.unit==='1'?'':' × '+E(x.unit)} ${E(x.currency)}</small></div><p class="exact-amount">${num(x.value)} ${E(x.currency)}${x.unit==='1'?'':' / '+L('단위','unit')+' '+E(x.unit)} · ${E(x.valuation??L('기준 미확인','basis unknown'))}</p><p class="source">${ref(x)}</p><details><summary>${L('자료 상태와 원본 해시','Record flags and source hash')}</summary><p class="source">${L('집계','Aggregate')}: ${show(x.aggregate)} · ${L('직접 신고 플래그','Reported flag')}: ${show(x.reported)}<br>${L('집계 기록을 개별 세관 신고서로 해석하지 않습니다.','Aggregate records are not individual customs declarations.')}<br>SHA-256 <code>${E(x.source_hash)}</code></p></details></article>`).join('')}</div>
+ <div class="record-pair">${[a,b].map((x,i)=>`<article><p class="eyeline">${L('기록','Record')} ${'AB'[i]}</p><h3>${E(recordName(x))}</h3><div class="record-amount">${readable(x.value)} <small>${L('십억','billion')}${x.unit==='1'?'':' × '+E(x.unit)} ${E(x.currency)}</small></div>${bar(x.value)}<p class="exact-amount">${num(x.value)} ${E(x.currency)}${x.unit==='1'?'':' / '+L('단위','unit')+' '+E(x.unit)} · ${E(x.valuation??L('기준 미확인','basis unknown'))}</p><p class="source">${ref(x)}</p><details><summary>${L('자료 상태와 원본 해시','Record flags and source hash')}</summary><p class="source">${L('집계','Aggregate')}: ${show(x.aggregate)} · ${L('직접 신고 플래그','Reported flag')}: ${show(x.reported)}<br>${L('집계 기록을 개별 세관 신고서로 해석하지 않습니다.','Aggregate records are not individual customs declarations.')}<br>SHA-256 <code>${E(x.source_hash)}</code></p></details></article>`).join('')}</div>
  <div class="difference"><div><span>${L('단순 차액 · 기록 B − 기록 A','Unadjusted difference · record B − record A')}</span><strong>${r.gap===null?L('차액 계산 보류','Difference not calculated'):num(r.gap)+' '+E(a.currency)+(a.unit==='1'?'':' / '+L('단위','unit')+' '+E(a.unit))}</strong></div><p>${r.blocked?L('기간·방향·통화·단위·품목이 다르거나 기록이 빠져 있어 차액을 계산하지 않습니다.','A required scope differs or a value is missing, so a difference is not calculated.'):L('가격·신고 기준을 보정하지 않은 산술적 차이입니다. 오류 금액이나 원인 기여액을 뜻하지 않습니다.','An arithmetic difference without valuation or reporting adjustments. It is not an estimate of error or causal contribution.')}</p></div>
- <h3>${L('비교 조건 점검','Comparison conditions')}</h3><p class="source">${L('일치는 해당 항목의 정보가 같다는 뜻입니다. 통계 전체의 정확성을 보증하지 않습니다.','A match means that condition agrees. It does not certify the statistics as a whole.')}</p>
+ ${conditionSummary(r)}
+ <section class="citation-panel"><h3>${L('인용 문장','Citation text')}</h3>
+ <button class="primary" data-action="copy">${L('출처와 함께 복사','Copy with sources')}</button>
+ <details id="citation-preview"><summary>${L('인용 문장 보기','View citation text')}</summary>
+ <textarea id="citation-text" aria-label="${L('복사할 인용 문장','Citation text to copy')}" readonly rows="7">${E(citation(r))}</textarea></details></section>
+ <details class="full-audit"><summary>${L('전체 비교 조건 보기','View all comparison conditions')}</summary><p class="source">${L('일치는 해당 항목의 정보가 같다는 뜻입니다. 통계 전체의 정확성을 보증하지 않습니다.','A match means that condition agrees. It does not certify the statistics as a whole.')}</p>
  <div class="audit-list">${r.checks.map(c=>`<article class="audit-row"><h4>${L(...descriptions[c.key])}</h4><div><span>A</span> ${E(show(c.a))}<br><span>B</span> ${E(show(c.b))}</div><strong class="audit-status ${c.status}">${c.status==='match'?L('일치','Match'):c.status==='different'?L('차이 있음','Different'):L('확인 불가','Unknown')}</strong></article>`).join('')}</div>
  <p class="source">${L('자료 발표·개정일, 상대국 지정 기준과 무역 집계 체계는 이 조회 응답만으로 확정하지 않아 ‘확인 불가’로 남깁니다. FOB는 Comtrade 필드 이름이며 미국 원통계의 FAS와 구분합니다.','Data release/revision date, partner attribution, and trade system are not established from these responses and remain unknown. FOB is the Comtrade field label, distinguished from FAS in US national statistics.')} <a target="_blank" rel="noopener noreferrer" href="https://uncomtrade.org/docs/bilateral-asymmetries/">${L('UN 비교 기준 설명','UN comparison guidance')}</a> / <a target="_blank" rel="noopener noreferrer" href="https://www.census.gov/foreign-trade/reference/guides/tradestatsinfo.html">${L('Census 가격 기준','Census valuation')}</a></p>
+ </details>
  ${revision?revisionPanel():''}
  <section class="note-editor"><h3>${L('내 근거 노트','My evidence note')}</h3><label for="memo">${L('메모 · 파일에만 저장됩니다','Memo · saved only in the file')}</label><textarea id="memo" maxlength="5000" rows="4" placeholder="${L('어디에 인용할지, 무엇을 더 확인할지 적어 두세요.','Record how you will cite this and what remains to check.')}">${E(memo)}</textarea><div class="button-group"><button class="primary" data-action="save">${L('다시 열 수 있는 노트 저장','Save a reopenable note')}</button><button data-action="csv">${L('정확한 값 CSV','Exact amounts CSV')}</button><button data-action="md">${L('인용용 근거 문서','Evidence document')}</button></div><p class="source">${L('노트 JSON은 금액·조건·출처와 메모를 보존합니다. CSV·문서는 읽기와 인용용입니다. 언어·테마·메모를 브라우저 저장소에 기록하지 않습니다.','Note JSON preserves values, conditions, sources, and your memo. CSV and evidence documents are for reading and citation. Language, theme, and memo are not written to browser storage.')}</p></section></section>`;
 }
@@ -77,11 +130,29 @@ function render(scroll=false){
  }else{current=null;warning=L('이 주소의 기록을 사용할 수 없습니다. 지원 목록에서 다시 선택해 주세요.','The linked records are unavailable. Choose from the supported catalog.');}
  }else if(route!=='note'){current=null;imported=null;revision=false;if(!['','/'].includes(route))warning=L('이 주소의 대조는 제공하지 않습니다. 지원 목록에서 선택해 주세요.','This comparison is unavailable. Choose from the supported catalog.');}
  $('#content').innerHTML=(warning?`<p class="note" role="alert">${warning}</p>`:'')+builder()+(current?result():route==='note'?`<p class="note">${L('새로고침하면 파일을 다시 열어 주세요. 노트는 브라우저 저장소에 보관하지 않습니다.','After a refresh, reopen the note file. Notes are not stored in browser storage.')}</p>`:'');
- chrome();if(scroll&&current)requestAnimationFrame(()=>$('#result')?.scrollIntoView({block:'start',behavior:'instant'}));else if(scroll)window.scrollTo({top:0,behavior:'instant'});
+ chrome();if(scroll&&current)requestAnimationFrame(()=>{
+  $('#result')?.scrollIntoView({block:'start',behavior:'instant'});
+  $('#result h2')?.focus({preventScroll:true});
+ });else if(scroll)window.scrollTo({top:0,behavior:'instant'});
 }
 function getNote(){if(!current)throw Error('selection');return C.makeNote(current.a,current.b,current.snapshot,memo,imported?.note.created_at);}
 function evidence(n){const r=C.audit(...n.observations);return `# CrossCite — ${L('무역 데이터 대조 근거','Trade comparison evidence')}\n\n${n.observations.map((x,i)=>`${'AB'[i]}: ${x.publisher} / ${x.reporter} ${x.flow} / ${x.origin} → ${x.destination} / ${x.year} / ${x.commodity}\n${x.value??L('기록 없음','No record')} ${x.currency} (unit ${x.unit}); ${x.valuation??'unknown'}\nSource: ${x.source_url}\nEdition: ${x.edition}; retrieved: ${x.retrieved_on}\nSHA-256: ${x.source_hash}`).join('\n\n')}\n\nB − A: ${r.gap??L('계산 보류','Not calculated')} ${r.gap===null?'':r.a.currency}\n${L('가격 기준 미조정 차액이며 원인·오류를 입증하지 않는다.','Unadjusted difference; it does not establish causation or error.')}\n\n## ${L('조건 점검','Conditions')}\n${r.checks.map(c=>`- ${L(...descriptions[c.key])}: ${c.status}; A=${show(c.a)}, B=${show(c.b)}`).join('\n')}\n\n## ${L('사용자 메모','User memo')}\n${n.memo}\n\nSnapshot: ${n.snapshot_id}\nSaved: ${n.created_at}\n`;}
 function download(kind){const n=getNote(),text=kind==='json'?JSON.stringify(n,null,2):kind==='csv'?C.csv(n):evidence(n);const blob=new Blob([text],{type:kind==='json'?'application/json;charset=utf-8':kind==='csv'?'text/csv;charset=utf-8':'text/markdown;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`crosscite-note-${n.observations[0].origin}-${n.observations[0].destination}-${n.observations[0].year}.${kind}`;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);message(L('출처와 비교 조건을 포함한 파일을 내려받았습니다.','The file includes source and condition information.'));}
+async function copyCitation(){
+ const text = citation(C.audit(current.a,current.b));
+ try {
+  await navigator.clipboard.writeText(text);
+  message(L('출처가 포함된 인용 문장을 복사했습니다.','Citation text with sources copied.'));
+ } catch {
+  const preview = $('#citation-preview');
+  if (!preview) return;
+  preview.open = true;
+  const field = $('#citation-text');
+  field.focus();
+  field.select();
+  message(L('자동 복사를 사용할 수 없습니다. 선택한 문장을 직접 복사하세요.','Automatic copy is unavailable. Copy the selected text manually.'));
+ }
+}
 let timer;function message(s){clearTimeout(timer);$('#message').textContent=s;$('#message').hidden=false;timer=setTimeout(()=>$('#message').hidden=true,5000);}
 async function openNote(file){
  const seq=++importSeq;
@@ -109,6 +180,8 @@ document.addEventListener('change',e=>{
 });
 document.addEventListener('submit',e=>{if(e.target.id!=='compare-form')return;e.preventDefault();memo='';revision=false;const hash=buildHash();if(location.hash===hash)render(true);else location.hash=hash;});
 document.addEventListener('click',e=>{const b=e.target.closest('button[data-action]');if(!b)return;const action=b.dataset.action;
+ if(action==='edit') { $('#origin').focus(); }
+ if(action==='copy') copyCitation();
  if(action==='open')$('#note-file').click();if(action==='save')download('json');if(action==='csv')download('csv');if(action==='md')download('md');
  if(action==='swap'&&current){const old=current.a;current.a=current.b;current.b=old;if(imported){imported.note.observations=[current.a,current.b];render();}else{state.left=current.a.id;state.right=current.b.id;location.hash=buildHash();}}
  if(action==='recheck'){revision=true;render();$('#result')?.scrollIntoView({block:'start',behavior:'instant'});}
