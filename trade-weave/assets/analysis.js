@@ -56,7 +56,20 @@
       return (value > 0 ? "+" : "−") + "0.1" + unit + " 미만";
     return (value > 0 ? "+" : "−") + Math.abs(value).toFixed(1) + unit;
   }
+  function periodRows(before, current) {
+    const delta = changes(before, current);
+    return [...delta.common, ...delta.entered, ...delta.absent].map((row) => ({
+      ...row,
+      status:
+        row.before && row.after ? "both" : row.before ? "absent" : "entered",
+      pp: row.before && row.after ? row.after.p - row.before.p : null,
+      valueChange: row.before && row.after ? row.after.v - row.before.v : null,
+      rankChange:
+        row.before && row.after ? row.before.rank - row.after.rank : null,
+    }));
+  }
   var api = {
+    periodRows: periodRows,
     changes: changes,
     sortChanges: sortChanges,
     hhi: hhi,

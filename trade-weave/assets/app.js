@@ -6,6 +6,8 @@
   var CATALOG = null;
   var SERIES = null;
   var datasetCache = new Map();
+  var seriesStatus = {};
+  var cacheLimit = 12;
   var loadPromise = null;
   var renderId = 0;
   var selection = {
@@ -152,7 +154,8 @@
 
   function resultRoute(iso, flow, section, partner, context) {
     const destinationTab = tabForSection[section];
-    if (destinationTab) context = { ...(context || selection), tab: destinationTab };
+    if (destinationTab)
+      context = { ...(context || selection), tab: destinationTab };
     return scopedPath(
       "see/" + iso + "/" + flow + (section ? "/" + section : ""),
       partner,
@@ -254,28 +257,72 @@
           return response.json();
         })
         .catch(function (error) {
-          datasetCache.delete(key);
+          if (datasetCache.get(key) === promise) datasetCache.delete(key);
           throw error;
         });
       datasetCache.set(key, promise);
     }
-    return datasetCache.get(key);
+    const cached = datasetCache.get(key);
+    datasetCache.delete(key);
+    datasetCache.set(key, cached);
+    for (const candidate of datasetCache.keys()) {
+      if (datasetCache.size <= cacheLimit) break;
+      if (!candidate.endsWith("/" + selection.product) && candidate !== key)
+        datasetCache.delete(candidate);
+    }
+    return cached;
   }
 
   async function loadScope(year, product) {
-    var snapshots = await Promise.all(
-      CATALOG.years.map(function (value) {
-        return getDataset(value, product);
-      }),
-    );
-    var series = {};
-    CATALOG.years.forEach(function (value, index) {
-      series[value] = snapshots[index];
+    const selected = await getDataset(year, product);
+    return { selected, series: { [year]: selected } };
+  }
+
+  function updateSeriesNotice() {
+    const missing = CATALOG.years.filter((year) => !SERIES[year]);
+    const failed = missing.filter((year) => seriesStatus[year] === "error");
+    document.getElementById("series-notice").hidden = !missing.length;
+    document.getElementById("series-status").textContent = failed.length
+      ? failed.join("·") +
+        "년 비교 자료를 불러오지 못했습니다. 선택연도 지도와 표는 계속 사용할 수 있습니다."
+      : missing.join("·") +
+        "년 비교 자료를 준비하고 있습니다. 선택연도 지도와 표를 먼저 탐색하세요.";
+    document.getElementById("retry-series").hidden = !failed.length;
+    document.getElementById("download-report").disabled = !!missing.length;
+    document.getElementById("report-availability").textContent = missing.length
+      ? "전체 보고서는 모든 연도 자료가 준비된 뒤 저장할 수 있습니다."
+      : "모든 연도의 자료가 준비됐습니다.";
+    document.getElementById("comparison-csv").disabled = !!missing.length;
+    document.getElementById("changes-csv").disabled =
+      !SERIES[selection.compareYear];
+  }
+
+  function hydrateSeries(product, retry) {
+    CATALOG.years.forEach((year) => {
+      if (SERIES[year] || (!retry && seriesStatus[year] === "error")) return;
+      seriesStatus[year] = "loading";
+      getDataset(year, product)
+        .then((dataset) => {
+          if (selection.product !== product) return;
+          SERIES[year] = dataset;
+          seriesStatus[year] = "ready";
+        })
+        .catch(() => {
+          if (selection.product === product) seriesStatus[year] = "error";
+        })
+        .finally(() => {
+          if (selection.product !== product || !SERIES) return;
+          updateSeriesNotice();
+          if (!document.getElementById("view-see").hidden) renderComparison();
+          else emitRender();
+        });
     });
-    return { selected: series[year], series: series };
+    updateSeriesNotice();
   }
 
   function comparisonMetrics(dataset) {
+    if (!dataset)
+      return { relation: null, cr5: null, hhi: null, count: 0, total: null };
     var data = rows(selection.iso, selection.flow, dataset);
     var relation = selection.partner
       ? partnerRelationship(
@@ -339,6 +386,7 @@
       card.type = "button";
       card.className = "year-card";
       card.dataset.historyYear = year;
+      card.disabled = !SERIES[year];
       card.setAttribute("aria-pressed", String(year === selection.year));
       var label = document.createElement("span");
       label.className = "year-label";
@@ -362,7 +410,11 @@
       amount.textContent =
         relation && relation.row
           ? "교역액 " + fmtUsd(relation.row.v)
-          : "상대국 교역 기록 없음";
+          : !SERIES[year]
+            ? seriesStatus[year] === "error"
+              ? "자료 불러오기 실패"
+              : "자료 준비 중"
+            : "상대국 교역 기록 없음";
       var structure = document.createElement("span");
       structure.className = "caption";
       structure.textContent =
@@ -371,7 +423,9 @@
             fmtPct(metrics.cr5) +
             " · HHI " +
             Math.round(metrics.hhi).toLocaleString("ko-KR")
-          : "이 품목·방향의 교역 기록 없음";
+          : !SERIES[year]
+            ? "자료가 준비되면 비교지표를 표시합니다."
+            : "이 품목·방향의 교역 기록 없음";
       card.append(label, share, amount, structure);
       container.appendChild(card);
     });
@@ -392,7 +446,12 @@
       entries.push(
         "교역액 " + signedChange((after.row.v / before.row.v - 1) * 100, "%"),
       );
-    } else entries.push("상대국 교역액·비중은 비교할 기록이 없습니다.");
+    } else
+      entries.push(
+        !SERIES[selection.compareYear]
+          ? "비교연도 자료가 준비되면 변화를 계산합니다."
+          : "상대국 교역액·비중은 비교할 기록이 없습니다.",
+      );
     if (previous.cr5 !== null && current.cr5 !== null)
       entries.push("CR5 " + signedChange(current.cr5 - previous.cr5, "%p"));
     entries.forEach(function (text) {
@@ -411,6 +470,7 @@
       scopeName() +
       " · 교역액은 경상 달러 기준";
     document.getElementById("r-comparison").hidden = false;
+    updateSeriesNotice();
     emitRender();
   }
 
@@ -430,7 +490,7 @@
     tooltip.style.top = Math.max(12, top) + "px";
   }
 
-  function showMapTooltip(event, code, iso, flow, row) {
+  function showMapTooltip(event, code, iso, flow, row, mapYear) {
     if (event.pointerType === "touch") return;
     document.getElementById("tooltip-country").textContent = code
       ? nameOf(code)
@@ -442,7 +502,7 @@
           ? fmtPct(row.p) + " · " + fmtUsd(row.v)
           : "교역 기록 또는 자료 없음";
     document.getElementById("tooltip-scope").textContent =
-      selection.year + " · " + scopeName() + " · " + wordOf(flow);
+      (mapYear || selection.year) + " · " + scopeName() + " · " + wordOf(flow);
     positionMapTooltip(event);
     document.getElementById("map-tooltip").classList.add("is-visible");
   }
@@ -585,10 +645,6 @@
         .then(async function (data) {
           CATALOG = data[0];
           MAP = data[1];
-          TRADE = await getDataset(
-            CATALOG.default.year,
-            CATALOG.default.product,
-          );
           if (selection.year === null) {
             selection.year = CATALOG.default.year;
             selection.product = CATALOG.default.product;
@@ -825,6 +881,25 @@
       list.appendChild(li);
     });
     list.hidden = !policies.length;
+    document
+      .querySelectorAll("#r-related .related-grid a[href]")
+      .forEach((link) => {
+        const url = new URL(link.href);
+        const context = {
+          tw_source: "tradeweave",
+          tw_country: selection.iso,
+          tw_partner: selection.partner,
+          tw_flow: selection.flow,
+          tw_year: selection.year,
+          tw_compare: selection.compareYear,
+          tw_product: selection.product,
+          tw_version: CATALOG.version,
+        };
+        Object.entries(context).forEach(([key, value]) => {
+          if (value !== null) url.searchParams.set(key, value);
+        });
+        link.href = url.href;
+      });
   }
 
   function renderPartner(warning) {
@@ -996,12 +1071,13 @@
   }
 
   var mapBindings = {};
-  function drawMap(prefix, iso, flow, data) {
+  function drawMap(prefix, iso, flow, data, mapYear) {
     var svg = document.getElementById(prefix + "-map");
     if (!svg) return;
     var readout = document.getElementById(prefix + "-readout");
     svg.setAttribute("viewBox", "0 0 " + MAP.w + " " + MAP.h);
     mapBindings[prefix] = {
+      year: mapYear || selection.year,
       iso: iso,
       flow: flow,
       shares: new Map(
@@ -1044,6 +1120,7 @@
             state.iso,
             state.flow,
             state.shares.get(code),
+            state.year,
           );
         });
         el.addEventListener("pointermove", positionMapTooltip);
@@ -1060,7 +1137,8 @@
                 ? " · " + fmtPct(row.p) + " · " + fmtUsd(row.v)
                 : " · 교역 기록 없음");
           if (!code || code === state.iso) return;
-          if (prefix === "r") selectPartner(code);
+          if (prefix === "r" || prefix.startsWith("temporal-"))
+            selectPartner(code);
           else go(resultRoute(state.iso, state.flow, "partner", code));
         });
         land.appendChild(el);
@@ -1097,7 +1175,7 @@
       desc.textContent =
         nameOf(iso) +
         "의 " +
-        TRADE.meta.year +
+        (mapYear || TRADE.meta.year) +
         "년 " +
         scopeName() +
         " " +
@@ -1404,8 +1482,12 @@
         ? parameters.get("tab")
         : "trends";
       // Recover links saved by earlier versions with a conflicting tab and anchor.
-      if (match && parameters.get("tab") === tab && tabForSection[match[3]] &&
-          tabForSection[match[3]] !== tab) {
+      if (
+        match &&
+        parameters.get("tab") === tab &&
+        tabForSection[match[3]] &&
+        tabForSection[match[3]] !== tab
+      ) {
         match[3] = "";
         name = "see/" + match[1] + "/" + match[2];
       }
@@ -1448,6 +1530,7 @@
         renderPartner(resolvePartner(rows(selection.iso, selection.flow)));
         document.getElementById("share-fallback").hidden = true;
         focusResultSection();
+        hydrateSeries(product);
         return;
       }
       var keepWorkspace =
@@ -1480,6 +1563,12 @@
       if (id !== renderId) return;
       TRADE = scope.selected;
       SERIES = scope.series;
+      seriesStatus = Object.fromEntries(
+        CATALOG.years.map((value) => [
+          value,
+          value === year ? "ready" : "loading",
+        ]),
+      );
       selection = Object.assign({}, previousSelection, context);
       if (
         view === "" &&
@@ -1519,6 +1608,7 @@
           '#pick-form input[value="' + selection.flow + '"]',
         ).checked = true;
       }
+      hydrateSeries(product);
     } catch (error) {
       if (id !== renderId) return;
       document.getElementById("load-error").hidden = false;
@@ -1532,6 +1622,12 @@
         : "교역 자료를 불러오지 못했습니다. 연결을 확인한 뒤 다시 시도해 주세요.";
     }
   }
+
+  document
+    .getElementById("retry-series")
+    .addEventListener("click", function () {
+      hydrateSeries(selection.product, true);
+    });
 
   function go(name) {
     if (location.hash.slice(1) === name) route();
@@ -1834,7 +1930,7 @@
         resultRoute(
           selection.iso,
           selection.flow,
-          "comparison",
+          "",
           selection.partner,
           context,
         ),
@@ -1958,6 +2054,12 @@
     get series() {
       return SERIES;
     },
+    get seriesStatus() {
+      return { ...seriesStatus };
+    },
+    get cacheSize() {
+      return datasetCache.size;
+    },
     get map() {
       return MAP;
     },
@@ -1969,10 +2071,12 @@
     matchesCountry: function (code, query) {
       const term = normalize(query);
       const exactCode = canonicalCode(term);
-      if (Object.hasOwn(CATALOG.countries, exactCode)) return code === exactCode;
+      if (Object.hasOwn(CATALOG.countries, exactCode))
+        return code === exactCode;
       const country = CATALOG.countries[code];
-      return [code, country?.ko, country?.en, ...(aliases[code] || [])]
-        .some(name => name && normalize(name).includes(term));
+      return [code, country?.ko, country?.en, ...(aliases[code] || [])].some(
+        (name) => name && normalize(name).includes(term),
+      );
     },
     canonical: canonicalCode,
     pct: fmtPct,
@@ -1993,9 +2097,14 @@
       if (manualTab) selection.section = "";
       selection.tab = tab;
       if (peers) selection.peers = peers;
-      const hash = "#" + resultRoute(
-        selection.iso, selection.flow, selection.section, selection.partner,
-      );
+      const hash =
+        "#" +
+        resultRoute(
+          selection.iso,
+          selection.flow,
+          selection.section,
+          selection.partner,
+        );
       if (hash === location.hash) return;
       if (manualTab && changedTab) history.pushState(null, "", hash);
       else history.replaceState(null, "", hash);

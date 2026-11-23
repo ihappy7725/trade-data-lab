@@ -11,7 +11,11 @@
       name="description"
       content="국가별 상품 교역 상대국과 교역 집중도를 지도와 데이터로 살펴봅니다. 출처: CEPII BACI."
     />
-    <link rel="icon" type="image/svg+xml" href="assets/tradeweave-mark.svg?v=1" />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="assets/tradeweave-mark.svg?v=1"
+    />
     <link rel="apple-touch-icon" href="assets/tradeweave-mark-v2.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -19,7 +23,8 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600&family=Noto+Serif+KR:wght@600;700&display=swap"
     />
-    <link rel="stylesheet" href="assets/studio.css?v=5" />
+    <link rel="stylesheet" href="assets/studio.css?v=6" />
+    <link rel="stylesheet" href="assets/research.css?v=1" />
   </head>
   <body>
     <a class="skip-link" href="#main-content">본문으로 이동</a>
@@ -324,7 +329,8 @@
         <main id="view-see" data-view="see" hidden>
           <div class="result">
             <a class="btn btn-text back" href="#" data-home>← 홈 지도</a>
-            <div class="result-toolbar">
+            <div class="result-toolbar" aria-label="분석 조건">
+              <p id="condition-context" class="condition-context"></p>
               <form
                 class="country-search"
                 id="result-search"
@@ -372,6 +378,11 @@
                 ></label>
               </div>
 
+              <div class="compare-control">
+                <label for="compare-year"
+                  >비교연도<select id="compare-year" disabled></select
+                ></label>
+              </div>
               <div class="toggle" role="group" aria-label="결과 수출·수입 선택">
                 <button type="button" data-rflow="export" aria-pressed="true">
                   수출</button
@@ -387,26 +398,44 @@
                 <p class="sub" id="r-sub"></p>
               </div>
               <div class="result-actions">
+                <button class="btn btn-text" id="open-note" type="button">
+                  메모
+                </button>
                 <button
                   class="btn btn-secondary"
                   id="save-analysis"
                   type="button"
                 >
-                  분석 저장</button
-                ><button
-                  class="btn btn-secondary"
-                  id="export-image"
-                  type="button"
-                >
-                  지도 PNG</button
-                ><button class="btn btn-secondary" id="open-report" type="button">분석 보고서</button>
-                  <button
-                  class="btn btn-secondary"
-                  id="print-analysis"
-                  type="button"
-                >
-                  인쇄</button
-                ><button
+                  분석 저장
+                </button>
+                <details class="export-menu">
+                  <summary class="btn btn-secondary">
+                    내보내기 <span aria-hidden="true">⌄</span>
+                  </summary>
+                  <div class="export-options">
+                    <button
+                      class="btn btn-secondary"
+                      id="export-image"
+                      type="button"
+                    >
+                      지도 PNG</button
+                    ><button
+                      class="btn btn-secondary"
+                      id="open-report"
+                      type="button"
+                    >
+                      분석 보고서
+                    </button>
+                    <button
+                      class="btn btn-secondary"
+                      id="print-analysis"
+                      type="button"
+                    >
+                      인쇄
+                    </button>
+                  </div>
+                </details>
+                <button
                   class="btn btn-primary"
                   type="button"
                   id="copy-link"
@@ -426,6 +455,28 @@
             </p>
 
             <div class="workspace-meta" id="workspace-meta"></div>
+            <section class="insight-section" aria-labelledby="insight-title">
+              <div class="section-heading">
+                <h2 id="insight-title">이번 분석에서 읽을 변화</h2>
+                <span id="insight-context" class="caption"></span>
+              </div>
+              <div id="insight-cards" class="insight-cards"></div>
+              <p class="caption">
+                같은 품목·방향의 관측값을 비교합니다. 변화의 원인을 뜻하지
+                않습니다.
+              </p>
+            </section>
+            <div id="series-notice" class="series-notice" role="status" hidden>
+              <span id="series-status"></span
+              ><button
+                id="retry-series"
+                class="btn btn-text"
+                type="button"
+                hidden
+              >
+                비교 자료 다시 불러오기
+              </button>
+            </div>
             <div class="result-grid workspace" id="r-body" hidden>
               <div class="panel map-panel">
                 <div class="map-caption">
@@ -526,20 +577,25 @@
                     <span class="caption" id="partner-rank"></span>
                   </div>
                   <p class="trade-amount" id="partner-amount"></p>
-                  <p class="caption" id="partner-exact"></p>
-                  <div class="pair-shares">
-                    <div class="pair-share">
-                      <h3 id="base-share-title"></h3>
-                      <strong class="big" id="base-share"></strong>
-                      <p class="caption" id="base-denominator"></p>
+                  <div id="partner-quick" class="partner-quick"></div>
+                  <details class="partner-details">
+                    <summary>분모·정확한 금액·출처 보기</summary>
+                    <p class="caption" id="partner-exact"></p>
+                    <div class="pair-shares">
+                      <div class="pair-share">
+                        <h3 id="base-share-title"></h3>
+                        <strong class="big" id="base-share"></strong>
+                        <p class="caption" id="base-denominator"></p>
+                      </div>
+                      <div class="pair-share">
+                        <h3 id="partner-share-title"></h3>
+                        <strong class="big" id="partner-share"></strong>
+                        <p class="caption" id="partner-denominator"></p>
+                      </div>
                     </div>
-                    <div class="pair-share">
-                      <h3 id="partner-share-title"></h3>
-                      <strong class="big" id="partner-share"></strong>
-                      <p class="caption" id="partner-denominator"></p>
-                    </div>
-                  </div>
-                  <p class="partner-note" id="partner-note"></p>
+                    <p class="partner-note" id="partner-note"></p>
+                    <p class="caption" data-source-line></p>
+                  </details>
                   <p
                     class="error"
                     id="partner-warning"
@@ -561,7 +617,6 @@
                       기준국·상대국 바꾸기
                     </button>
                   </div>
-                  <p class="caption" data-source-line></p>
                 </section>
               </aside>
             </div>
@@ -614,6 +669,72 @@
                 aria-labelledby="tab-trends"
                 tabindex="-1"
               >
+                <button
+                  class="period-opener"
+                  id="toggle-periods"
+                  type="button"
+                  aria-expanded="false"
+                  aria-controls="period-content"
+                >
+                  <strong>두 시점 비교</strong
+                  ><span
+                    >지도·금액·비중을 같은 상대국 순서로
+                    <span aria-hidden="true">＋</span></span
+                  >
+                </button>
+                <section
+                  id="period-content"
+                  hidden
+                  class="temporal-panel"
+                  aria-labelledby="temporal-title"
+                >
+                  <div class="section-heading">
+                    <div>
+                      <p class="section-kicker">TWO PERIODS</p>
+                      <h2 id="temporal-title">두 시점, 같은 상대국</h2>
+                      <p id="temporal-context" class="caption"></p>
+                    </div>
+                    <label
+                      >정렬<select id="temporal-sort">
+                        <option value="current">선택연도 비중 순</option>
+                        <option value="gain">비중 증가 순</option>
+                        <option value="loss">비중 감소 순</option>
+                        <option value="amount">교역액 변화 큰 순</option>
+                      </select></label
+                    >
+                  </div>
+                  <div id="temporal-maps" class="temporal-maps"></div>
+                  <div class="explore-controls">
+                    <label
+                      >상대국 검색<input
+                        id="temporal-query"
+                        type="search"
+                        placeholder="국가 이름 또는 코드" /></label
+                    ><button
+                      id="temporal-csv"
+                      class="btn btn-secondary"
+                      type="button"
+                    >
+                      두 시점 전체 CSV
+                    </button>
+                  </div>
+                  <p id="temporal-count" class="caption" role="status"></p>
+                  <div
+                    id="temporal-table"
+                    class="table-scroll"
+                    tabindex="0"
+                    role="region"
+                    aria-label="두 시점 상대국 비교"
+                  ></div>
+                  <button
+                    id="temporal-more"
+                    class="btn btn-text"
+                    type="button"
+                    aria-expanded="false"
+                  >
+                    전체 상대국 펼치기
+                  </button>
+                </section>
                 <section
                   class="panel comparison-panel"
                   id="r-comparison"
@@ -627,12 +748,7 @@
                       <p class="caption" id="comparison-scope"></p>
                     </div>
                     <div class="comparison-tools">
-                      <label for="compare-year"
-                        >비교연도<select
-                          id="compare-year"
-                          disabled
-                        ></select></label
-                      ><button
+                      <button
                         class="btn btn-secondary"
                         id="comparison-csv"
                         type="button"
@@ -647,7 +763,11 @@
                   <p class="caption" id="comparison-source"></p>
                 </section>
                 <div class="trend-plot" id="trend-plot"></div>
-                <section id="number-explanation" class="explanation-card" aria-label="비중 변화 해석"></section>
+                <section
+                  id="number-explanation"
+                  class="explanation-card"
+                  aria-label="비중 변화 해석"
+                ></section>
                 <div class="panel summary-panel" id="analysis-summary">
                   <section
                     class="concentration"
@@ -734,14 +854,56 @@
                   신규·미기록은 별도로 표시합니다.
                 </p>
                 <div class="explore-controls">
-                  <label>상대국 검색<input id="change-query" type="search" placeholder="국가 이름 또는 코드" /></label>
-                  <label>변화 방향<select id="change-direction"><option value="all">전체</option><option value="up">증가</option><option value="down">감소</option><option value="same">변화 없음</option></select></label>
-                  <label>최소 절대 변화량 (%p)<input id="change-min" type="number" min="0" max="100" step="any" value="0" /></label>
+                  <label
+                    >상대국 검색<input
+                      id="change-query"
+                      type="search"
+                      placeholder="국가 이름 또는 코드"
+                  /></label>
+                  <label
+                    >변화 방향<select id="change-direction">
+                      <option value="all">전체</option>
+                      <option value="up">증가</option>
+                      <option value="down">감소</option>
+                      <option value="same">변화 없음</option>
+                    </select></label
+                  >
+                  <label
+                    >최소 절대 변화량 (%p)<input
+                      id="change-min"
+                      type="number"
+                      min="0"
+                      max="100"
+                      step="any"
+                      value="0"
+                  /></label>
                   <label>비교연도<select id="change-year"></select></label>
                 </div>
                 <p id="change-count" class="caption" role="status"></p>
                 <div id="change-list" class="change-list"></div>
-                <div class="pagination"><button id="change-prev" class="btn btn-secondary" type="button">이전</button><span id="change-page" class="caption"></span><button id="change-next" class="btn btn-secondary" type="button">다음</button><button id="change-all" class="btn btn-text" type="button" aria-pressed="false">전체 펼치기</button></div>
+                <div class="pagination">
+                  <button
+                    id="change-prev"
+                    class="btn btn-secondary"
+                    type="button"
+                  >
+                    이전</button
+                  ><span id="change-page" class="caption"></span
+                  ><button
+                    id="change-next"
+                    class="btn btn-secondary"
+                    type="button"
+                  >
+                    다음</button
+                  ><button
+                    id="change-all"
+                    class="btn btn-text"
+                    type="button"
+                    aria-pressed="false"
+                  >
+                    전체 펼치기
+                  </button>
+                </div>
                 <details class="method-details">
                   <summary>신규·미기록 상대국</summary>
                   <div id="change-missing"></div>
@@ -860,14 +1022,41 @@
                 <div class="country-cards" id="country-cards"></div>
                 <section class="matrix-section" aria-labelledby="matrix-title">
                   <h3 id="matrix-title">동일 상대국 비교</h3>
-                  <p class="caption">각 열은 보고국의 해당 연도·품목·방향 합계를 분모로 씁니다. 색은 모든 열에 같은 비중 구간을 적용합니다.</p>
+                  <p class="caption">
+                    각 열은 보고국의 해당 연도·품목·방향 합계를 분모로 씁니다.
+                    색은 모든 열에 같은 비중 구간을 적용합니다.
+                  </p>
                   <div class="explore-controls">
-                    <label>상대국 검색<input id="matrix-query" type="search" placeholder="국가 이름 또는 코드" /></label>
+                    <label
+                      >상대국 검색<input
+                        id="matrix-query"
+                        type="search"
+                        placeholder="국가 이름 또는 코드"
+                    /></label>
+                    <label
+                      >표시 지표<select id="matrix-metric">
+                        <option value="share">비중</option>
+                        <option value="amount">교역액</option>
+                        <option value="rank">순위</option>
+                      </select></label
+                    >
                     <label>정렬 기준<select id="matrix-sort"></select></label>
-                    <button id="matrix-csv" class="btn btn-secondary" type="button">상대국 비교 CSV</button>
+                    <button
+                      id="matrix-csv"
+                      class="btn btn-secondary"
+                      type="button"
+                    >
+                      상대국 비교 CSV
+                    </button>
                   </div>
                   <p id="matrix-count" class="caption" role="status"></p>
-                  <div id="matrix-table" class="table-scroll" role="region" aria-label="동일 상대국 비교표" tabindex="0"></div>
+                  <div
+                    id="matrix-table"
+                    class="table-scroll"
+                    role="region"
+                    aria-label="동일 상대국 비교표"
+                    tabindex="0"
+                  ></div>
                 </section>
               </section>
             </div>
@@ -879,6 +1068,30 @@
             >
               <h2 id="related-title">이 교역에서 이어지는 질문</h2>
               <p class="caption" id="related-context"></p>
+              <div class="handoff-bar">
+                <p>
+                  분석 조건과 출처를 함께 가져가세요. 다른 서비스의 필터가
+                  자동으로 적용되는 것은 아닙니다.
+                </p>
+                <button
+                  class="btn btn-secondary"
+                  id="copy-context"
+                  type="button"
+                >
+                  분석 맥락 복사</button
+                ><button
+                  class="btn btn-text"
+                  id="download-context"
+                  type="button"
+                >
+                  맥락 파일 저장</button
+                ><textarea
+                  id="context-fallback"
+                  readonly
+                  hidden
+                  aria-label="복사할 분석 맥락"
+                ></textarea>
+              </div>
               <div class="related-grid">
                 <article class="related-card">
                   <h3>정책 전후에는 어떻게 움직였을까?</h3>
@@ -1085,15 +1298,74 @@
     </div>
     <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 
-    <script defer src="assets/app.js?v=6"></script>
-    <script defer src="assets/analysis.js?v=1"></script>
-    <script defer src="assets/studio.js?v=5"></script>
-    <dialog id="report-dialog" class="sheet-dialog" aria-labelledby="report-title">
-      <div class="dialog-heading"><h2 id="report-title">분석 보고서</h2><button type="button" class="icon-btn" data-close-dialog aria-label="보고서 닫기">×</button></div>
-      <label class="control-label">메모<textarea id="report-note" rows="4" maxlength="2000" placeholder="보고서에 남길 해석이나 질문을 적으세요."></textarea></label>
+    <script defer src="assets/app.js?v=7"></script>
+    <script defer src="assets/analysis.js?v=2"></script>
+    <script defer src="assets/workspace-state.js?v=1"></script>
+    <script defer src="assets/studio.js?v=6"></script>
+    <script defer src="assets/research.js?v=1"></script>
+    <dialog id="note-dialog" class="sheet-dialog" aria-labelledby="note-title">
+      <div class="dialog-heading">
+        <h2 id="note-title">분석 메모</h2>
+        <button
+          class="icon-btn"
+          type="button"
+          data-close-dialog
+          aria-label="메모 닫기"
+        >
+          ×
+        </button>
+      </div>
+      <p id="note-scope" class="caption"></p>
+      <label
+        >이 분석에 남길 메모<textarea
+          id="workspace-note"
+          rows="6"
+          maxlength="2000"
+          placeholder="관측한 사실과 다음에 확인할 질문을 적으세요."
+        ></textarea>
+      </label>
+      <p class="caption">
+        메모는 ‘분석 저장’을 눌렀을 때만 이 브라우저에 보관합니다. 보고서에도
+        함께 포함됩니다.
+      </p>
+      <button class="btn btn-primary" id="save-note" type="button">
+        메모 적용
+      </button>
+    </dialog>
+    <dialog
+      id="report-dialog"
+      class="sheet-dialog"
+      aria-labelledby="report-title"
+    >
+      <div class="dialog-heading">
+        <h2 id="report-title">분석 보고서</h2>
+        <button
+          type="button"
+          class="icon-btn"
+          data-close-dialog
+          aria-label="보고서 닫기"
+        >
+          ×
+        </button>
+      </div>
+      <label class="control-label"
+        >메모<textarea
+          id="report-note"
+          rows="4"
+          maxlength="2000"
+          placeholder="보고서에 남길 해석이나 질문을 적으세요."
+        ></textarea>
+      </label>
       <p id="report-scope" class="caption"></p>
-      <p class="caption">지도, 연도별 수치, 구조 변화 전체 표, 동일 상대국 비교표, 출처를 하나의 HTML 파일에 담습니다. 저장한 파일을 브라우저에서 열어 인쇄하거나 PDF로 저장할 수 있습니다.</p>
-      <button id="download-report" type="button" class="btn btn-primary">보고서 HTML 저장</button>
+      <p id="report-availability" class="caption" role="status"></p>
+      <p class="caption">
+        지도, 연도별 수치, 구조 변화 전체 표, 동일 상대국 비교표, 출처를 하나의
+        HTML 파일에 담습니다. 저장한 파일을 브라우저에서 열어 인쇄하거나 PDF로
+        저장할 수 있습니다.
+      </p>
+      <button id="download-report" type="button" class="btn btn-primary">
+        보고서 HTML 저장
+      </button>
     </dialog>
     <dialog id="product-dialog" class="sheet-dialog">
       <div class="dialog-heading">
@@ -1135,6 +1407,22 @@
       <p class="caption">
         이 브라우저에만 보관합니다. 항목은 이름을 바꾸거나 삭제할 수 있습니다.
       </p>
+      <div class="backup-actions">
+        <button class="btn btn-secondary" id="backup-saved" type="button">
+          분석 백업 JSON</button
+        ><button
+          class="btn btn-secondary"
+          id="import-saved-button"
+          type="button"
+        >
+          백업 가져오기</button
+        ><input
+          id="import-saved"
+          type="file"
+          accept="application/json,.json"
+          hidden
+        />
+      </div>
       <div id="saved-list"></div>
       <p id="storage-message" class="caption" role="status"></p>
     </dialog>
