@@ -85,7 +85,7 @@
       "{0} 비중 {1}, {2}위에서 {3}위, 교역액 {4}":
         "{0}: share {1}, rank {2} → {3}, trade value {4}",
       "{0} 비중(%)": "{0} share (%)",
-      "{0} 상대국 {1}위": "{0} partner rank {1}",
+      "{0} 상대국 {1}위": "Partner rank {1} · {0}",
       "{0} 상대국 상세를 표시했습니다.": "Showing details for partner {0}.",
       "{0} 이름": "{0} name",
       "{0} 천 달러": "{0} thousand USD",
@@ -119,11 +119,11 @@
       "{0}억 달러": "{0} × USD 100 million",
       "{0}위": "Rank {0}",
       "{0}위 → {1}위 · {2}": "Rank {0} → {1} · {2}",
-      "{0}의 {1} 상대국": "{0}: {1} partners",
-      "{0}의 {1} 상대국 · Tradeweave": "{0}: {1} partners · Tradeweave",
+      "{0}의 {1} 상대국": "{0} · {1} by partner",
+      "{0}의 {1} 상대국 · Tradeweave": "{0} · {1} by partner · Tradeweave",
       "{0}의 {1} 지도를 표시했습니다.": "Showing {0}'s {1} map.",
       "{0}의 {1}년 {2} {3} 상대국 지도. 상위 5개: {4}":
-        "{0}, {1}, {2} {3} partner map. Top five: {4}",
+        "Partner map for {0}: {1} · {2} · {3}. Top five: {4}",
       "{0}의 {1}년 {2}에서 1위 상대국 {3}의 비중은 {4}, 상위 5개 상대국의 합계는 {5}입니다.":
         "In {0}'s {1} {2}, the largest partner {3} accounts for {4}; the top five account for {5}.",
       "← 지도로 돌아가기": "← Back to map",
@@ -405,7 +405,7 @@
       "상대국별 {0}": "By partner: {0}",
       "상위 3개 합계": "Top-three total",
       "상위 5개 {0} · HHI {1}": "Top-five share {0} · HHI {1}",
-      "상위 5개 {0} 상대국": "Top five {0} partners",
+      "상위 5개 {0} 상대국": "Top five partners · {0}",
       "상위 5개 비중": "Top-five share",
       "상위 5개 상대국": "Top five partners",
       "상위 5개 상대국의 쏠림": "Top-five concentration",
