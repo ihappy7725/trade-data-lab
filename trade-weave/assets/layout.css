@@ -1,0 +1,402 @@
+/* Compact analysis layout and language controls. Keep palette values in tokens.css. */
+.language-switch {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  padding: 3px;
+  background: var(--card);
+  gap: 2px;
+}
+.language-switch button {
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted-ink);
+  font-size: 12px;
+  padding: 8px 12px;
+  min-height: 36px;
+}
+.language-switch button[aria-pressed="true"] {
+  background: var(--atlas-blue);
+  color: var(--card);
+}
+.language-switch button:focus-visible {
+  outline-offset: 2px;
+}
+.hero {
+  padding-top: 24px;
+}
+.hero:before {
+  display: none;
+}
+.atlas-caption {
+  padding-top: 22px;
+  padding-bottom: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px 12px;
+}
+#hero-map-title {
+  flex: 1 0 100%;
+  font: 500 clamp(23px, 2.4vw, 32px) / 1.5 var(--sans);
+  letter-spacing: -0.04em;
+}
+.atlas-caption > .caption,
+.atlas-caption > .scope-description {
+  flex: 1 0 100%;
+  margin: 0;
+}
+.atlas-caption > .map-layer-toggle {
+  position: static;
+  margin-top: 6px;
+}
+.result-head {
+  padding-block: 4px;
+}
+.result-head .eyebrow {
+  font-size: 11px;
+  letter-spacing: 0;
+}
+.result-head h1 {
+  font-family: var(--sans);
+  font-weight: 500;
+}
+.condition-context {
+  display: none;
+}
+.result-toolbar {
+  gap: 12px;
+  align-items: end;
+}
+.result-toolbar .country-search {
+  max-width: 280px;
+}
+.result-toolbar .scope-controls {
+  flex: 1 1 280px;
+}
+.result-toolbar .compare-control {
+  flex-basis: 100px;
+}
+.workspace-meta {
+  margin-block: 0;
+  padding-block: 14px;
+}
+.scope-controls .product-label {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0 6px;
+}
+.scope-controls .product-label > select {
+  grid-column: 1/-1;
+  grid-row: 2;
+}
+.scope-controls .product-label > .product-explore {
+  position: static;
+  grid-row: 1;
+  grid-column: 2;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  min-height: 28px;
+  padding: 0;
+  font-size: 18px;
+  border: 0;
+  background: transparent;
+}
+.product-label .product-explore:hover {
+  background: var(--paper);
+  border-radius: 6px;
+}
+.insight-section {
+  border: 1px solid var(--rule);
+  border-radius: 14px;
+  padding: 0;
+  background: var(--card);
+  margin-block: 4px;
+}
+.insight-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  cursor: pointer;
+  padding: 16px 20px;
+  list-style: none;
+  min-height: 56px;
+}
+.insight-summary::-webkit-details-marker {
+  display: none;
+}
+.insight-summary:after {
+  content: "＋";
+  font-size: 18px;
+  color: var(--atlas-blue);
+}
+.insight-section[open] > .insight-summary:after {
+  content: "−";
+}
+.insight-summary h2 {
+  font-size: 16px;
+}
+.insight-summary > .caption {
+  margin-left: auto;
+  text-align: right;
+  max-width: 60%;
+  font-size: 12px;
+}
+.insight-section > .insight-cards {
+  margin: 0;
+  padding: 0 18px 14px;
+}
+.insight-section > .caption {
+  padding: 0 18px 16px;
+}
+.insight-section[open] .insight-cards {
+  animation: summary-enter 180ms ease-out;
+}
+@keyframes summary-enter {
+  from {
+    opacity: 0.5;
+    transform: translateY(-3px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.relationship-state {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-block: 12px 6px;
+  min-height: 40px;
+  font-size: 12px;
+}
+.relationship-state > span {
+  padding: 5px 10px;
+  border-radius: 999px;
+  border: 1px solid #b7ccdc;
+  color: var(--atlas-blue);
+  background: #f0f6fb;
+}
+.relationship-state > #preview-relationship-state {
+  border-style: dashed;
+  background: var(--card);
+  color: var(--muted-ink);
+}
+.map-caption-actions {
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+.map-layer-toggle {
+  white-space: normal;
+}
+.analysis-nav {
+  flex-wrap: wrap;
+}
+.research-table caption {
+  line-height: 1.6;
+}
+html[lang="en"] .hero-emphasis {
+  white-space: normal;
+}
+html[lang="en"] .scope-controls label {
+  font-size: 12px;
+}
+html[lang="en"] .map-caption-actions > .caption {
+  display: none;
+}
+html[lang="en"] .partner-quick {
+  gap: 16px;
+}
+html[lang="en"] .partner-quick span {
+  font-size: 11px;
+}
+html[lang="en"] .result-head h1 {
+  letter-spacing: -0.025em;
+}
+html[lang="en"] .atlas-side .rank .partner-button {
+  overflow-wrap: anywhere;
+}
+html[lang="en"] .research-table {
+  font-size: 12px;
+}
+@media (max-width: 1100px) {
+  .top {
+    flex-wrap: wrap;
+  }
+  .top nav {
+    gap: 18px;
+  }
+  .language-switch {
+    margin-left: auto;
+  }
+  .result-toolbar .country-search {
+    max-width: none;
+  }
+  .result-toolbar .scope-controls {
+    flex: 1 1 300px;
+  }
+}
+@media (max-width: 850px) {
+  .top {
+    gap: 12px;
+  }
+  .top nav {
+    order: 3;
+    width: 100%;
+    justify-content: space-between;
+    margin: 0;
+    padding-bottom: 8px;
+  }
+  .top .language-switch {
+    order: 2;
+    margin-left: auto;
+  }
+  .top .brand {
+    order: 1;
+  }
+  .language-switch button {
+    min-height: 40px;
+    padding: 8px 10px;
+  }
+  .condition-context {
+    display: block;
+    font-size: 12px;
+  }
+  .result-toolbar {
+    position: static;
+  }
+  .insight-summary {
+    padding: 14px 16px;
+  }
+  .insight-summary > .caption {
+    font-size: 11px;
+  }
+  .map-caption {
+    align-items: start;
+  }
+  .map-caption-actions {
+    gap: 6px;
+  }
+  .map-caption-actions .map-layer-toggle {
+    max-width: 180px;
+    min-height: 44px;
+  }
+  .map-layer-toggle[data-fit-relation] {
+    font-size: 11px;
+  }
+  .atlas-caption .map-layer-toggle {
+    min-height: 44px;
+  }
+  .insight-section > .insight-cards {
+    padding-inline: 12px;
+  }
+  .insight-section > .caption {
+    padding-inline: 12px;
+  }
+}
+@media (max-width: 480px) {
+  .top {
+    padding-block: 12px 4px;
+  }
+  .top .brand-mark {
+    width: 30px;
+    height: 30px;
+  }
+  .top .brand-word {
+    font-size: 22px;
+  }
+  .language-switch button {
+    padding-inline: 8px;
+    font-size: 11px;
+    min-height: 40px;
+  }
+  .top nav {
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .top nav > .btn {
+    min-height: 40px;
+  }
+  .hero {
+    padding-top: 16px;
+  }
+  .atlas-head {
+    padding: 14px;
+  }
+  #hero-map-title {
+    font-size: 23px;
+  }
+  .atlas-caption > .caption {
+    font-size: 11px;
+  }
+  .result-head h1 {
+    font-size: 23px;
+  }
+  .result-actions {
+    gap: 8px;
+  }
+  .result-actions .btn {
+    min-height: 44px;
+  }
+  .relationship-state {
+    font-size: 11px;
+  }
+  .map-caption {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .map-caption-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+  .map-caption-actions .map-layer-toggle {
+    flex: 1;
+    max-width: none;
+  }
+  .insight-summary {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .insight-summary > .caption {
+    max-width: none;
+    font-size: 10px;
+    flex: 1;
+  }
+  .analysis-nav button {
+    flex: 1;
+    padding-inline: 8px;
+    font-size: 11px;
+  }
+  .research-table th,
+  .research-table td {
+    overflow-wrap: anywhere;
+  }
+  .map-panel > .caption {
+    font-size: 11px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .insight-section[open] .insight-cards {
+    animation: none;
+  }
+}
+@media print {
+  .language-switch,
+  .relationship-state,
+  [data-fit-relation] {
+    display: none !important;
+  }
+  .insight-section {
+    display: none !important;
+  }
+  .result-head h1 {
+    font-size: 24px;
+  }
+}

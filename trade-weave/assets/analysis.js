@@ -1,5 +1,9 @@
 /* Pure analyses: missing records are not zero-valued trades. */
 (function (root) {
+  const i18nText = (key, values = []) =>
+    globalThis.TWI18n
+      ? globalThis.TWI18n.t(key, values)
+      : key.replace(/\{(\d+)\}/g, (_, i) => String(values[Number(i)]));
   function changes(before, current) {
     var a = new Map(
         before.list.map(function (r) {
@@ -28,11 +32,23 @@
             valueChange: now.v - old.v,
             percentChange: (now.v / old.v - 1) * 100,
           });
-        else if (now) entered.push({ iso: code, after: now });
-        else absent.push({ iso: code, before: old });
+        else if (now)
+          entered.push({
+            iso: code,
+            after: now,
+          });
+        else
+          absent.push({
+            iso: code,
+            before: old,
+          });
       },
     );
-    return { common: common, entered: entered, absent: absent };
+    return {
+      common: common,
+      entered: entered,
+      absent: absent,
+    };
   }
   function sortChanges(items, mode) {
     return items.slice().sort(function (a, b) {
@@ -51,9 +67,11 @@
       : null;
   }
   function signed(value, unit) {
+    if (globalThis.TWI18n) unit = globalThis.TWI18n.unit(unit);
+
     if (Math.abs(value) < 0.000000001) return "0.0" + unit;
     if (Math.abs(value) < 0.05)
-      return (value > 0 ? "+" : "−") + "0.1" + unit + " 미만";
+      return i18nText("{0}0.1{1} 미만", [value > 0 ? "+" : "−", unit]);
     return (value > 0 ? "+" : "−") + Math.abs(value).toFixed(1) + unit;
   }
   function periodRows(before, current) {

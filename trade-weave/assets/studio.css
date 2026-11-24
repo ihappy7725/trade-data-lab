@@ -1,28 +1,5 @@
 /* Tradeweave / Atlas Studio — a shared system for exploration and analysis. */
-:root {
-  --paper: #f5f3ed;
-  --card: #fffefa;
-  --ink: #182d3d;
-  --stone: #62717b;
-  --rule: #dce0dc;
-  --atlas-blue: #234d86;
-  --blue-hover: #173d70;
-  --ochre: #b48438;
-  --land: #e5e6e0;
-  --map-1: #a9bfd4;
-  --map-2: #759bc0;
-  --map-3: #477cae;
-  --map-4: #285a92;
-  --map-5: #163d6b;
-  --alert: #a94335;
-  --up: #286c67;
-  --down: #9b6048;
-  --sans: "IBM Plex Sans KR", "Apple SD Gothic Neo", sans-serif;
-  --serif: "Noto Serif KR", serif;
-  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
-  --shadow: 0 8px 32px #182d3d0b;
-  color-scheme: light;
-}
+
 * {
   box-sizing: border-box;
 }
@@ -1347,10 +1324,9 @@ footer a {
   border-top: 1px solid var(--rule);
   background: none;
   display: grid;
-  grid-template-columns: minmax(90px, 1fr) minmax(100px, 2fr) minmax(
-      60px,
-      0.6fr
-    ) minmax(100px, 1.3fr);
+  grid-template-columns:
+    minmax(90px, 1fr) minmax(100px, 2fr) minmax(60px, 0.6fr)
+    minmax(100px, 1.3fr);
   gap: 20px;
   text-align: left;
   align-items: center;
@@ -2857,12 +2833,87 @@ footer a {
   }
 }
 /* Keep the atlas at its natural aspect ratio while the inspector stays compact. */
-.workspace{align-items:start}.workspace>.map-panel{grid-template-rows:none}.rank-panel .rank li{padding-block:5px}.rank-panel .rank-country{gap:4px}.rank-panel .rank .val2{display:none}.rank-panel{padding-bottom:14px}.inspector-shell{gap:16px}.partner-panel{gap:11px}.partner-panel .trade-amount{font-size:28px}.partner-panel>.caption[data-source-line]{font-size:10px}
-@media(max-width:850px){.rank-panel .rank li{padding:10px}.rank-panel{padding:0}.partner-panel .trade-amount{font-size:32px}}
+.workspace {
+  align-items: start;
+}
+.workspace > .map-panel {
+  grid-template-rows: none;
+}
+.rank-panel .rank li {
+  padding-block: 5px;
+}
+.rank-panel .rank-country {
+  gap: 4px;
+}
+.rank-panel .rank .val2 {
+  display: none;
+}
+.rank-panel {
+  padding-bottom: 14px;
+}
+.inspector-shell {
+  gap: 16px;
+}
+.partner-panel {
+  gap: 11px;
+}
+.partner-panel .trade-amount {
+  font-size: 28px;
+}
+.partner-panel > .caption[data-source-line] {
+  font-size: 10px;
+}
+@media (max-width: 850px) {
+  .rank-panel .rank li {
+    padding: 10px;
+  }
+  .rank-panel {
+    padding: 0;
+  }
+  .partner-panel .trade-amount {
+    font-size: 32px;
+  }
+}
 /* A short entrance sequence; subsequent scope changes keep the same map nodes. */
-.top{animation:studio-enter .32s var(--ease)}.hero-copy{animation:studio-enter .38s .04s var(--ease) both}.atlas{animation:studio-enter .44s .09s var(--ease) both}.map-land{animation:ink-enter .4s var(--ease)}
-@keyframes studio-enter{from{opacity:.35;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}@keyframes ink-enter{from{opacity:.3}to{opacity:1}}
-@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+.top {
+  animation: studio-enter 0.32s var(--ease);
+}
+.hero-copy {
+  animation: studio-enter 0.38s 0.04s var(--ease) both;
+}
+.atlas {
+  animation: studio-enter 0.44s 0.09s var(--ease) both;
+}
+.map-land {
+  animation: ink-enter 0.4s var(--ease);
+}
+@keyframes studio-enter {
+  from {
+    opacity: 0.35;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes ink-enter {
+  from {
+    opacity: 0.3;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *:before,
+  *:after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
 
 .explore-controls {
   display: flex;
@@ -2885,12 +2936,16 @@ footer a {
   gap: 10px;
   margin-bottom: 16px;
 }
-.matrix-section, .explanation-card {
+.matrix-section,
+.explanation-card {
   margin-block: 20px;
   padding-block-start: 16px;
   border-top: 1px solid var(--rule);
 }
-.explanation-card > p, .matrix-section > p { margin-block: 8px; }
+.explanation-card > p,
+.matrix-section > p {
+  margin-block: 8px;
+}
 .research-table {
   width: 100%;
   border-collapse: collapse;
@@ -2902,21 +2957,55 @@ footer a {
   color: var(--stone);
   padding: 8px 0;
 }
-.research-table th, .research-table td {
+.research-table th,
+.research-table td {
   text-align: left;
   padding: 8px;
   border-bottom: 1px solid var(--rule);
   vertical-align: top;
   overflow-wrap: anywhere;
 }
-.research-table thead th { background: var(--paper); }
-#matrix-table .research-table { min-width: 520px; }
-#matrix-table .research-table thead th { position: sticky; top: 0; z-index: 1; }
-.matrix-value { display: block; padding: 5px; border-radius: 4px; color: var(--ink); }
-.matrix-value[data-band="1"] { background: #eef3f8; }
-.matrix-value[data-band="2"] { background: #dbe8f4; }
-.matrix-value[data-band="3"] { background: #c5dbed; }
-.matrix-value[data-band="4"] { background: #9bbcd7; }
-.matrix-value[data-band="5"] { background: #29588d; color: white; }
-#report-note { width: 100%; padding: 10px; resize: vertical; font: inherit; border: 1px solid var(--rule); border-radius: 6px; }
-#report-dialog p { margin-block: 12px; }
+.research-table thead th {
+  background: var(--paper);
+}
+#matrix-table .research-table {
+  min-width: 520px;
+}
+#matrix-table .research-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+.matrix-value {
+  display: block;
+  padding: 5px;
+  border-radius: 4px;
+  color: var(--ink);
+}
+.matrix-value[data-band="1"] {
+  background: #eef3f8;
+}
+.matrix-value[data-band="2"] {
+  background: #dbe8f4;
+}
+.matrix-value[data-band="3"] {
+  background: #c5dbed;
+}
+.matrix-value[data-band="4"] {
+  background: #9bbcd7;
+}
+.matrix-value[data-band="5"] {
+  background: #29588d;
+  color: white;
+}
+#report-note {
+  width: 100%;
+  padding: 10px;
+  resize: vertical;
+  font: inherit;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+}
+#report-dialog p {
+  margin-block: 12px;
+}

@@ -1,6 +1,11 @@
 /* Visual atlas: one observed relationship, with reversible hover previews. */
 (function () {
   "use strict";
+  const i18nText = (key, values = []) =>
+    globalThis.TWI18n
+      ? globalThis.TWI18n.t(key, values)
+      : key.replace(/\{(\d+)\}/g, (_, i) => String(values[Number(i)]));
+
   const api = window.Tradeweave,
     model = window.TradeweaveAtlasModel;
   const $ = (id) => document.getElementById(id),
@@ -43,6 +48,7 @@
       return;
     }
     const key = [
+      TWI18n.lang,
       state.iso,
       state.flow,
       state.year,
@@ -51,7 +57,10 @@
     ].join("/");
     if (group && keys.get(prefix) === key) return;
     if (!group) {
-      group = svg("g", { class: "connection-layer", "aria-hidden": "true" });
+      group = svg("g", {
+        class: "connection-layer",
+        "aria-hidden": "true",
+      });
       scene.append(group);
     }
     group.replaceChildren();
@@ -69,7 +78,10 @@
         markerUnits: "strokeWidth",
       });
     marker.append(
-      svg("path", { d: "M0,0 L8,4 L0,8 Z", class: "connection-arrow" }),
+      svg("path", {
+        d: "M0,0 L8,4 L0,8 Z",
+        class: "connection-arrow",
+      }),
     );
     defs.append(marker);
     group.append(defs);
@@ -90,9 +102,18 @@
         transform: "translate(" + point.join(",") + ")",
       });
       pin.append(
-        svg("circle", { r: 10, class: "pin-halo" }),
-        svg("circle", { r: 5.2, class: "pin-core" }),
-        svg("circle", { r: 1.8, class: "pin-center" }),
+        svg("circle", {
+          r: 10,
+          class: "pin-halo",
+        }),
+        svg("circle", {
+          r: 5.2,
+          class: "pin-core",
+        }),
+        svg("circle", {
+          r: 1.8,
+          class: "pin-center",
+        }),
       );
       group.append(pin);
     });
@@ -101,17 +122,31 @@
         class: "connection-callout",
         transform: `translate(${label.x},${label.y})`,
       });
-    callout.append(svg("rect", { width: label.w, height: label.h, rx: 10 }));
+    callout.append(
+      svg("rect", {
+        width: label.w,
+        height: label.h,
+        rx: 10,
+      }),
+    );
     const name = api.name(row.iso);
     callout.append(
       svg(
         "text",
-        { x: 12, y: 18, class: "callout-country" },
+        {
+          x: 12,
+          y: 18,
+          class: "callout-country",
+        },
         name.length > 11 ? name.slice(0, 10) + "…" : name,
       ),
       svg(
         "text",
-        { x: 12, y: 35, class: "callout-value" },
+        {
+          x: 12,
+          y: 35,
+          class: "callout-value",
+        },
         api.pct(row.p) + " · " + api.usd(row.v),
       ),
     );
@@ -124,17 +159,27 @@
         "text-anchor": geometry.base[0] > api.map.w - 110 ? "end" : "middle",
         class: "connection-base-label",
       },
-      "기준국 · " + api.name(state.iso),
+      i18nText("기준국 · {0}", [api.name(state.iso)]),
     );
     group.append(baseLabel);
     if (
       !matchMedia("(prefers-reduced-motion: reduce)").matches &&
       group.animate
     )
-      group.animate([{ opacity: 0 }, { opacity: 1 }], {
-        duration: 240,
-        easing: "ease-out",
-      });
+      group.animate(
+        [
+          {
+            opacity: 0,
+          },
+          {
+            opacity: 1,
+          },
+        ],
+        {
+          duration: 240,
+          easing: "ease-out",
+        },
+      );
   }
   function render() {
     const prefix = targetView();
@@ -149,9 +194,33 @@
     const code = preview || (prefix === "hero" ? rows[0]?.iso : s.partner),
       row = rows.find((item) => item.iso === code) || null;
     layer(prefix, s, row);
+    const selectedCode = prefix === "hero" ? rows[0]?.iso : s.partner;
+    document
+      .querySelectorAll('[data-fit-relation="' + prefix + '"]')
+      .forEach((button) => {
+        button.disabled =
+          !selectedCode ||
+          !api.map.anchors?.[s.iso] ||
+          !api.map.anchors?.[selectedCode] ||
+          !rows.some((item) => item.iso === selectedCode);
+      });
+    if (prefix === "r") {
+      $("selected-relationship-state").textContent = i18nText("선택한 상대국: {0}", [
+        s.partner ? api.name(s.partner) : i18nText("선택 상대국 없음"),
+      ]);
+      $("preview-relationship-state").hidden =
+        !preview || preview === s.partner;
+      $("preview-relationship-state").textContent = preview
+        ? i18nText("미리보기: {0}", [api.name(preview)])
+        : "";
+    }
+
     $("example-compare-link").href =
       "#" +
-      api.resultRoute(s.iso, s.flow, "", s.partner, { ...s, tab: "countries" });
+      api.resultRoute(s.iso, s.flow, "", s.partner, {
+        ...s,
+        tab: "countries",
+      });
     if (prefix === "hero") {
       const link = $("atlas-focus-link");
       link.hidden = !row;
@@ -179,12 +248,13 @@
     } else {
       $("r-connection-caption").textContent =
         enabled && row
-          ? (preview ? "미리보기 · " : "") +
-            api.name(s.iso) +
-            " · " +
-            api.name(row.iso) +
-            "의 교역 관계. 연결선은 실제 운송 경로가 아닙니다."
-          : "핀은 대표 위치, 연결선은 선택한 교역 관계입니다. 실제 운송 경로를 뜻하지 않습니다.";
+          ? i18nText("{0} · {1}의 교역 관계. 연결선은 실제 운송 경로가 아닙니다.", [
+              (preview ? i18nText("미리보기 · ") : "") + api.name(s.iso),
+              api.name(row.iso),
+            ])
+          : i18nText(
+              "핀은 대표 위치, 연결선은 선택한 교역 관계입니다. 실제 운송 경로를 뜻하지 않습니다.",
+            );
     }
   }
   function schedule() {
@@ -246,7 +316,18 @@
       render();
     }),
   );
+  document.querySelectorAll("[data-fit-relation]").forEach((button) =>
+    button.addEventListener("click", () => {
+      const prefix = button.dataset.fitRelation,
+        s = api.state,
+        partner =
+          prefix === "hero" ? api.rows(s.iso, s.flow).list[0]?.iso : s.partner;
+      window.TWStudio.fitRelationship(prefix, partner);
+    }),
+  );
   document.addEventListener("tw:render", schedule);
-  window.TradeweaveAtlas = { render };
+  window.TradeweaveAtlas = {
+    render,
+  };
   schedule();
 })();

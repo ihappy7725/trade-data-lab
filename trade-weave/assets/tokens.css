@@ -1,0 +1,28 @@
+/* Shared design tokens; component files must not redeclare the root palette. */
+:root {
+  --paper: #f6f9fc;
+  --card: #ffffff;
+  --ink: #203749;
+  --stone: #5d7282;
+  --rule: #e0e8ee;
+  --atlas-blue: #2b6388;
+  --blue-hover: #204f70;
+  --ochre: #ad7d35;
+  --land: #e4ebf0;
+  --map-1: #c1d4e2;
+  --map-2: #91b3cb;
+  --map-3: #628eaf;
+  --map-4: #396d96;
+  --map-5: #244d73;
+  --alert: #a94335;
+  --up: #286c67;
+  --down: #9b6048;
+  --sans: "IBM Plex Sans KR", "Apple SD Gothic Neo", sans-serif;
+  --serif: "Noto Serif KR", serif;
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --shadow: 0 12px 44px #254d7210;
+  color-scheme: light;
+  --muted-ink: #566e7f;
+  --space-section: 28px;
+  --atlas-radius: 22px;
+}

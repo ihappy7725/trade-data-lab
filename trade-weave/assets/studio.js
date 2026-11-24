@@ -1,6 +1,11 @@
 /* Workspace interaction, analysis and local exports. No network or third-party runtime. */
 (function () {
   "use strict";
+  const i18nText = (key, values = []) =>
+    globalThis.TWI18n
+      ? globalThis.TWI18n.t(key, values)
+      : key.replace(/\{(\d+)\}/g, (_, i) => String(values[Number(i)]));
+
   var api = window.Tradeweave,
     math = window.TradeweaveAnalysis;
   var $ = function (id) {
@@ -30,7 +35,10 @@
       el.animate(
         frames,
         Object.assign(
-          { duration: 240, easing: "cubic-bezier(.2,.7,.2,1)" },
+          {
+            duration: 240,
+            easing: "cubic-bezier(.2,.7,.2,1)",
+          },
           options,
         ),
       );
@@ -67,20 +75,32 @@
             animate(
               li,
               [
-                { transform: "translateY(" + delta + "px)" },
-                { transform: "translateY(0)" },
+                {
+                  transform: "translateY(" + delta + "px)",
+                },
+                {
+                  transform: "translateY(0)",
+                },
               ],
-              { duration: 320 },
+              {
+                duration: 320,
+              },
             );
           var bar = li.querySelector(".bar");
           if (bar && old.width)
             animate(
               bar,
               [
-                { width: old.width + "px" },
-                { width: bar.getBoundingClientRect().width + "px" },
+                {
+                  width: old.width + "px",
+                },
+                {
+                  width: bar.getBoundingClientRect().width + "px",
+                },
               ],
-              { duration: 320 },
+              {
+                duration: 320,
+              },
             );
         }
       });
@@ -95,6 +115,38 @@
       });
     }
   }
+  function refreshLocaleControls() {
+    peerReady = false;
+    document.querySelectorAll(".product-explore").forEach((el) => {
+      el.textContent = "↗";
+      el.setAttribute("aria-label", i18nText("품목 탐색"));
+      el.title = i18nText("품목 탐색");
+    });
+    document.querySelectorAll(".map-controls").forEach((control) => {
+      const labels = ["지도 확대", "지도 축소", "세계 전체 지도"];
+      control
+        .querySelectorAll("button")
+        .forEach((el, i) => el.setAttribute("aria-label", i18nText(labels[i])));
+      const regions = {
+        world: "세계",
+        asia: "아시아",
+        europe: "유럽",
+        americas: "미주",
+        africa: "아프리카",
+        oceania: "오세아니아",
+      };
+      const select = control.querySelector("select");
+      select.setAttribute("aria-label", i18nText("지도 지역"));
+      select
+        .querySelectorAll("option")
+        .forEach((el) => (el.textContent = i18nText(regions[el.value])));
+    });
+    if ($("product-dialog").open) renderProducts();
+    if ($("saved-dialog").open) renderSaved();
+    schedule();
+  }
+  document.addEventListener("tw:language", refreshLocaleControls);
+  document.addEventListener("tw:language-controls", refreshLocaleControls);
   document.addEventListener("tw:render", schedule);
   function metric(label, value) {
     var el = node("div", "meta-stat");
@@ -115,20 +167,26 @@
         "",
         data.list.length ? api.pct(api.concentration(data, 5)) : "—",
       ),
-      node("span", "", "상위 5개 상대국의 합계"),
+      node("span", "", i18nText("상위 5개 상대국의 합계")),
     );
     if (!resultVisible()) return;
     $("workspace-meta").replaceChildren(
-      metric("교역액", data.list.length ? api.usd(data.total) : "기록 없음"),
-      metric("상대국", data.list.length.toLocaleString("ko-KR") + "곳"),
       metric(
-        "상위 5개 비중",
+        i18nText("교역액"),
+        data.list.length ? api.usd(data.total) : i18nText("기록 없음"),
+      ),
+      metric(
+        i18nText("상대국"),
+        i18nText("{0}곳", [data.list.length.toLocaleString(TWI18n.locale)]),
+      ),
+      metric(
+        i18nText("상위 5개 비중"),
         data.list.length ? api.pct(api.concentration(data, 5)) : "—",
       ),
       metric(
         "HHI",
         data.list.length
-          ? Math.round(math.hhi(data)).toLocaleString("ko-KR")
+          ? Math.round(math.hhi(data)).toLocaleString(TWI18n.locale)
           : "—",
       ),
     );
@@ -136,8 +194,14 @@
       s.iso + "/" + s.partner + "/" + s.year + "/" + s.product + "/" + s.flow;
     if (lastPartner && lastPartner !== partnerKey)
       animate($("r-partner"), [
-        { opacity: 0.45, transform: "translateY(5px)" },
-        { opacity: 1, transform: "translateY(0)" },
+        {
+          opacity: 0.45,
+          transform: "translateY(5px)",
+        },
+        {
+          opacity: 1,
+          transform: "translateY(0)",
+        },
       ]);
     lastPartner = partnerKey;
     renderCondition();
@@ -205,8 +269,18 @@
       $("r-partner").setAttribute("role", "dialog");
       $("r-partner").setAttribute("aria-modal", "true");
       backdrop.hidden = false;
-      $("close-partner").focus({ preventScroll: true });
-    } else animate($("r-partner"), [{ opacity: 0.6 }, { opacity: 1 }]);
+      $("close-partner").focus({
+        preventScroll: true,
+      });
+    } else
+      animate($("r-partner"), [
+        {
+          opacity: 0.6,
+        },
+        {
+          opacity: 1,
+        },
+      ]);
   }
   function closePartner() {
     var wasOpen = $("r-partner").classList.contains("sheet-open");
@@ -220,7 +294,9 @@
       lastFocus.isConnected &&
       lastFocus !== document.body
     )
-      lastFocus.focus({ preventScroll: true });
+      lastFocus.focus({
+        preventScroll: true,
+      });
   }
   $("close-partner").addEventListener("click", closePartner);
   backdrop.addEventListener("click", closePartner);
@@ -276,8 +352,14 @@
     button.addEventListener("click", function () {
       activateTab(button.dataset.tab, true);
       animate($(paneFor[button.dataset.tab]), [
-        { opacity: 0.4, transform: "translateY(4px)" },
-        { opacity: 1, transform: "translateY(0)" },
+        {
+          opacity: 0.4,
+          transform: "translateY(4px)",
+        },
+        {
+          opacity: 1,
+          transform: "translateY(0)",
+        },
       ]);
     });
     button.addEventListener("keydown", function (e) {
@@ -301,7 +383,13 @@
       var svg = stage.querySelector(".map-svg");
       if (!svg || !svg.querySelector(".map-scene") || cameras.has(svg.id))
         return;
-      var camera = { k: 1, x: 0, y: 0, svg: svg, stage: stage },
+      var camera = {
+          k: 1,
+          x: 0,
+          y: 0,
+          svg: svg,
+          stage: stage,
+        },
         controls = node("div", "map-controls");
       function button(text, label, action) {
         var b = node("button", "", text);
@@ -310,13 +398,13 @@
         b.addEventListener("click", action);
         controls.appendChild(b);
       }
-      button("+", "지도 확대", function () {
+      button("+", i18nText("지도 확대"), function () {
         zoom(camera, 1.4);
       });
-      button("−", "지도 축소", function () {
+      button("−", i18nText("지도 축소"), function () {
         zoom(camera, 1 / 1.4);
       });
-      button("↺", "세계 전체 지도", function () {
+      button("↺", i18nText("세계 전체 지도"), function () {
         applyCamera(camera, 1, 0, 0, true);
         region.value = "world";
       });
@@ -324,14 +412,14 @@
       controls.appendChild(level);
       camera.level = level;
       var region = node("select");
-      region.setAttribute("aria-label", "지도 지역");
+      region.setAttribute("aria-label", i18nText("지도 지역"));
       [
-        ["world", "세계"],
-        ["asia", "아시아"],
-        ["europe", "유럽"],
-        ["americas", "미주"],
-        ["africa", "아프리카"],
-        ["oceania", "오세아니아"],
+        ["world", i18nText("세계")],
+        ["asia", i18nText("아시아")],
+        ["europe", i18nText("유럽")],
+        ["americas", i18nText("미주")],
+        ["africa", i18nText("아프리카")],
+        ["oceania", i18nText("오세아니아")],
       ].forEach(function (p) {
         var o = node("option", "", p[1]);
         o.value = p[0];
@@ -459,11 +547,39 @@
     c.y = y;
     scene.style.transform = to;
     if (motion)
-      animate(scene, [{ transform: from }, { transform: to }], {
-        duration: 320,
-      });
+      animate(
+        scene,
+        [
+          {
+            transform: from,
+          },
+          {
+            transform: to,
+          },
+        ],
+        {
+          duration: 320,
+        },
+      );
     c.level.textContent = Math.round(k * 100) + "%";
     c.svg.style.touchAction = k > 1 ? "none" : "pan-y";
+  }
+  function fitRelationship(prefix, partner) {
+    const camera = cameras.get(prefix + "-map"),
+      s = api.state,
+      a = api.map.anchors?.[s.iso],
+      b = api.map.anchors?.[partner];
+    if (!camera || !a || !b) return;
+    const spanX = Math.max(160, Math.abs(a[0] - b[0]) + 130),
+      spanY = Math.max(110, Math.abs(a[1] - b[1]) + 100);
+    const k = Math.min(4.5, api.map.w / spanX, api.map.h / spanY);
+    applyCamera(
+      camera,
+      k,
+      api.map.w / 2 - ((a[0] + b[0]) / 2) * k,
+      api.map.h / 2 - ((a[1] + b[1]) / 2) * k,
+      true,
+    );
   }
   function zoom(c, factor) {
     var k = Math.max(1, Math.min(5, c.k * factor));
@@ -497,13 +613,13 @@
     container.replaceChildren();
     var heading = node("div", "trend-heading");
     heading.append(
-      node("h3", "", "선택 상대국 비중의 흐름"),
+      node("h3", "", i18nText("선택 상대국 비중의 흐름")),
       node(
         "span",
         "caption",
         s.partner
           ? api.name(s.partner) + " · " + api.scope()
-          : "선택 상대국 없음",
+          : i18nText("선택 상대국 없음"),
       ),
     );
     container.appendChild(heading);
@@ -517,8 +633,8 @@
           "p",
           "caption",
           years.some((year) => !api.series[year])
-            ? "비교 자료를 준비하고 있습니다."
-            : "선택 상대국의 비교 가능한 교역 기록이 없습니다.",
+            ? i18nText("비교 자료를 준비하고 있습니다.")
+            : i18nText("선택 상대국의 비교 가능한 교역 기록이 없습니다."),
         ),
       );
       return;
@@ -547,15 +663,14 @@
       role: "img",
       "aria-label": years
         .map(function (yr, i) {
-          return (
-            yr +
-            "년 " +
-            (!api.series[yr]
-              ? "자료 미준비"
+          return i18nText("{0}년 {1}", [
+            yr,
+            !api.series[yr]
+              ? i18nText("자료 미준비")
               : values[i] === null
-                ? "기록 없음"
-                : api.pct(values[i]))
-          );
+                ? i18nText("기록 없음")
+                : api.pct(values[i]),
+          ]);
         })
         .join(", "),
     });
@@ -571,7 +686,11 @@
         }),
         svgNode(
           "text",
-          { x: left - 10, y: y(value) + 4, "text-anchor": "end" },
+          {
+            x: left - 10,
+            y: y(value) + 4,
+            "text-anchor": "end",
+          },
           value.toFixed(value < 1 ? 1 : 0) + "%",
         ),
       );
@@ -586,17 +705,34 @@
       path += (previous ? " L" : " M") + x(i) + "," + y(v);
       previous = true;
     });
-    chart.appendChild(svgNode("path", { d: path, class: "series-line" }));
+    chart.appendChild(
+      svgNode("path", {
+        d: path,
+        class: "series-line",
+      }),
+    );
     years.forEach(function (year, i) {
       chart.appendChild(
-        svgNode("text", { x: x(i), y: h - 7, "text-anchor": "middle" }, year),
+        svgNode(
+          "text",
+          {
+            x: x(i),
+            y: h - 7,
+            "text-anchor": "middle",
+          },
+          year,
+        ),
       );
       if (values[i] === null) {
         chart.appendChild(
           svgNode(
             "text",
-            { x: x(i), y: h - 23, "text-anchor": "middle" },
-            !api.series[year] ? "자료 미준비" : "기록 없음",
+            {
+              x: x(i),
+              y: h - 23,
+              "text-anchor": "middle",
+            },
+            !api.series[year] ? i18nText("자료 미준비") : i18nText("기록 없음"),
           ),
         );
         return;
@@ -608,10 +744,12 @@
         class: "series-dot" + (year === s.year ? " active" : ""),
         tabindex: "0",
         role: "button",
-        "aria-label": year + "년 선택 · " + api.pct(values[i]),
+        "aria-label": i18nText("{0}년 선택 · {1}", [year, api.pct(values[i])]),
       });
       function choose() {
-        var context = Object.assign({}, api.state, { year: year });
+        var context = Object.assign({}, api.state, {
+          year: year,
+        });
         if (context.compareYear === year)
           context.compareYear = years.find(function (v) {
             return v !== year;
@@ -631,7 +769,11 @@
         dot,
         svgNode(
           "text",
-          { x: x(i), y: y(values[i]) - 12, "text-anchor": "middle" },
+          {
+            x: x(i),
+            y: y(values[i]) - 12,
+            "text-anchor": "middle",
+          },
           api.pct(values[i]),
         ),
       );
@@ -640,15 +782,15 @@
   }
   function renderCondition() {
     const s = api.state;
-    $("condition-context").textContent =
-      api.name(s.iso) +
-      " · " +
-      (s.flow === "export" ? "수출" : "수입") +
-      " · " +
-      s.year +
-      "년 / " +
-      s.compareYear +
-      "년 비교";
+    $("condition-context").textContent = i18nText(
+      "{0} · {1} · {2}년 / {3}년 비교",
+      [
+        api.name(s.iso),
+        s.flow === "export" ? i18nText("수출") : i18nText("수입"),
+        s.year,
+        s.compareYear,
+      ],
+    );
   }
   function renderPartnerQuick() {
     const s = api.state;
@@ -660,8 +802,8 @@
     if (!relation) return;
     quick.append(
       metric(
-        "기준국 내 비중",
-        relation.row ? api.pct(relation.baseShare) : "기록 없음",
+        i18nText("기준국 내 비중"),
+        relation.row ? api.pct(relation.baseShare) : i18nText("기록 없음"),
       ),
     );
     if (api.series[s.compareYear]) {
@@ -673,10 +815,10 @@
       );
       quick.append(
         metric(
-          s.compareYear + "년 대비",
+          i18nText("{0}년 대비", [s.compareYear]),
           old.row && relation.row
             ? math.signed(relation.baseShare - old.baseShare, "%p")
-            : "비교 기록 없음",
+            : i18nText("비교 기록 없음"),
         ),
       );
     }
@@ -695,7 +837,7 @@
       ...api.catalog.years
         .filter((year) => year !== s.year)
         .map((year) => {
-          const option = node("option", "", year + "년");
+          const option = node("option", "", i18nText("{0}년", [year]));
           option.value = year;
           return option;
         }),
@@ -708,7 +850,7 @@
       " · " +
       api.name(s.iso) +
       " " +
-      (s.flow === "export" ? "수출" : "수입") +
+      (s.flow === "export" ? i18nText("수출") : i18nText("수입")) +
       " · " +
       api.scope();
     if (pairReady) renderChangeRows();
@@ -717,10 +859,10 @@
         node(
           "p",
           "caption",
-          "비교연도 자료가 준비되면 구조 변화를 계산합니다.",
+          i18nText("비교연도 자료가 준비되면 구조 변화를 계산합니다."),
         ),
       );
-      $("change-count").textContent = "비교 자료 미준비";
+      $("change-count").textContent = i18nText("비교 자료 미준비");
     }
     $("change-prev").disabled = !pairReady || $("change-prev").disabled;
     $("change-next").disabled = !pairReady || $("change-next").disabled;
@@ -729,12 +871,16 @@
     missing.replaceChildren();
     if (!pairReady) return;
     [
-      ["비교연도 미기록 → 선택연도 기록", changeData.entered],
-      ["비교연도 기록 → 선택연도 미기록", changeData.absent],
+      [i18nText("비교연도 미기록 → 선택연도 기록"), changeData.entered],
+      [i18nText("비교연도 기록 → 선택연도 미기록"), changeData.absent],
     ].forEach(function (group) {
       var wrap = node("div", "change-missing-group");
       wrap.appendChild(
-        node("strong", "", group[0] + " · " + group[1].length + "곳"),
+        node(
+          "strong",
+          "",
+          i18nText("{0} · {1}곳", [group[0], group[1].length]),
+        ),
       );
       group[1].forEach(function (r) {
         var a = node("a", "", api.name(r.iso));
@@ -769,24 +915,23 @@
       ? items
       : items.slice(changePage * pageSize, (changePage + 1) * pageSize);
     const max = Math.max(0.1, ...items.map((row) => Math.abs(row.pp)));
-    $("change-count").textContent =
-      items.length +
-      "곳 / 비교 가능한 상대국 " +
-      changeData.common.length +
-      "곳";
+    $("change-count").textContent = i18nText(
+      "{0}곳 / 비교 가능한 상대국 {1}곳",
+      [items.length, changeData.common.length],
+    );
     $("change-page").textContent = showAllChanges
-      ? "전체"
+      ? i18nText("전체")
       : changePage + 1 + " / " + pages;
     $("change-prev").disabled = showAllChanges || changePage === 0;
     $("change-next").disabled = showAllChanges || changePage + 1 === pages;
     $("change-all").setAttribute("aria-pressed", String(showAllChanges));
     $("change-all").textContent = showAllChanges
-      ? "페이지로 보기"
-      : "전체 펼치기";
+      ? i18nText("페이지로 보기")
+      : i18nText("전체 펼치기");
     list.replaceChildren();
     if (!items.length) {
       list.appendChild(
-        node("p", "empty-state", "조건에 맞는 상대국이 없습니다."),
+        node("p", "empty-state", i18nText("조건에 맞는 상대국이 없습니다.")),
       );
       return;
     }
@@ -809,24 +954,22 @@
         node(
           "span",
           "rank-change",
-          r.before.rank +
-            "위 → " +
-            r.after.rank +
-            "위 · " +
+          i18nText("{0}위 → {1}위 · {2}", [
+            r.before.rank,
+            r.after.rank,
             math.signed(r.percentChange, "%"),
+          ]),
         ),
       );
       button.setAttribute(
         "aria-label",
-        api.name(r.iso) +
-          " 비중 " +
-          math.signed(r.pp, "%p") +
-          ", " +
-          r.before.rank +
-          "위에서 " +
-          r.after.rank +
-          "위, 교역액 " +
+        i18nText("{0} 비중 {1}, {2}위에서 {3}위, 교역액 {4}", [
+          api.name(r.iso),
+          math.signed(r.pp, "%p"),
+          r.before.rank,
+          r.after.rank,
           math.signed(r.percentChange, "%"),
+        ]),
       );
       button.addEventListener("click", function () {
         api.selectPartner(r.iso);
@@ -871,26 +1014,26 @@
     var s = api.state,
       lines = [
         [
-          "기준국 코드",
-          "상대국 코드",
-          "교역 방향",
-          "품목 범위",
-          "비교연도",
-          "선택연도",
-          "비교연도 금액(천 달러)",
-          "선택연도 금액(천 달러)",
-          "비교연도 비중(%)",
-          "선택연도 비중(%)",
-          "비중 변화(%p)",
-          "거래액 변화(%)",
-          "비교연도 순위",
-          "선택연도 순위",
-          "기록 상태",
-          "출처",
-          "자료 버전",
-          "단위",
-          "라이선스",
-          "원자료 링크",
+          i18nText("기준국 코드"),
+          i18nText("상대국 코드"),
+          i18nText("교역 방향"),
+          i18nText("품목 범위"),
+          i18nText("비교연도"),
+          i18nText("선택연도"),
+          i18nText("비교연도 금액(천 달러)"),
+          i18nText("선택연도 금액(천 달러)"),
+          i18nText("비교연도 비중(%)"),
+          i18nText("선택연도 비중(%)"),
+          i18nText("비중 변화(%p)"),
+          i18nText("거래액 변화(%)"),
+          i18nText("비교연도 순위"),
+          i18nText("선택연도 순위"),
+          i18nText("기록 상태"),
+          i18nText("출처"),
+          i18nText("자료 버전"),
+          i18nText("단위"),
+          i18nText("라이선스"),
+          i18nText("원자료 링크"),
         ].join(","),
       ];
     changeData.common.forEach(function (r) {
@@ -910,7 +1053,7 @@
           r.percentChange,
           r.before.rank,
           r.after.rank,
-          "두 연도 기록",
+          i18nText("두 연도 기록"),
           api.source(),
           api.catalog.version,
           api.catalog.unit,
@@ -938,7 +1081,7 @@
           null,
           r.before ? r.before.rank : null,
           r.after ? r.after.rank : null,
-          r.after ? "비교연도 미기록" : "선택연도 미기록",
+          r.after ? i18nText("비교연도 미기록") : i18nText("선택연도 미기록"),
           api.source(),
           api.catalog.version,
           api.catalog.unit,
@@ -965,8 +1108,9 @@
   // Country comparison uses the same year, flow, product and fixed map buckets.
   function initPeers() {
     if (peerReady) return;
+    ["peer-one", "peer-two"].forEach((id) => $(id).replaceChildren());
     var codes = Object.keys(api.catalog.countries).sort(function (a, b) {
-      return api.name(a).localeCompare(api.name(b), "ko");
+      return api.name(a).localeCompare(api.name(b), TWI18n.locale);
     });
     ["peer-one", "peer-two"].forEach(function (id) {
       codes.forEach(function (code) {
@@ -1007,12 +1151,11 @@
     });
     if ((s.peers || []).join(",") !== countries.slice(1).join(","))
       api.setTab(s.tab, countries.slice(1));
-    $("countries-context").textContent =
-      s.year +
-      "년 · " +
-      api.scope() +
-      " · " +
-      (s.flow === "export" ? "수출" : "수입");
+    $("countries-context").textContent = i18nText("{0}년 · {1} · {2}", [
+      s.year,
+      api.scope(),
+      s.flow === "export" ? i18nText("수출") : i18nText("수입"),
+    ]);
     var wrap = $("country-cards");
     wrap.replaceChildren();
     countries.forEach(function (code, index) {
@@ -1027,7 +1170,7 @@
             " · " +
             s.year +
             " · " +
-            (s.flow === "export" ? "수출" : "수입"),
+            (s.flow === "export" ? i18nText("수출") : i18nText("수입")),
         ),
       );
       var svg = svgNode("svg", {
@@ -1037,27 +1180,33 @@
         "aria-labelledby": "peer-" + index + "-map-desc",
       });
       svg.appendChild(
-        svgNode("desc", { id: "peer-" + index + "-map-desc" }, ""),
+        svgNode(
+          "desc",
+          {
+            id: "peer-" + index + "-map-desc",
+          },
+          "",
+        ),
       );
       card.appendChild(svg);
       card.appendChild(
         node(
           "strong",
           "mini-total",
-          data.list.length ? api.usd(data.total) : "교역 기록 없음",
+          data.list.length ? api.usd(data.total) : i18nText("교역 기록 없음"),
         ),
       );
       var dl = node("dl");
       [
-        ["상대국", data.list.length + "곳"],
+        [i18nText("상대국"), i18nText("{0}곳", [data.list.length])],
         [
-          "상위 5개 비중",
+          i18nText("상위 5개 비중"),
           data.list.length ? api.pct(api.concentration(data, 5)) : "—",
         ],
         [
           "HHI",
           data.list.length
-            ? Math.round(math.hhi(data)).toLocaleString("ko-KR")
+            ? Math.round(math.hhi(data)).toLocaleString(TWI18n.locale)
             : "—",
         ],
       ].forEach(function (row) {
@@ -1079,7 +1228,7 @@
       card.appendChild(rank); // Use the same fixed legend for every comparison map.
       var key = document.querySelector("#r-body .legend").cloneNode(true);
       card.appendChild(key);
-      var link = node("a", "btn btn-text", "이 국가 자세히 보기 →");
+      var link = node("a", "btn btn-text", i18nText("이 국가 자세히 보기 →"));
       link.href = "#" + api.resultRoute(code, s.flow, "", null);
       card.appendChild(link);
       wrap.appendChild(card);
@@ -1097,22 +1246,22 @@
     var s = api.state,
       lines = [
         [
-          "기준국",
-          "기준국 코드",
-          "교역 방향",
-          "연도",
-          "품목 범위",
-          "교역액(천 달러)",
-          "상대국 수",
+          i18nText("기준국"),
+          i18nText("기준국 코드"),
+          i18nText("교역 방향"),
+          i18nText("연도"),
+          i18nText("품목 범위"),
+          i18nText("교역액(천 달러)"),
+          i18nText("상대국 수"),
           "CR1(%)",
           "CR3(%)",
           "CR5(%)",
           "HHI",
-          "출처",
-          "자료 버전",
-          "단위",
-          "라이선스",
-          "원자료 링크",
+          i18nText("출처"),
+          i18nText("자료 버전"),
+          i18nText("단위"),
+          i18nText("라이선스"),
+          i18nText("원자료 링크"),
         ].join(","),
       ];
     selectedCountries().forEach(function (code) {
@@ -1173,7 +1322,6 @@
       })),
     };
   }
-
   function makeTable(headers, rows, caption) {
     const table = node("table", "research-table");
     table.appendChild(node("caption", "", caption));
@@ -1196,7 +1344,6 @@
     });
     return table;
   }
-
   function matrixCells(matrix, row, highlight) {
     const state = api.state;
     const metric = $("matrix-metric").value || "share";
@@ -1204,20 +1351,20 @@
       api.name(row.code) + " · " + row.code,
       ...row.cells.map((value, index) => {
         if (!value)
-          return matrix.countries[index] === row.code ? "기준국" : "기록 없음";
-        const fullText =
-          api.pct(value.p) +
-          " · " +
-          api.usd(value.v) +
-          " · " +
-          value.rank +
-          "위";
+          return matrix.countries[index] === row.code
+            ? i18nText("기준국")
+            : i18nText("기록 없음");
+        const fullText = i18nText("{0} · {1} · {2}위", [
+          api.pct(value.p),
+          api.usd(value.v),
+          value.rank,
+        ]);
         if (!highlight) return fullText;
         const label =
           metric === "amount"
             ? api.usd(value.v)
             : metric === "rank"
-              ? value.rank + "위"
+              ? i18nText("{0}위", [value.rank])
               : api.pct(value.p);
         const link = node("a", "matrix-value", label);
         if (metric === "share")
@@ -1252,7 +1399,6 @@
       }),
     ];
   }
-
   function captureRowPositions(container) {
     if (reduced.matches) return new Map();
     return new Map(
@@ -1270,8 +1416,12 @@
         old === undefined ? 0 : old - row.getBoundingClientRect().top;
       if (Math.abs(delta) > 1 && Math.abs(delta) < 500)
         animate(row, [
-          { transform: "translateY(" + delta + "px)" },
-          { transform: "translateY(0)" },
+          {
+            transform: "translateY(" + delta + "px)",
+          },
+          {
+            transform: "translateY(0)",
+          },
         ]);
     });
   }
@@ -1287,10 +1437,10 @@
           "",
           api.name(code) +
             ($("matrix-metric").value === "rank"
-              ? " 순위 순"
+              ? i18nText(" 순위 순")
               : $("matrix-metric").value === "amount"
-                ? " 금액 큰 순"
-                : " 비중 큰 순"),
+                ? i18nText(" 금액 큰 순")
+                : i18nText(" 비중 큰 순")),
         );
         option.value = String(index);
         return option;
@@ -1311,20 +1461,23 @@
       .sort(
         (a, b) =>
           score(b.cells[column]) - score(a.cells[column]) ||
-          api.name(a.code).localeCompare(api.name(b.code), "ko"),
+          api.name(a.code).localeCompare(api.name(b.code), TWI18n.locale),
       );
-    $("matrix-count").textContent =
-      rows.length + "곳 / " + matrix.rows.length + "곳";
+    $("matrix-count").textContent = i18nText("{0}곳 / {1}곳", [
+      rows.length,
+      matrix.rows.length,
+    ]);
     $("matrix-table").replaceChildren(
       makeTable(
-        ["상대국", ...matrix.countries.map(api.name)],
+        [i18nText("상대국"), ...matrix.countries.map(api.name)],
         rows.map((row) => matrixCells(matrix, row, true)),
-        "상대국별 " +
-          ({
-            share: "비중 · 각 보고국 합계 = 100%",
-            amount: "교역액 · 경상 달러",
-            rank: "순위 · 각 보고국 내 순위",
-          }[$("matrix-metric").value] || "비중"),
+        i18nText("상대국별 {0}", [
+          {
+            share: i18nText("비중 · 각 보고국 합계 = 100%"),
+            amount: i18nText("교역액 · 경상 달러"),
+            rank: i18nText("순위 · 각 보고국 내 순위"),
+          }[$("matrix-metric").value] || i18nText("비중"),
+        ]),
       ),
     );
     $("matrix-table")
@@ -1339,10 +1492,9 @@
     animateTableRows($("matrix-table"), positions);
     if (!rows.length)
       $("matrix-table").appendChild(
-        node("p", "caption", "검색 조건에 맞는 상대국이 없습니다."),
+        node("p", "caption", i18nText("검색 조건에 맞는 상대국이 없습니다.")),
       );
   }
-
   $("matrix-metric").addEventListener("change", renderMatrix);
   $("matrix-query").addEventListener("input", renderMatrix);
   $("matrix-sort").addEventListener("change", renderMatrix);
@@ -1350,17 +1502,17 @@
     const matrix = comparisonMatrix();
     const state = api.state;
     const header = [
-      "보고국 코드",
-      "상대국 코드",
-      "금액(천 달러)",
-      "분모(천 달러)",
-      "비중(%)",
-      "순위",
-      "기록 상태",
-      "연도",
-      "교역 방향",
-      "품목 범위",
-      "출처",
+      i18nText("보고국 코드"),
+      i18nText("상대국 코드"),
+      i18nText("금액(천 달러)"),
+      i18nText("분모(천 달러)"),
+      i18nText("비중(%)"),
+      i18nText("순위"),
+      i18nText("기록 상태"),
+      i18nText("연도"),
+      i18nText("교역 방향"),
+      i18nText("품목 범위"),
+      i18nText("출처"),
     ];
     const totals = matrix.countries.map(
       (country) => api.rows(country, state.flow).total,
@@ -1376,7 +1528,11 @@
           total || null,
           cell?.p ?? null,
           cell?.rank ?? null,
-          country === row.code ? "기준국" : cell ? "기록 있음" : "기록 없음",
+          country === row.code
+            ? i18nText("기준국")
+            : cell
+              ? i18nText("기록 있음")
+              : i18nText("기록 없음"),
           state.year,
           state.flow,
           api.scope(),
@@ -1389,7 +1545,6 @@
       "tradeweave_" + state.year + "_" + state.product + "_partner_matrix.csv",
     );
   });
-
   function numberExplanation() {
     const state = api.state;
     if (
@@ -1415,19 +1570,19 @@
     return {
       rows: [
         [
-          state.compareYear + "년",
+          i18nText("{0}년", [state.compareYear]),
           api.usd(old.row.v),
           api.usd(old.baseTotal),
           api.pct(old.baseShare),
         ],
         [
-          state.year + "년",
+          i18nText("{0}년", [state.year]),
           api.usd(now.row.v),
           api.usd(now.baseTotal),
           api.pct(now.baseShare),
         ],
         [
-          "변화",
+          i18nText("변화"),
           math.signed(growth(now.row.v, old.row.v), "%"),
           math.signed(growth(now.baseTotal, old.baseTotal), "%"),
           math.signed(now.baseShare - old.baseShare, "%p"),
@@ -1435,26 +1590,31 @@
       ],
       message:
         Math.abs(now.baseShare - old.baseShare) < 1e-9
-          ? "상대국 교역액과 기준국 전체 교역액의 변화율이 같아 비중이 유지됐습니다."
-          : "상대국 교역액의 변화율이 기준국 전체 교역액의 변화율보다 " +
-            (now.baseShare > old.baseShare
-              ? "높아 비중이 올랐습니다."
-              : "낮아 비중이 내려갔습니다."),
+          ? i18nText(
+              "상대국 교역액과 기준국 전체 교역액의 변화율이 같아 비중이 유지됐습니다.",
+            )
+          : i18nText(
+              "상대국 교역액의 변화율이 기준국 전체 교역액의 변화율보다 {0}",
+              [
+                now.baseShare > old.baseShare
+                  ? i18nText("높아 비중이 올랐습니다.")
+                  : i18nText("낮아 비중이 내려갔습니다."),
+              ],
+            ),
     };
   }
-
   function renderNumberExplanation() {
     const section = $("number-explanation");
     const explanation = numberExplanation();
-    section.replaceChildren(
-      node("h3", "", "금액과 비중은 왜 다르게 움직일까?"),
-    );
+    section.replaceChildren(node("h3", "", i18nText("교역액·비중 변화")));
     if (!explanation) {
       section.appendChild(
         node(
           "p",
           "caption",
-          "두 연도 자료가 준비되고 선택 상대국과의 기록이 모두 있을 때 계산할 수 있습니다.",
+          i18nText(
+            "두 연도 자료가 준비되고 선택 상대국과의 기록이 모두 있을 때 계산할 수 있습니다.",
+          ),
         ),
       );
       return;
@@ -1463,28 +1623,31 @@
       node("p", "", explanation.message),
       makeTable(
         [
-          "연도",
-          api.name(api.state.partner) + " 교역액",
-          "기준국 전체 교역액",
-          "상대국 비중",
+          i18nText("연도"),
+          i18nText("{0} 교역액", [api.name(api.state.partner)]),
+          i18nText("기준국 전체 교역액"),
+          i18nText("상대국 비중"),
         ],
         explanation.rows,
-        "선택한 연도·품목·방향 기준",
+        i18nText("선택한 연도·품목·방향 기준"),
       ),
       node(
         "p",
         "caption",
-        "비중 = 상대국 교역액 ÷ 기준국 전체 교역액 × 100. 변화율은 반올림 전 금액으로 계산합니다.",
+        i18nText(
+          "비중 = 상대국 교역액 ÷ 기준국 전체 교역액 × 100. 변화율은 반올림 전 금액으로 계산합니다.",
+        ),
       ),
     );
   }
-
   function installProductButtons() {
     document.querySelectorAll(".scope-controls").forEach(function (group) {
       if (group.querySelector(".product-explore")) return;
       var label = group.querySelector("[data-product]").parentElement;
       label.classList.add("product-label");
-      var b = node("button", "product-explore", "품목 탐색 ↗");
+      var b = node("button", "product-explore", "↗");
+      b.setAttribute("aria-label", i18nText("품목 탐색"));
+      b.title = i18nText("품목 탐색");
       b.type = "button";
       b.addEventListener("click", function () {
         openProduct();
@@ -1502,10 +1665,14 @@
   function renderProducts() {
     var q = api.normalize($("product-query").value),
       items = api.catalog.products.filter(function (p) {
-        return api.normalize(p.scope + " " + p.description).includes(q);
+        return api
+          .normalize(p.searchText || p.scope + " " + p.description)
+          .includes(q);
       });
-    $("product-count").textContent =
-      items.length + "개 범위 · HS 2단위 산업군과 주요 4단위 품목";
+    $("product-count").textContent = i18nText(
+      "{0}개 범위 · HS 2단위 산업군과 주요 4단위 품목",
+      [items.length],
+    );
     var list = $("product-results");
     list.replaceChildren();
     items.forEach(function (p) {
@@ -1519,7 +1686,11 @@
         node(
           "small",
           "",
-          p.level === 4 ? "주요 품목" : p.level === 2 ? "산업군" : "전체",
+          p.level === 4
+            ? i18nText("주요 품목")
+            : p.level === 2
+              ? i18nText("산업군")
+              : i18nText("전체"),
         ),
       );
       b.addEventListener("click", function () {
@@ -1533,7 +1704,9 @@
         node(
           "p",
           "empty-state",
-          "일치하는 품목이 없습니다. 산업군 이름이나 HS 코드로 검색해 주세요.",
+          i18nText(
+            "일치하는 품목이 없습니다. 산업군 이름이나 HS 코드로 검색해 주세요.",
+          ),
         ),
       );
   }
@@ -1614,15 +1787,23 @@
         showAllChanges = item.showAllChanges === true;
         if (changeData) renderChangeRows();
         if (s.tab === "countries") renderMatrix();
-        $("partner-query").dispatchEvent(new Event("input", { bubbles: true }));
-        $("partner-sort").dispatchEvent(new Event("change", { bubbles: true }));
+        $("partner-query").dispatchEvent(
+          new Event("input", {
+            bubbles: true,
+          }),
+        );
+        $("partner-sort").dispatchEvent(
+          new Event("change", {
+            bubbles: true,
+          }),
+        );
         window.TradeweaveResearch?.restoreView(item.temporal);
-        api.say("분석 조건·메모·표시 설정을 복원했습니다.");
+        api.say(i18nText("분석 조건·메모·표시 설정을 복원했습니다."));
       }
     }
     $("open-note").textContent = $("report-note").value.trim()
-      ? "메모 있음"
-      : "메모";
+      ? i18nText("메모 있음")
+      : i18nText("메모");
   }
   function applyDraft(value) {
     const note = value.slice(0, 2000);
@@ -1630,12 +1811,17 @@
     if (drafts.size > 60) drafts.delete(drafts.keys().next().value);
     $("workspace-note").value = note;
     $("report-note").value = note;
-    $("open-note").textContent = note.trim() ? "메모 있음" : "메모";
+    $("open-note").textContent = note.trim()
+      ? i18nText("메모 있음")
+      : i18nText("메모");
   }
   $("open-note").addEventListener("click", () => {
     syncWorkspaceDraft();
-    $("note-scope").textContent =
-      $("r-title").textContent + " · " + api.state.year + "년 · " + api.scope();
+    $("note-scope").textContent = i18nText("{0} · {1}년 · {2}", [
+      $("r-title").textContent,
+      api.state.year,
+      api.scope(),
+    ]);
     $("workspace-note").value = $("report-note").value;
     $("note-dialog").showModal();
     $("workspace-note").focus();
@@ -1644,7 +1830,9 @@
     applyDraft($("workspace-note").value);
     $("note-dialog").close();
     api.say(
-      "현재 분석에 메모를 적용했습니다. 분석 저장을 누르면 이 브라우저에 보관됩니다.",
+      i18nText(
+        "현재 분석에 메모를 적용했습니다. 분석 저장을 누르면 이 브라우저에 보관됩니다.",
+      ),
     );
   });
   $("report-note").addEventListener("input", () =>
@@ -1663,21 +1851,31 @@
       return [];
     }
   }
-
   function writeSaved(items) {
     try {
       localStorage.setItem(storageKey, JSON.stringify(items));
       updateSavedCount();
       return true;
     } catch (e) {
-      $("storage-message").textContent =
-        "브라우저 저장 공간을 사용할 수 없습니다. 링크 복사를 이용해 주세요.";
-      api.say("분석을 저장하지 못했습니다. 링크 복사를 이용해 주세요.");
+      $("storage-message").textContent = i18nText(
+        "브라우저 저장 공간을 사용할 수 없습니다. 링크 복사를 이용해 주세요.",
+      );
+      api.say(
+        i18nText("분석을 저장하지 못했습니다. 링크 복사를 이용해 주세요."),
+      );
       return false;
     }
   }
   function updateSavedCount() {
     $("saved-count").textContent = readSaved().length;
+  }
+  function analysisIdentity(hash) {
+    const index = hash.indexOf("?"),
+      path = index < 0 ? hash : hash.slice(0, index),
+      params = new URLSearchParams(index < 0 ? "" : hash.slice(index + 1));
+    params.delete("lang");
+    params.sort();
+    return path + "?" + params.toString();
   }
   $("save-analysis").addEventListener("click", function () {
     if (!resultVisible() || document.body.classList.contains("is-loading"))
@@ -1687,12 +1885,12 @@
       hash = "#" + api.resultRoute(s.iso, s.flow, s.section, s.partner),
       items = readSaved(),
       existing = items.find(function (r) {
-        return r.hash === hash;
+        return analysisIdentity(r.hash) === analysisIdentity(hash);
       }),
       name =
         api.name(s.iso) +
         " " +
-        (s.flow === "export" ? "수출" : "수입") +
+        (s.flow === "export" ? i18nText("수출") : i18nText("수입")) +
         " · " +
         s.year +
         " · " +
@@ -1726,8 +1924,8 @@
     if (writeSaved(items.slice(0, 30)))
       api.say(
         existing
-          ? "저장한 분석을 갱신했습니다."
-          : "이 브라우저에 분석을 저장했습니다.",
+          ? i18nText("저장한 분석을 갱신했습니다.")
+          : i18nText("이 브라우저에 분석을 저장했습니다."),
       );
   });
   function renderSaved() {
@@ -1740,7 +1938,9 @@
         node(
           "p",
           "empty-state",
-          "저장한 분석이 없습니다. 결과 화면에서 ‘분석 저장’을 눌러 보세요.",
+          i18nText(
+            "저장한 분석이 없습니다. 결과 화면에서 ‘분석 저장’을 눌러 보세요.",
+          ),
         ),
       );
       return;
@@ -1757,8 +1957,9 @@
       link.addEventListener("click", function (event) {
         event.preventDefault();
         if (!workspaceModel.versionMatches(item, api.catalog)) {
-          $("storage-message").textContent =
-            "저장 당시 자료 버전과 현재 자료가 다릅니다. 아래 ‘현재 자료로 다시 분석’을 선택하면 현재 자료로 조건과 메모를 복원합니다.";
+          $("storage-message").textContent = i18nText(
+            "저장 당시 자료 버전과 현재 자료가 다릅니다. 아래 ‘현재 자료로 다시 분석’을 선택하면 현재 자료로 조건과 메모를 복원합니다.",
+          );
           return;
         }
         restore();
@@ -1769,12 +1970,11 @@
           "p",
           "saved-version",
           item.snapshot
-            ? "저장 기준 · " +
-                item.snapshot.version +
-                " · SHA-256 " +
-                item.snapshot.archiveSha256.slice(0, 12) +
-                "…"
-            : "이전 저장 항목 · 자료 버전 미지정",
+            ? i18nText("저장 기준 · {0} · SHA-256 {1}…", [
+                item.snapshot.version,
+                item.snapshot.archiveSha256.slice(0, 12),
+              ])
+            : i18nText("이전 저장 항목 · 자료 버전 미지정"),
         ),
       );
       if (item.note)
@@ -1784,13 +1984,15 @@
           node(
             "p",
             "version-warning",
-            "저장 당시 자료와 현재 배포판이 다릅니다. 이전 배포판의 수치를 자동 복원하지 않습니다.",
+            i18nText(
+              "저장 당시 자료와 현재 배포판이 다릅니다. 이전 배포판의 수치를 자동 복원하지 않습니다.",
+            ),
           ),
         );
         const current = node(
           "button",
           "btn btn-secondary",
-          "현재 자료로 다시 분석",
+          i18nText("현재 자료로 다시 분석"),
         );
         current.type = "button";
         current.addEventListener("click", restore);
@@ -1800,9 +2002,9 @@
         input = node("input");
       input.value = item.name;
       input.maxLength = 100;
-      input.setAttribute("aria-label", item.name + " 이름");
-      var rename = node("button", "btn btn-secondary", "이름 변경"),
-        remove = node("button", "btn btn-text", "삭제");
+      input.setAttribute("aria-label", i18nText("{0} 이름", [item.name]));
+      var rename = node("button", "btn btn-secondary", i18nText("이름 변경")),
+        remove = node("button", "btn btn-text", i18nText("삭제"));
       rename.type = remove.type = "button";
       rename.addEventListener("click", function () {
         var name = input.value.trim();
@@ -1826,7 +2028,7 @@
           )
         ) {
           renderSaved();
-          var undo = node("button", "btn btn-text", "방금 삭제 취소");
+          var undo = node("button", "btn btn-text", i18nText("방금 삭제 취소"));
           undo.addEventListener("click", function () {
             if (writeSaved(before)) renderSaved();
           });
@@ -1851,7 +2053,9 @@
     };
     const link = node("a");
     link.href = URL.createObjectURL(
-      new Blob([JSON.stringify(bundle, null, 2)], { type: "application/json" }),
+      new Blob([JSON.stringify(bundle, null, 2)], {
+        type: "application/json",
+      }),
     );
     link.download = "tradeweave_workspace_backup.json";
     link.click();
@@ -1882,13 +2086,15 @@
       }
       if (writeSaved(merged.slice(0, 30))) {
         renderSaved();
-        $("storage-message").textContent =
-          imported.length +
-          "개 분석을 가져왔습니다. 중복 주소는 합치고 최근 30개까지 보관합니다.";
+        $("storage-message").textContent = i18nText(
+          "{0}개 분석을 가져왔습니다. 중복 주소는 합치고 최근 30개까지 보관합니다.",
+          [imported.length],
+        );
       }
     } catch (error) {
-      $("storage-message").textContent =
-        "백업을 가져오지 못했습니다. Tradeweave 백업 JSON 형식·지원 국가/품목·파일 크기(1MB 이하)를 확인하세요. 기존 저장은 유지됩니다.";
+      $("storage-message").textContent = i18nText(
+        "백업을 가져오지 못했습니다. Tradeweave 백업 JSON 형식·지원 국가/품목·파일 크기(1MB 이하)를 확인하세요. 기존 저장은 유지됩니다.",
+      );
     } finally {
       $("import-saved").value = "";
     }
@@ -1925,10 +2131,16 @@
               animate(
                 row,
                 [
-                  { transform: "translateY(" + (old - r.top) + "px)" },
-                  { transform: "translateY(0)" },
+                  {
+                    transform: "translateY(" + (old - r.top) + "px)",
+                  },
+                  {
+                    transform: "translateY(0)",
+                  },
                 ],
-                { duration: 280 },
+                {
+                  duration: 280,
+                },
               );
           });
       });
@@ -2003,7 +2215,13 @@
   }
   function paintLegend(ctx, x, y, width) {
     var p = colors(),
-      labels = ["1% 미만", "1–5%", "5–10%", "10–20%", "20% 이상"];
+      labels = [
+        i18nText("1% 미만"),
+        "1–5%",
+        "5–10%",
+        "10–20%",
+        i18nText("20% 이상"),
+      ];
     ctx.font = "15px sans-serif";
     labels.forEach(function (label, i) {
       ctx.fillStyle = p.buckets[i];
@@ -2016,7 +2234,7 @@
     if (exporting || !resultVisible()) return;
     exporting = true;
     $("export-image").disabled = true;
-    api.say("출처를 포함한 지도 이미지를 만드는 중입니다.");
+    api.say(i18nText("출처를 포함한 지도 이미지를 만드는 중입니다."));
     try {
       await document.fonts.ready;
       var s = api.state,
@@ -2033,23 +2251,22 @@
       ctx.font = '500 40px "IBM Plex Sans KR",sans-serif';
       ctx.fillText(
         compare
-          ? "같은 기준으로, 나란히"
-          : api.name(s.iso) +
-              "의 " +
-              (s.flow === "export" ? "수출" : "수입") +
-              " 상대국",
+          ? i18nText("국가 비교")
+          : i18nText("{0}의 {1} 상대국", [
+              api.name(s.iso),
+              s.flow === "export" ? i18nText("수출") : i18nText("수입"),
+            ]),
         65,
         145,
       );
       ctx.font = '20px "IBM Plex Sans KR",sans-serif';
       ctx.fillStyle = "#62717b";
       ctx.fillText(
-        s.year +
-          " · " +
-          api.scope() +
-          " · " +
-          (s.flow === "export" ? "수출" : "수입") +
-          " · 경상 미국 달러",
+        i18nText("{0} · {1} · {2} · 경상 미국 달러", [
+          s.year,
+          api.scope(),
+          s.flow === "export" ? i18nText("수출") : i18nText("수입"),
+        ]),
         65,
         190,
       );
@@ -2066,18 +2283,18 @@
           ctx.fillStyle = "#182d3d";
           ctx.font = '500 28px "IBM Plex Sans KR",sans-serif';
           ctx.fillText(
-            data.list.length ? api.usd(data.total) : "교역 기록 없음",
+            data.list.length ? api.usd(data.total) : i18nText("교역 기록 없음"),
             x + 25,
             670,
           );
           ctx.font = '17px "IBM Plex Sans KR",sans-serif';
           ctx.fillText(
-            "상위 5개 " +
-              (data.list.length ? api.pct(api.concentration(data, 5)) : "—") +
-              " · HHI " +
-              (data.list.length
-                ? Math.round(math.hhi(data)).toLocaleString("ko-KR")
-                : "—"),
+            i18nText("상위 5개 {0} · HHI {1}", [
+              data.list.length ? api.pct(api.concentration(data, 5)) : "—",
+              data.list.length
+                ? Math.round(math.hhi(data)).toLocaleString(TWI18n.locale)
+                : "—",
+            ]),
             x + 25,
             715,
           );
@@ -2094,7 +2311,9 @@
         ctx.fillStyle = "#62717b";
         ctx.font = '16px "IBM Plex Sans KR",sans-serif';
         ctx.fillText(
-          "각 국가의 선택 범위 합계 = 각각 100% · 공통 색 구간 · 황토색 = 기준국",
+          i18nText(
+            "각 국가의 선택 범위 합계 = 각각 100% · 공통 색 구간 · 황토색 = 기준국",
+          ),
           65,
           1160,
         );
@@ -2105,7 +2324,7 @@
         var data = api.rows(s.iso, s.flow);
         ctx.fillStyle = "#182d3d";
         ctx.font = '500 21px "IBM Plex Sans KR",sans-serif';
-        ctx.fillText("상위 5개 상대국", 1270, 285);
+        ctx.fillText(i18nText("상위 5개 상대국"), 1270, 285);
         data.list.slice(0, 5).forEach(function (r, i) {
           ctx.font = '20px "IBM Plex Sans KR",sans-serif';
           ctx.fillStyle = "#62717b";
@@ -2118,10 +2337,10 @@
         ctx.fillStyle = "#182d3d";
         ctx.font = '500 26px "IBM Plex Sans KR",sans-serif';
         ctx.fillText(
-          "합계 " +
-            (data.list.length ? api.usd(data.total) : "교역 기록 없음") +
-            " · 상위 5개 " +
-            (data.list.length ? api.pct(api.concentration(data, 5)) : "—"),
+          i18nText("합계 {0} · 상위 5개 {1}", [
+            data.list.length ? api.usd(data.total) : i18nText("교역 기록 없음"),
+            data.list.length ? api.pct(api.concentration(data, 5)) : "—",
+          ]),
           65,
           925,
         );
@@ -2131,27 +2350,32 @@
         if (s.partner)
           wrapText(
             ctx,
-            "선택 상대국 " +
-              api.name(s.partner) +
-              " · " +
-              (relation.row
-                ? api.usd(relation.row.v) +
-                  " · 기준국 비중 " +
-                  api.pct(relation.baseShare) +
-                  " · 상대국 비중 " +
-                  api.pct(relation.partnerShare)
-                : "교역 기록 없음"),
+            i18nText("선택 상대국 {0} · {1}", [
+              api.name(s.partner),
+              relation.row
+                ? i18nText("{0} · 기준국 비중 {1} · 상대국 비중 {2}", [
+                    api.usd(relation.row.v),
+                    api.pct(relation.baseShare),
+                    api.pct(relation.partnerShare),
+                  ])
+                : i18nText("교역 기록 없음"),
+            ]),
             65,
             970,
             1665,
             26,
           );
         ctx.fillText(
-          "분모 " +
-            (data.list.length
-              ? data.total.toLocaleString("ko-KR") + " 천 달러"
-              : "교역 기록 없음") +
-            " · 황토색 = 기준국 · 바탕색 = 교역 기록 또는 자료 없음",
+          i18nText(
+            "분모 {0} · 황토색 = 기준국 · 바탕색 = 교역 기록 또는 자료 없음",
+            [
+              data.list.length
+                ? i18nText("{0} 천 달러", [
+                    data.total.toLocaleString(TWI18n.locale),
+                  ])
+                : i18nText("교역 기록 없음"),
+            ],
+          ),
           65,
           1020,
         );
@@ -2161,7 +2385,9 @@
       ctx.font = '15px "IBM Plex Sans KR",sans-serif';
       footer = wrapText(ctx, api.source(), 65, footer, 1665, 24);
       ctx.fillText(
-        "Etalab Open Licence 2.0 · Natural Earth / world-atlas 2.0.2 · 정거원통 도법",
+        i18nText(
+          "Etalab Open Licence 2.0 · Natural Earth / world-atlas 2.0.2 · 정거원통 도법",
+        ),
         65,
         footer + 5,
       );
@@ -2191,10 +2417,12 @@
       setTimeout(function () {
         URL.revokeObjectURL(url);
       }, 1000);
-      api.say("출처를 포함한 PNG를 저장했습니다.");
+      api.say(i18nText("출처를 포함한 PNG를 저장했습니다."));
     } catch (e) {
       console.error("Tradeweave PNG export failed", e);
-      api.say("이미지를 만들지 못했습니다. 인쇄 또는 CSV를 이용해 주세요.");
+      api.say(
+        i18nText("이미지를 만들지 못했습니다. 인쇄 또는 CSV를 이용해 주세요."),
+      );
     } finally {
       exporting = false;
       $("export-image").disabled = false;
@@ -2203,17 +2431,19 @@
   $("open-report").addEventListener("click", () => {
     if (!resultVisible() || document.body.classList.contains("is-loading"))
       return;
-    $("report-scope").textContent =
-      $("r-title").textContent + " · " + api.state.year + "년 · " + api.scope();
+    $("report-scope").textContent = i18nText("{0} · {1}년 · {2}", [
+      $("r-title").textContent,
+      api.state.year,
+      api.scope(),
+    ]);
     $("report-dialog").showModal();
   });
-
   function reportMap(year) {
     const s = api.state;
     const map = svgNode("svg", {
       viewBox: "0 0 " + api.map.w + " " + api.map.h,
       role: "img",
-      "aria-label": $("r-title").textContent + " · " + year + "년",
+      "aria-label": i18nText("{0} · {1}년", [$("r-title").textContent, year]),
     });
     const palette = colors();
     const vector = new Map(
@@ -2237,8 +2467,14 @@
                 : 0;
       const attrs =
         tag === "path"
-          ? { d: shape[1] }
-          : { cx: shape[1], cy: shape[2], r: 2.6 };
+          ? {
+              d: shape[1],
+            }
+          : {
+              cx: shape[1],
+              cy: shape[2],
+              r: 2.6,
+            };
       map.append(
         svgNode(tag, {
           ...attrs,
@@ -2257,7 +2493,6 @@
     api.map.dots.forEach((shape) => add(shape, "circle"));
     return map;
   }
-
   $("download-report").addEventListener("click", () => {
     if (
       !resultVisible() ||
@@ -2271,7 +2506,7 @@
     const report = document.implementation.createHTMLDocument(
       title + " · Tradeweave",
     );
-    report.documentElement.lang = "ko";
+    report.documentElement.lang = TWI18n.lang;
     const charset = report.createElement("meta");
     charset.setAttribute("charset", "utf-8");
     report.head.prepend(charset);
@@ -2296,7 +2531,7 @@
     const main = node("main");
     const header = node("header");
     header.append(
-      node("p", "", "Tradeweave · 분석 보고서"),
+      node("p", "", i18nText("Tradeweave · 분석 보고서")),
       node("h1", "", title),
       node(
         "p",
@@ -2311,7 +2546,6 @@
       ),
     );
     main.appendChild(header);
-
     function section(title, ...content) {
       const block = node("section");
       block.append(node("h2", "", title), ...content);
@@ -2323,8 +2557,7 @@
       return wrap;
     }
     const note = $("report-note").value.trim();
-    if (note) section("사용자 메모", node("pre", "", note));
-
+    if (note) section(i18nText("사용자 메모"), node("pre", "", note));
     const data = api.rows(state.iso, state.flow);
     const insights = Array.from(
       document.querySelectorAll("#insight-cards .insight-card"),
@@ -2338,55 +2571,70 @@
       ),
     );
     section(
-      "관측된 변화 요약",
+      i18nText("관측된 변화 요약"),
       ...insights,
-      node("p", "", "관측값의 산술 비교이며 변화 원인을 뜻하지 않습니다."),
+      node(
+        "p",
+        "",
+        i18nText("관측값의 산술 비교이며 변화 원인을 뜻하지 않습니다."),
+      ),
     );
     const mapPair = node("div", "report-maps");
     [state.compareYear, state.year].forEach((year) => {
       const figure = node("figure");
       const vector = api.rows(state.iso, state.flow, api.series[year]);
       figure.append(
-        node("h3", "", year + "년"),
+        node("h3", "", i18nText("{0}년", [year])),
         reportMap(year),
         node(
           "figcaption",
           "",
           vector.total
-            ? "분모 · " + api.usd(vector.total) + " = 100%"
-            : "교역 기록 없음",
+            ? i18nText("분모 · {0} = 100%", [api.usd(vector.total)])
+            : i18nText("교역 기록 없음"),
         ),
       );
       mapPair.append(figure);
     });
     section(
-      "교역 지도 · 두 시점",
+      i18nText("교역 지도 · 두 시점"),
       mapPair,
       node("p", "", $("r-denominator").textContent),
       node(
         "p",
         "",
-        "공통 비중 구간: 1% 미만 · 1~5% · 5~10% · 10~20% · 20% 이상. 황토색은 기준국, 회색은 기록 없음입니다.",
+        i18nText(
+          "공통 비중 구간: 1% 미만 · 1~5% · 5~10% · 10~20% · 20% 이상. 황토색은 기준국, 회색은 기록 없음입니다.",
+        ),
       ),
       table(
-        ["상대국", "교역액(천 달러)", "비중", "순위"],
+        [
+          i18nText("상대국"),
+          i18nText("교역액(천 달러)"),
+          i18nText("비중"),
+          i18nText("순위"),
+        ],
         data.list
           .slice(0, 5)
           .map((row) => [
             api.name(row.iso),
-            row.v.toLocaleString("ko-KR"),
+            row.v.toLocaleString(TWI18n.locale),
             api.pct(row.p),
             row.rank,
           ]),
-        "선택연도 상위 상대국",
+        i18nText("선택연도 상위 상대국"),
       ),
     );
-
     if (state.partner) {
       section(
-        "선택 상대국 추이 · " + api.name(state.partner),
+        i18nText("선택 상대국 추이 · {0}", [api.name(state.partner)]),
         table(
-          ["연도", "교역액(천 달러)", "기준국 분모(천 달러)", "상대국 비중"],
+          [
+            i18nText("연도"),
+            i18nText("교역액(천 달러)"),
+            i18nText("기준국 분모(천 달러)"),
+            i18nText("상대국 비중"),
+          ],
           api.catalog.years.map((year) => {
             const relation = api.relationship(
               state.iso,
@@ -2396,53 +2644,60 @@
             );
             return [
               year,
-              relation.row?.v.toLocaleString("ko-KR") ?? "기록 없음",
+              relation.row?.v.toLocaleString(TWI18n.locale) ??
+                i18nText("기록 없음"),
               relation.baseTotal
-                ? relation.baseTotal.toLocaleString("ko-KR")
-                : "기록 없음",
-              relation.row ? api.pct(relation.baseShare) : "기록 없음",
+                ? relation.baseTotal.toLocaleString(TWI18n.locale)
+                : i18nText("기록 없음"),
+              relation.row
+                ? api.pct(relation.baseShare)
+                : i18nText("기록 없음"),
             ];
           }),
-          "동일 품목·교역 방향의 연도별 자료",
+          i18nText("동일 품목·교역 방향의 연도별 자료"),
         ),
       );
     }
     const explanation = numberExplanation();
     if (explanation)
       section(
-        "금액·비중 변화 해석",
+        i18nText("금액·비중 변화 해석"),
         node("p", "", explanation.message),
         table(
-          ["연도", "상대국 교역액", "기준국 전체 교역액", "비중"],
+          [
+            i18nText("연도"),
+            i18nText("상대국 교역액"),
+            i18nText("기준국 전체 교역액"),
+            i18nText("비중"),
+          ],
           explanation.rows,
-          "교역액과 전체 교역액의 변화",
+          i18nText("교역액과 전체 교역액의 변화"),
         ),
       );
-
     const periods = math.periodRows(
       api.rows(state.iso, state.flow, api.series[state.compareYear]),
       data,
     );
     section(
-      "두 시점 상대국 비교",
+      i18nText("두 시점 상대국 비교"),
       table(
         [
-          "상대국",
-          state.compareYear + "년 금액(천 달러)",
-          state.year + "년 금액(천 달러)",
-          state.compareYear + "년 비중",
-          state.year + "년 비중",
-          "비중 차이",
+          i18nText("상대국"),
+          i18nText("{0}년 금액(천 달러)", [state.compareYear]),
+          i18nText("{0}년 금액(천 달러)", [state.year]),
+          i18nText("{0}년 비중", [state.compareYear]),
+          i18nText("{0}년 비중", [state.year]),
+          i18nText("비중 차이"),
         ],
         periods.map((row) => [
           api.name(row.iso),
-          row.before?.v.toLocaleString("ko-KR") ?? "기록 없음",
-          row.after?.v.toLocaleString("ko-KR") ?? "기록 없음",
+          row.before?.v.toLocaleString(TWI18n.locale) ?? i18nText("기록 없음"),
+          row.after?.v.toLocaleString(TWI18n.locale) ?? i18nText("기록 없음"),
           row.before ? api.pct(row.before.p) : "—",
           row.after ? api.pct(row.after.p) : "—",
-          row.pp === null ? "계산 안 함" : math.signed(row.pp, "%p"),
+          row.pp === null ? i18nText("계산 안 함") : math.signed(row.pp, "%p"),
         ]),
-        "동일 상대국 전체 · 필터와 무관하게 모든 기록을 포함합니다.",
+        i18nText("동일 상대국 전체 · 필터와 무관하게 모든 기록을 포함합니다."),
       ),
     );
     const changes = math.changes(
@@ -2461,53 +2716,62 @@
     for (const row of [...changes.entered, ...changes.absent]) {
       changeRows.push([
         api.name(row.iso),
-        row.before ? api.pct(row.before.p) : "기록 없음",
-        row.after ? api.pct(row.after.p) : "기록 없음",
+        row.before ? api.pct(row.before.p) : i18nText("기록 없음"),
+        row.after ? api.pct(row.after.p) : i18nText("기록 없음"),
         "—",
         "—",
       ]);
     }
     section(
-      "구조 변화 전체",
+      i18nText("구조 변화 전체"),
       table(
         [
-          "상대국",
-          state.compareYear + "년 비중",
-          state.year + "년 비중",
-          "차이",
-          "순위",
+          i18nText("상대국"),
+          i18nText("{0}년 비중", [state.compareYear]),
+          i18nText("{0}년 비중", [state.year]),
+          i18nText("차이"),
+          i18nText("순위"),
         ],
         changeRows,
-        "한 연도라도 기록이 없으면 차이를 계산하지 않습니다.",
+        i18nText("한 연도라도 기록이 없으면 차이를 계산하지 않습니다."),
       ),
     );
-
     const matrix = comparisonMatrix();
     section(
-      "동일 상대국 비교",
+      i18nText("동일 상대국 비교"),
       table(
-        ["상대국", ...matrix.countries.map(api.name)],
+        [i18nText("상대국"), ...matrix.countries.map(api.name)],
         matrix.rows.map((row) => matrixCells(matrix, row, false)),
-        state.year +
-          "년 · 비중 · 교역액 · 순위. 분모는 각 보고국의 해당 품목·방향 합계입니다.",
+        i18nText(
+          "{0}년 · 비중 · 교역액 · 순위. 분모는 각 보고국의 해당 품목·방향 합계입니다.",
+          [state.year],
+        ),
       ),
     );
-
-    const source = node("a", "", "CEPII BACI 원자료");
+    const source = node("a", "", i18nText("CEPII BACI 원자료"));
     source.href = api.catalog.archive_url;
     section(
-      "출처와 재현 정보",
+      i18nText("출처와 재현 정보"),
       node("p", "", api.source()),
       node("p", "", api.catalog.unit + " · " + api.catalog.license),
-      node("p", "", "원자료 SHA-256: " + api.catalog.archive_sha256),
-      node("p", "", "지도: " + api.map.source + " · " + api.map.projection),
+      node(
+        "p",
+        "",
+        i18nText("원자료 SHA-256: {0}", [api.catalog.archive_sha256]),
+      ),
+      node(
+        "p",
+        "",
+        i18nText("지도: {0} · {1}", [api.map.source, api.map.projection]),
+      ),
       source,
     );
     report.body.appendChild(main);
-
     const blob = new Blob(
       ["<!doctype html>\n", report.documentElement.outerHTML],
-      { type: "text/html;charset=utf-8" },
+      {
+        type: "text/html;charset=utf-8",
+      },
     );
     const link = node("a");
     link.href = URL.createObjectURL(blob);
@@ -2524,9 +2788,8 @@
     link.remove();
     setTimeout(() => URL.revokeObjectURL(link.href), 1500);
     $("report-dialog").close();
-    api.say("분석 보고서를 저장했습니다.");
+    api.say(i18nText("분석 보고서를 저장했습니다."));
   });
-
   $("export-image").addEventListener("click", exportImage);
   $("print-analysis").addEventListener("click", function () {
     window.print();
@@ -2536,6 +2799,7 @@
     openPartner: openPartner,
     closePartner: closePartner,
     refreshWorkspace: schedule,
+    fitRelationship,
     captureRowPositions,
     animateTableRows,
   };

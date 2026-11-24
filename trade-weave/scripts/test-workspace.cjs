@@ -8,6 +8,7 @@ const app = fs.readFileSync(path.join(base, 'assets/app.js'), 'utf8');
 const studio = fs.readFileSync(path.join(base, 'assets/studio.js'), 'utf8');
 const catalog = JSON.parse(fs.readFileSync(path.join(base, 'data/catalog.json')));
 const math = require('../assets/analysis.js');
+const locale = require('../assets/i18n.js');
 
 // Exercise the shipped functions, including the old-link recovery branch.
 function functionSource(source, name) {
@@ -21,7 +22,7 @@ const state = {iso:'KOR', flow:'export', partner:'CHN', section:'partners',
   tab:'partners', year:2024, compareYear:2023, product:'8542', peers:['JPN','S19']};
 const historyCalls = [];
 const location = {hash:''};
-const context = vm.createContext({CATALOG:catalog, selection:state, URLSearchParams,
+const context = vm.createContext({TWI18n:locale,tr:locale.t,i18nText:locale.t,CATALOG:catalog, selection:state, URLSearchParams,
   location, history:Object.fromEntries(['pushState','replaceState'].map(method =>
     [method, (_, unused, hash) => { historyCalls.push(method); location.hash = hash; }]))});
 for (const name of ['normalize','canonicalCode','defaultCompare','scopedPath','resultRoute',

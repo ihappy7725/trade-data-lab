@@ -1,8 +1,5 @@
 /* Research workspace: conditions, evidence, comparisons and reusable analyses. */
-:root {
-  --muted-ink: #536775;
-  --space-section: 28px;
-}
+
 #view-see .caption,
 #view-see .hint {
   font-size: 12px;

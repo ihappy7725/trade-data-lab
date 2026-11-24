@@ -16,6 +16,7 @@ async function boot({
   hash = "#see/KOR/export?product=8542&partner=CHN",
   failYear = null,
   small = false,
+  locale = null,
 } = {}) {
   const errors = [],
     requests = [],
@@ -27,6 +28,7 @@ async function boot({
   });
   const vc = new VirtualConsole();
   vc.on("jsdomError", (e) => errors.push(e));
+  vc.on("error", (...args) => console.error(...args));
   const dom = new JSDOM(fs.readFileSync(base + "/index.html", "utf8"), {
     url: "http://localhost/" + hash,
     runScripts: "outside-only",
@@ -35,7 +37,9 @@ async function boot({
   });
   const w = dom.window;
   // jsdom parses CSS but does not apply viewport media queries; mobile focus tests use DOM state only.
-  for (const file of small ? [] : ["studio.css", "research.css", "atlas.css"]) {
+  for (const file of small
+    ? []
+    : ["tokens.css", "studio.css", "research.css", "atlas.css", "layout.css"]) {
     const style = w.document.createElement("style");
     style.textContent = fs.readFileSync(
       path.join(base, "assets", file),
@@ -90,6 +94,8 @@ async function boot({
   w.addEventListener("error", (e) => errors.push(e.error));
   w.addEventListener("unhandledrejection", (e) => errors.push(e.reason));
   for (const file of [
+    "locales/en.js",
+    "i18n.js",
     "app.js",
     "analysis.js",
     "workspace-state.js",
@@ -104,9 +110,20 @@ async function boot({
       $(id).value = value;
       $(id).dispatchEvent(new w.Event(type, { bubbles: true }));
     };
-  await waitFor(() =>
-    hash.startsWith("#see/") ? !$("r-body").hidden : !$("hero-map-body").hidden,
-  );
+  try {
+    await waitFor(() =>
+      hash.startsWith("#see/")
+        ? !$("r-body").hidden
+        : !$("hero-map-body").hidden,
+    );
+  } catch (error) {
+    console.error(
+      "BOOT ERRORS",
+      errors.map(String),
+      $("load-error").textContent,
+    );
+    throw error;
+  }
   assert.equal(
     hash.startsWith("#see/") ? $("r-body").hidden : $("hero-map-body").hidden,
     false,
@@ -118,6 +135,7 @@ async function boot({
       !requests.some((file) => file.endsWith("/all.json")),
     "No eager unrelated default product",
   );
+  if (locale) w.TWI18n.setLanguage(locale, { persist: true });
   return {
     w,
     dom,
@@ -132,7 +150,7 @@ async function boot({
     },
   };
 }
-(async () => {
+async function run() {
   const t = await boot();
   const { w, $, change } = t;
   assert.equal(
@@ -424,7 +442,10 @@ async function boot({
   console.log(
     "PASS: selected-year-first loading, evidence summaries, correct year labels, CSV/report/backup downloads, metric switching, memo isolation/restoration, version guard, handoff metadata, partial failure/retry, mobile detail states, atlas hover/toggle/no-record states and CSS parsing",
   );
-})().catch((error) => {
-  console.error(error);
-  process.exitCode = 1;
-});
+}
+module.exports = { boot, tick, waitFor };
+if (require.main === module)
+  run().catch((error) => {
+    console.error(error);
+    process.exitCode = 1;
+  });

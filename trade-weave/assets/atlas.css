@@ -1,23 +1,5 @@
 /* Open Atlas: pale geography, clear quantitative contrast, quiet material depth. */
-:root {
-  --paper: #f6f9fc;
-  --card: #ffffff;
-  --ink: #203749;
-  --stone: #5d7282;
-  --muted-ink: #566e7f;
-  --rule: #e0e8ee;
-  --atlas-blue: #2b6388;
-  --blue-hover: #204f70;
-  --ochre: #ad7d35;
-  --land: #e4ebf0;
-  --map-1: #c1d4e2;
-  --map-2: #91b3cb;
-  --map-3: #628eaf;
-  --map-4: #396d96;
-  --map-5: #244d73;
-  --shadow: 0 12px 44px #254d7210;
-  --atlas-radius: 22px;
-}
+
 body {
   background:
     radial-gradient(
