@@ -98,7 +98,9 @@ function untranslated(w) {
   assert.match($("temporal-0-map-desc").textContent, /2023/);
   assert.match($("temporal-0-map-desc").textContent, /Exports/);
   $("open-report").click();
+  const reportCount = test.downloads.length;
   $("download-report").click();
+  await waitFor(() => test.downloads.length > reportCount);
   const report = await test.downloads.at(-1).blob.text();
   assert.match(report, /<html lang="en"/);
   assert.ok(report.includes("Analysis report"));

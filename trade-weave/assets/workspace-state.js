@@ -2,6 +2,10 @@
 (function (root) {
   "use strict";
   const controls = [
+    "industry-target",
+    "industry-query",
+    "industry-sort",
+    "industry-records",
     "change-query",
     "change-sort",
     "change-direction",

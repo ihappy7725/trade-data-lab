@@ -1488,9 +1488,13 @@
         .slice(0, 2);
       while (peers.length < 2)
         peers.push(peers.indexOf("JPN") === -1 ? "JPN" : "S19");
-      var tab = ["trends", "changes", "partners", "countries"].includes(
-        parameters.get("tab"),
-      )
+      var tab = [
+        "trends",
+        "changes",
+        "partners",
+        "countries",
+        "industry",
+      ].includes(parameters.get("tab"))
         ? parameters.get("tab")
         : "trends";
       // Recover links saved by earlier versions with a conflicting tab and anchor.

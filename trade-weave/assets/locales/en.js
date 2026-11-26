@@ -1351,6 +1351,89 @@
     "선택한 상대국: {0}": "Selected partner: {0}",
     "미리보기: {0}": "Preview: {0}",
   });
+  Object.assign(data.messages, {
+    "산업 구성": "Industry composition",
+    "산업 구성과 증감 기여": "Industry composition and growth contributions",
+    "산업 구성 CSV": "Industry composition CSV",
+    "HS 2단위 전체 산업을 비교합니다. 상단 품목 선택과 관계없이 상품 전체를 분모로 사용합니다.":
+      "Compare all HS 2-digit chapters. The denominator is all products, independently of the product selected above.",
+    "분석 범위": "Analysis scope",
+    "국가 전체 교역": "All country trade",
+    "선택 상대국과의 교역": "Trade with selected partner",
+    "산업 검색": "Search industries",
+    "산업명 또는 HS 코드": "Industry name or HS code",
+    "산업 정렬": "Sort industries",
+    "선택연도 금액순": "Selected-year value",
+    "증가 기여순": "Largest growth contributions",
+    "감소 기여순": "Largest decline contributions",
+    "HS 코드순": "HS code",
+    "기록 범위": "Record coverage",
+    "한 연도 이상 기록": "Recorded in at least one year",
+    "전체 96개 산업": "All 96 chapters",
+    "다시 불러오기": "Reload",
+    "기여도는 산업 증감액을 비교연도 상품 전체 금액으로 나눈 전체 증감률 기여(%p)입니다. 한쪽 연도 미기록 산업의 증감은 계산하지 않습니다.":
+      "Contributions are industry value changes divided by the reference-year all-products value, in percentage points of total growth. Changes are not calculated when an industry is unrecorded in either year.",
+    "산업 구성 표": "Industry composition table",
+    "기록 범위 차이는 한쪽 연도에만 기록된 금액의 순차이입니다. 실제 신규·중단 교역을 뜻하지 않습니다. 반올림 차이는 상품 전체와 산업별 합계의 차이에서 발생합니다. 원인 분석이 아닌 산술 분해입니다.":
+      "The coverage difference is the net difference of values recorded in only one year. It does not establish new or discontinued trade. The rounding difference comes from the gap between all-products totals and summed chapter values. This is an accounting decomposition, not a causal analysis.",
+    "양쪽 연도 기록": "Recorded in both years",
+    "선택연도만 기록": "Selected year only",
+    "비교연도만 기록": "Reference year only",
+    "양쪽 연도 미기록": "Unrecorded in both years",
+    "산업 / HS 2단위": "Industry / HS 2-digit",
+    "선택연도 산업 비중": "Selected-year industry share (%)",
+    "전체 증감률 기여(%p)": "Contribution to total growth (pp)",
+    "기록 상태": "Record status",
+    "국가 전체 산업 비중": "Country-wide industry share (%)",
+    "전체 증감액 대조": "Reconcile total value change",
+    "양쪽 기록 산업 증감 합계": "Change in chapters recorded in both years",
+    "기록 범위 차이": "Record coverage difference",
+    "반올림 차이": "Rounding difference",
+    "상품 전체 증감액": "All-products value change",
+    "상품 전체 증감률": "All-products growth rate",
+    "{0}개 산업 · CSV는 검색과 관계없이 전체 96개 산업을 포함합니다.":
+      "{0} chapters · CSV includes all 96 chapters, independently of search.",
+    "지도 탐색": "Explore map",
+    "상대국 지도": "Partner map",
+    "HS {0} {1} 상대국 지도": "Partner map for HS {0} {1}",
+    "증감 기여 상위 산업": "Leading industry contributions",
+    "선택연도 산업 구성": "Selected-year industry composition",
+    "막대는 현재 검색·정렬 결과의 앞 10개 산업입니다. 전체 값은 아래 표에서 확인합니다.":
+      "Bars show the first 10 chapters in the current search and sort order. The table contains all matching values.",
+    "산업 자료를 불러오는 중입니다.": "Loading industry data.",
+    "산업 자료를 불러오지 못했습니다. 다시 시도해 주세요.":
+      "Industry data could not be loaded. Please retry.",
+    "행 유형": "Row type",
+    산업명: "Industry name",
+    "비교연도 금액(천 달러)": "Reference-year value (thousand USD)",
+    "선택연도 금액(천 달러)": "Selected-year value (thousand USD)",
+    "금액 변화(천 달러)": "Value change (thousand USD)",
+    "비교연도 산업 비중(%)": "Reference-year industry share (%)",
+    "비교연도 상품 전체(천 달러)":
+      "Reference-year all-products value (thousand USD)",
+    "선택연도 상품 전체(천 달러)":
+      "Selected-year all-products value (thousand USD)",
+    "자료 버전": "Dataset version",
+    "보고서 자료를 준비하고 있습니다.": "Preparing report data.",
+    "분석 조건이 바뀌었습니다. 현재 조건으로 다시 저장해 주세요.":
+      "Analysis conditions changed. Please save again using the current conditions.",
+    "보고서 자료를 준비하지 못했습니다. 다시 시도해 주세요.":
+      "Report data could not be prepared. Please retry.",
+  });
+  Object.assign(data.messages, {
+    "상품 전체": "All products",
+    금액: "Value",
+    "금액 변화": "Value change",
+    "비중 변화": "Share change",
+  });
+  Object.assign(data.messages, {
+    "검색 결과가 없습니다.": "No results found.",
+    "기준국 코드": "Reporting-country code",
+    "상대국 코드": "Partner code",
+    방향: "Direction",
+    비교연도: "Reference year",
+    선택연도: "Selected year",
+  });
   if (typeof module !== "undefined" && module.exports) module.exports = data;
   else root.TW_LOCALE_EN = data;
 })(globalThis);

@@ -23,13 +23,14 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600&amp;family=Noto+Serif+KR:wght@600;700&amp;display=swap"
     />
-    <script defer="" src="assets/locales/en.js?v=2"></script>
+    <script defer="" src="assets/locales/en.js?v=3"></script>
     <script defer="" src="assets/i18n.js?v=1"></script>
     <link rel="stylesheet" href="assets/tokens.css?v=1" />
     <link rel="stylesheet" href="assets/studio.css?v=7" />
     <link rel="stylesheet" href="assets/research.css?v=2" />
     <link rel="stylesheet" href="assets/atlas.css?v=2" />
     <link rel="stylesheet" href="assets/layout.css?v=1" />
+    <link rel="stylesheet" href="assets/industry.css?v=1" />
   </head>
   <body>
     <a class="skip-link" href="#main-content">본문으로 이동</a>
@@ -754,6 +755,16 @@
                 >
                   국가 비교
                 </button>
+                <button
+                  role="tab"
+                  id="tab-industry"
+                  data-tab="industry"
+                  aria-controls="r-industry"
+                  aria-selected="false"
+                  tabindex="-1"
+                >
+                  산업 구성
+                </button>
               </div>
               <section
                 id="r-trends"
@@ -1085,6 +1096,86 @@
                 </section>
               </section>
               <section
+                id="r-industry"
+                class="analysis-pane"
+                role="tabpanel"
+                aria-labelledby="tab-industry"
+                tabindex="-1"
+                hidden
+              >
+                <div class="section-heading">
+                  <div>
+                    <h2>산업 구성과 증감 기여</h2>
+                    <p id="industry-context" class="caption"></p>
+                  </div>
+                  <button class="btn btn-secondary" id="industry-csv" disabled>
+                    산업 구성 CSV
+                  </button>
+                </div>
+                <p class="caption">
+                  HS 2단위 전체 산업을 비교합니다. 상단 품목 선택과 관계없이
+                  상품 전체를 분모로 사용합니다.
+                </p>
+                <div class="industry-controls">
+                  <label
+                    >분석 범위<select id="industry-target">
+                      <option value="all">국가 전체 교역</option>
+                      <option value="partner">선택 상대국과의 교역</option>
+                    </select></label
+                  >
+                  <label
+                    >산업 검색<input
+                      id="industry-query"
+                      type="search"
+                      placeholder="산업명 또는 HS 코드"
+                  /></label>
+                  <label
+                    >산업 정렬<select id="industry-sort">
+                      <option value="current">선택연도 금액순</option>
+                      <option value="gain">증가 기여순</option>
+                      <option value="loss">감소 기여순</option>
+                      <option value="code">HS 코드순</option>
+                    </select></label
+                  >
+                  <label
+                    >기록 범위<select id="industry-records">
+                      <option value="recorded">한 연도 이상 기록</option>
+                      <option value="all">전체 96개 산업</option>
+                    </select></label
+                  >
+                </div>
+                <p id="industry-status" role="status" class="caption"></p>
+                <button id="industry-retry" class="btn btn-secondary" hidden>
+                  다시 불러오기
+                </button>
+                <div id="industry-content" hidden>
+                  <div id="industry-metrics" class="industry-metrics"></div>
+                  <p class="caption">
+                    기여도는 산업 증감액을 비교연도 상품 전체 금액으로 나눈 전체
+                    증감률 기여(%p)입니다. 한쪽 연도 미기록 산업의 증감은
+                    계산하지 않습니다.
+                  </p>
+                  <div id="industry-bars" class="industry-bars"></div>
+                  <div
+                    class="industry-table-wrap"
+                    tabindex="0"
+                    role="region"
+                    aria-label="산업 구성 표"
+                  >
+                    <table id="industry-table">
+                      <caption id="industry-count"></caption>
+                      <thead></thead>
+                      <tbody></tbody>
+                    </table>
+                  </div>
+                  <div
+                    id="industry-reconciliation"
+                    class="industry-reconciliation"
+                  ></div>
+                  <p id="industry-source" class="caption"></p>
+                </div>
+              </section>
+              <section
                 id="r-countries"
                 class="analysis-pane"
                 role="tabpanel"
@@ -1394,13 +1485,16 @@
       hidden=""
     ></div>
 
-    <script defer="" src="assets/app.js?v=9"></script>
+    <script defer="" src="assets/app.js?v=10"></script>
     <script defer="" src="assets/analysis.js?v=3"></script>
-    <script defer="" src="assets/workspace-state.js?v=1"></script>
-    <script defer="" src="assets/studio.js?v=8"></script>
+    <script defer="" src="assets/workspace-state.js?v=2"></script>
+    <script defer="" src="assets/studio.js?v=9"></script>
     <script defer="" src="assets/research.js?v=2"></script>
     <script defer="" src="assets/atlas-model.js?v=1"></script>
     <script defer="" src="assets/atlas.js?v=2"></script>
+    <script defer src="assets/vendor/fflate.js?v=1"></script>
+    <script defer src="assets/industry-model.js?v=1"></script>
+    <script defer src="assets/industry.js?v=1"></script>
     <dialog id="note-dialog" class="sheet-dialog" aria-labelledby="note-title">
       <div class="dialog-heading">
         <h2 id="note-title">분석 메모</h2>
@@ -1461,6 +1555,7 @@
         HTML 파일에 담습니다. 저장한 파일을 브라우저에서 열어 인쇄하거나 PDF로
         저장할 수 있습니다.
       </p>
+      <p id="report-status" role="status" class="caption"></p>
       <button id="download-report" type="button" class="btn btn-primary">
         보고서 HTML 저장
       </button>

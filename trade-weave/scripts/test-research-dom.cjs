@@ -39,7 +39,14 @@ async function boot({
   // jsdom parses CSS but does not apply viewport media queries; mobile focus tests use DOM state only.
   for (const file of small
     ? []
-    : ["tokens.css", "studio.css", "research.css", "atlas.css", "layout.css"]) {
+    : [
+        "tokens.css",
+        "studio.css",
+        "research.css",
+        "atlas.css",
+        "layout.css",
+        "industry.css",
+      ]) {
     const style = w.document.createElement("style");
     style.textContent = fs.readFileSync(
       path.join(base, "assets", file),
@@ -87,6 +94,13 @@ async function boot({
     if (m && m[1] !== "2024") await historyGate;
     return {
       ok: !(m && Number(m[1]) === fail),
+      arrayBuffer: async () => {
+        const bytes = fs.readFileSync(path.join(base, file));
+        return bytes.buffer.slice(
+          bytes.byteOffset,
+          bytes.byteOffset + bytes.byteLength,
+        );
+      },
       json: async () =>
         JSON.parse(fs.readFileSync(path.join(base, file), "utf8")),
     };
@@ -103,6 +117,9 @@ async function boot({
     "research.js",
     "atlas-model.js",
     "atlas.js",
+    "vendor/fflate.js",
+    "industry-model.js",
+    "industry.js",
   ])
     w.eval(fs.readFileSync(base + "/assets/" + file, "utf8"));
   const $ = (id) => w.document.getElementById(id),
@@ -261,7 +278,9 @@ async function run() {
   assert.equal(w.Tradeweave.state.partner, "CHN");
   assert.equal($("report-note").value, "검증 메모 <표> & 출처");
   assert.equal($("matrix-metric").value, "rank");
+  const reportCount = t.downloads.length;
   $("download-report").click();
+  await waitFor(() => t.downloads.length > reportCount);
   const report = await t.downloads.at(-1).blob.text();
   assert.ok(report.includes("검증 메모 &lt;표&gt; &amp; 출처"));
   assert.ok(report.includes("관측된 변화 요약"));
@@ -271,6 +290,20 @@ async function run() {
   assert.ok(
     reportDOM.window.document.body.textContent.includes("두 시점 상대국 비교"),
   );
+  const industrySections = [
+    ...reportDOM.window.document.querySelectorAll("section"),
+  ].filter(
+    (s) => s.querySelector("h2")?.textContent === "산업 구성과 증감 기여",
+  );
+  assert.equal(
+    industrySections.length,
+    2,
+    "Country and selected-partner industry reports",
+  );
+  for (const section of industrySections) {
+    assert.equal(section.querySelectorAll("tbody tr").length, 96);
+    assert.ok(section.textContent.includes("반올림 차이"));
+  }
   reportDOM.window.close();
   $("backup-saved").click();
   const backup = JSON.parse(await t.downloads.at(-1).blob.text());

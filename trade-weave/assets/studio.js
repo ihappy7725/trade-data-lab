@@ -334,6 +334,7 @@
     changes: "r-changes",
     partners: "pane-partners",
     countries: "r-countries",
+    industry: "r-industry",
   };
   function activateTab(tab, persist) {
     tab = paneFor[tab] ? tab : "trends";
@@ -346,6 +347,7 @@
     });
     if (persist !== false) api.setTab(tab);
     document.body.dataset.printTab = tab;
+    document.dispatchEvent(new CustomEvent("tw:tab"));
     if (tab === "countries" && api.series) renderCountries();
   }
   document.querySelectorAll("[data-tab]").forEach(function (button) {
@@ -2493,30 +2495,50 @@
     api.map.dots.forEach((shape) => add(shape, "circle"));
     return map;
   }
-  $("download-report").addEventListener("click", () => {
+  let reportBuilding = false;
+  $("download-report").addEventListener("click", async () => {
     if (
+      reportBuilding ||
       !resultVisible() ||
       document.body.classList.contains("is-loading") ||
       api.catalog.years.some((year) => !api.series[year])
     )
       return;
-    syncWorkspaceDraft();
-    const state = api.state;
-    const title = $("r-title").textContent;
-    const report = document.implementation.createHTMLDocument(
-      title + " · Tradeweave",
-    );
-    report.documentElement.lang = TWI18n.lang;
-    const charset = report.createElement("meta");
-    charset.setAttribute("charset", "utf-8");
-    report.head.prepend(charset);
-    const viewport = report.createElement("meta");
-    viewport.name = "viewport";
-    viewport.content = "width=device-width,initial-scale=1";
-    const style = node(
-      "style",
-      "",
-      `
+    reportBuilding = true;
+    $("download-report").disabled = true;
+    $("report-status").textContent =
+      i18nText("보고서 자료를 준비하고 있습니다.");
+    const signature = () => JSON.stringify(api.state) + TWI18n.lang;
+    const original = signature();
+    try {
+      const industryPayload = await window.TradeweaveIndustry.ensure();
+      if (
+        signature() !== original ||
+        !resultVisible() ||
+        document.body.classList.contains("is-loading")
+      ) {
+        $("report-status").textContent = i18nText(
+          "분석 조건이 바뀌었습니다. 현재 조건으로 다시 저장해 주세요.",
+        );
+        return;
+      }
+      syncWorkspaceDraft();
+      const state = api.state;
+      const title = $("r-title").textContent;
+      const report = document.implementation.createHTMLDocument(
+        title + " · Tradeweave",
+      );
+      report.documentElement.lang = TWI18n.lang;
+      const charset = report.createElement("meta");
+      charset.setAttribute("charset", "utf-8");
+      report.head.prepend(charset);
+      const viewport = report.createElement("meta");
+      viewport.name = "viewport";
+      viewport.content = "width=device-width,initial-scale=1";
+      const style = node(
+        "style",
+        "",
+        `
       body{font:15px/1.65 system-ui,sans-serif;color:#182d3d;margin:0;background:#f5f3ed}
       main{max-width:1080px;margin:auto;padding:clamp(16px,4vw,52px)}
       header,section{background:#fffefa;border:1px solid #dde2df;border-radius:10px;padding:clamp(14px,3vw,28px);margin-bottom:20px}
@@ -2526,269 +2548,287 @@
       thead{background:#e8eef0}pre{font:inherit;white-space:pre-wrap;overflow-wrap:anywhere}.table-wrap{overflow:auto}
       @media print{body{background:white}main{padding:0}section,header{border:0;padding:0}thead{display:table-header-group}tr,svg{break-inside:avoid}.table-wrap{overflow:visible}}
     `,
-    );
-    report.head.append(viewport, style);
-    const main = node("main");
-    const header = node("header");
-    header.append(
-      node("p", "", i18nText("Tradeweave · 분석 보고서")),
-      node("h1", "", title),
-      node(
-        "p",
-        "",
-        state.compareYear +
-          " → " +
-          state.year +
-          " · " +
-          api.scope() +
-          " · " +
-          api.catalog.version,
-      ),
-    );
-    main.appendChild(header);
-    function section(title, ...content) {
-      const block = node("section");
-      block.append(node("h2", "", title), ...content);
-      main.appendChild(block);
-    }
-    function table(headers, rows, caption) {
-      const wrap = node("div", "table-wrap");
-      wrap.appendChild(makeTable(headers, rows, caption));
-      return wrap;
-    }
-    const note = $("report-note").value.trim();
-    if (note) section(i18nText("사용자 메모"), node("pre", "", note));
-    const data = api.rows(state.iso, state.flow);
-    const insights = Array.from(
-      document.querySelectorAll("#insight-cards .insight-card"),
-    ).map((card) =>
-      node(
-        "p",
-        "",
-        card.querySelector("strong").textContent +
-          ": " +
-          card.querySelectorAll("span")[0].textContent,
-      ),
-    );
-    section(
-      i18nText("관측된 변화 요약"),
-      ...insights,
-      node(
-        "p",
-        "",
-        i18nText("관측값의 산술 비교이며 변화 원인을 뜻하지 않습니다."),
-      ),
-    );
-    const mapPair = node("div", "report-maps");
-    [state.compareYear, state.year].forEach((year) => {
-      const figure = node("figure");
-      const vector = api.rows(state.iso, state.flow, api.series[year]);
-      figure.append(
-        node("h3", "", i18nText("{0}년", [year])),
-        reportMap(year),
+      );
+      report.head.append(viewport, style);
+      const main = node("main");
+      const header = node("header");
+      header.append(
+        node("p", "", i18nText("Tradeweave · 분석 보고서")),
+        node("h1", "", title),
         node(
-          "figcaption",
+          "p",
           "",
-          vector.total
-            ? i18nText("분모 · {0} = 100%", [api.usd(vector.total)])
-            : i18nText("교역 기록 없음"),
+          state.compareYear +
+            " → " +
+            state.year +
+            " · " +
+            api.scope() +
+            " · " +
+            api.catalog.version,
         ),
       );
-      mapPair.append(figure);
-    });
-    section(
-      i18nText("교역 지도 · 두 시점"),
-      mapPair,
-      node("p", "", $("r-denominator").textContent),
-      node(
-        "p",
-        "",
-        i18nText(
-          "공통 비중 구간: 1% 미만 · 1~5% · 5~10% · 10~20% · 20% 이상. 황토색은 기준국, 회색은 기록 없음입니다.",
+      main.appendChild(header);
+      function section(title, ...content) {
+        const block = node("section");
+        block.append(node("h2", "", title), ...content);
+        main.appendChild(block);
+      }
+      function table(headers, rows, caption) {
+        const wrap = node("div", "table-wrap");
+        wrap.appendChild(makeTable(headers, rows, caption));
+        return wrap;
+      }
+      const note = $("report-note").value.trim();
+      if (note) section(i18nText("사용자 메모"), node("pre", "", note));
+      const data = api.rows(state.iso, state.flow);
+      const insights = Array.from(
+        document.querySelectorAll("#insight-cards .insight-card"),
+      ).map((card) =>
+        node(
+          "p",
+          "",
+          card.querySelector("strong").textContent +
+            ": " +
+            card.querySelectorAll("span")[0].textContent,
         ),
-      ),
-      table(
-        [
-          i18nText("상대국"),
-          i18nText("교역액(천 달러)"),
-          i18nText("비중"),
-          i18nText("순위"),
-        ],
-        data.list
-          .slice(0, 5)
-          .map((row) => [
-            api.name(row.iso),
-            row.v.toLocaleString(TWI18n.locale),
-            api.pct(row.p),
-            row.rank,
-          ]),
-        i18nText("선택연도 상위 상대국"),
-      ),
-    );
-    if (state.partner) {
+      );
       section(
-        i18nText("선택 상대국 추이 · {0}", [api.name(state.partner)]),
+        i18nText("관측된 변화 요약"),
+        ...insights,
+        node(
+          "p",
+          "",
+          i18nText("관측값의 산술 비교이며 변화 원인을 뜻하지 않습니다."),
+        ),
+      );
+      const mapPair = node("div", "report-maps");
+      [state.compareYear, state.year].forEach((year) => {
+        const figure = node("figure");
+        const vector = api.rows(state.iso, state.flow, api.series[year]);
+        figure.append(
+          node("h3", "", i18nText("{0}년", [year])),
+          reportMap(year),
+          node(
+            "figcaption",
+            "",
+            vector.total
+              ? i18nText("분모 · {0} = 100%", [api.usd(vector.total)])
+              : i18nText("교역 기록 없음"),
+          ),
+        );
+        mapPair.append(figure);
+      });
+      section(
+        i18nText("교역 지도 · 두 시점"),
+        mapPair,
+        node("p", "", $("r-denominator").textContent),
+        node(
+          "p",
+          "",
+          i18nText(
+            "공통 비중 구간: 1% 미만 · 1~5% · 5~10% · 10~20% · 20% 이상. 황토색은 기준국, 회색은 기록 없음입니다.",
+          ),
+        ),
         table(
           [
-            i18nText("연도"),
+            i18nText("상대국"),
             i18nText("교역액(천 달러)"),
-            i18nText("기준국 분모(천 달러)"),
-            i18nText("상대국 비중"),
+            i18nText("비중"),
+            i18nText("순위"),
           ],
-          api.catalog.years.map((year) => {
-            const relation = api.relationship(
-              state.iso,
-              state.flow,
-              state.partner,
-              api.series[year],
-            );
-            return [
-              year,
-              relation.row?.v.toLocaleString(TWI18n.locale) ??
-                i18nText("기록 없음"),
-              relation.baseTotal
-                ? relation.baseTotal.toLocaleString(TWI18n.locale)
-                : i18nText("기록 없음"),
-              relation.row
-                ? api.pct(relation.baseShare)
-                : i18nText("기록 없음"),
-            ];
-          }),
-          i18nText("동일 품목·교역 방향의 연도별 자료"),
+          data.list
+            .slice(0, 5)
+            .map((row) => [
+              api.name(row.iso),
+              row.v.toLocaleString(TWI18n.locale),
+              api.pct(row.p),
+              row.rank,
+            ]),
+          i18nText("선택연도 상위 상대국"),
         ),
       );
-    }
-    const explanation = numberExplanation();
-    if (explanation)
+      if (state.partner) {
+        section(
+          i18nText("선택 상대국 추이 · {0}", [api.name(state.partner)]),
+          table(
+            [
+              i18nText("연도"),
+              i18nText("교역액(천 달러)"),
+              i18nText("기준국 분모(천 달러)"),
+              i18nText("상대국 비중"),
+            ],
+            api.catalog.years.map((year) => {
+              const relation = api.relationship(
+                state.iso,
+                state.flow,
+                state.partner,
+                api.series[year],
+              );
+              return [
+                year,
+                relation.row?.v.toLocaleString(TWI18n.locale) ??
+                  i18nText("기록 없음"),
+                relation.baseTotal
+                  ? relation.baseTotal.toLocaleString(TWI18n.locale)
+                  : i18nText("기록 없음"),
+                relation.row
+                  ? api.pct(relation.baseShare)
+                  : i18nText("기록 없음"),
+              ];
+            }),
+            i18nText("동일 품목·교역 방향의 연도별 자료"),
+          ),
+        );
+      }
+      const explanation = numberExplanation();
+      if (explanation)
+        section(
+          i18nText("금액·비중 변화 해석"),
+          node("p", "", explanation.message),
+          table(
+            [
+              i18nText("연도"),
+              i18nText("상대국 교역액"),
+              i18nText("기준국 전체 교역액"),
+              i18nText("비중"),
+            ],
+            explanation.rows,
+            i18nText("교역액과 전체 교역액의 변화"),
+          ),
+        );
+      const periods = math.periodRows(
+        api.rows(state.iso, state.flow, api.series[state.compareYear]),
+        data,
+      );
       section(
-        i18nText("금액·비중 변화 해석"),
-        node("p", "", explanation.message),
+        i18nText("두 시점 상대국 비교"),
         table(
           [
-            i18nText("연도"),
-            i18nText("상대국 교역액"),
-            i18nText("기준국 전체 교역액"),
-            i18nText("비중"),
+            i18nText("상대국"),
+            i18nText("{0}년 금액(천 달러)", [state.compareYear]),
+            i18nText("{0}년 금액(천 달러)", [state.year]),
+            i18nText("{0}년 비중", [state.compareYear]),
+            i18nText("{0}년 비중", [state.year]),
+            i18nText("비중 차이"),
           ],
-          explanation.rows,
-          i18nText("교역액과 전체 교역액의 변화"),
+          periods.map((row) => [
+            api.name(row.iso),
+            row.before?.v.toLocaleString(TWI18n.locale) ??
+              i18nText("기록 없음"),
+            row.after?.v.toLocaleString(TWI18n.locale) ?? i18nText("기록 없음"),
+            row.before ? api.pct(row.before.p) : "—",
+            row.after ? api.pct(row.after.p) : "—",
+            row.pp === null
+              ? i18nText("계산 안 함")
+              : math.signed(row.pp, "%p"),
+          ]),
+          i18nText(
+            "동일 상대국 전체 · 필터와 무관하게 모든 기록을 포함합니다.",
+          ),
         ),
       );
-    const periods = math.periodRows(
-      api.rows(state.iso, state.flow, api.series[state.compareYear]),
-      data,
-    );
-    section(
-      i18nText("두 시점 상대국 비교"),
-      table(
-        [
-          i18nText("상대국"),
-          i18nText("{0}년 금액(천 달러)", [state.compareYear]),
-          i18nText("{0}년 금액(천 달러)", [state.year]),
-          i18nText("{0}년 비중", [state.compareYear]),
-          i18nText("{0}년 비중", [state.year]),
-          i18nText("비중 차이"),
-        ],
-        periods.map((row) => [
+      const changes = math.changes(
+        api.rows(state.iso, state.flow, api.series[state.compareYear]),
+        data,
+      );
+      const changeRows = math
+        .sortChanges(changes.common, "gain")
+        .map((row) => [
           api.name(row.iso),
-          row.before?.v.toLocaleString(TWI18n.locale) ?? i18nText("기록 없음"),
-          row.after?.v.toLocaleString(TWI18n.locale) ?? i18nText("기록 없음"),
-          row.before ? api.pct(row.before.p) : "—",
-          row.after ? api.pct(row.after.p) : "—",
-          row.pp === null ? i18nText("계산 안 함") : math.signed(row.pp, "%p"),
-        ]),
-        i18nText("동일 상대국 전체 · 필터와 무관하게 모든 기록을 포함합니다."),
-      ),
-    );
-    const changes = math.changes(
-      api.rows(state.iso, state.flow, api.series[state.compareYear]),
-      data,
-    );
-    const changeRows = math
-      .sortChanges(changes.common, "gain")
-      .map((row) => [
-        api.name(row.iso),
-        api.pct(row.before.p),
-        api.pct(row.after.p),
-        math.signed(row.pp, "%p"),
-        row.before.rank + " → " + row.after.rank,
-      ]);
-    for (const row of [...changes.entered, ...changes.absent]) {
-      changeRows.push([
-        api.name(row.iso),
-        row.before ? api.pct(row.before.p) : i18nText("기록 없음"),
-        row.after ? api.pct(row.after.p) : i18nText("기록 없음"),
-        "—",
-        "—",
-      ]);
-    }
-    section(
-      i18nText("구조 변화 전체"),
-      table(
-        [
-          i18nText("상대국"),
-          i18nText("{0}년 비중", [state.compareYear]),
-          i18nText("{0}년 비중", [state.year]),
-          i18nText("차이"),
-          i18nText("순위"),
-        ],
-        changeRows,
-        i18nText("한 연도라도 기록이 없으면 차이를 계산하지 않습니다."),
-      ),
-    );
-    const matrix = comparisonMatrix();
-    section(
-      i18nText("동일 상대국 비교"),
-      table(
-        [i18nText("상대국"), ...matrix.countries.map(api.name)],
-        matrix.rows.map((row) => matrixCells(matrix, row, false)),
-        i18nText(
-          "{0}년 · 비중 · 교역액 · 순위. 분모는 각 보고국의 해당 품목·방향 합계입니다.",
-          [state.year],
+          api.pct(row.before.p),
+          api.pct(row.after.p),
+          math.signed(row.pp, "%p"),
+          row.before.rank + " → " + row.after.rank,
+        ]);
+      for (const row of [...changes.entered, ...changes.absent]) {
+        changeRows.push([
+          api.name(row.iso),
+          row.before ? api.pct(row.before.p) : i18nText("기록 없음"),
+          row.after ? api.pct(row.after.p) : i18nText("기록 없음"),
+          "—",
+          "—",
+        ]);
+      }
+      section(
+        i18nText("구조 변화 전체"),
+        table(
+          [
+            i18nText("상대국"),
+            i18nText("{0}년 비중", [state.compareYear]),
+            i18nText("{0}년 비중", [state.year]),
+            i18nText("차이"),
+            i18nText("순위"),
+          ],
+          changeRows,
+          i18nText("한 연도라도 기록이 없으면 차이를 계산하지 않습니다."),
         ),
-      ),
-    );
-    const source = node("a", "", i18nText("CEPII BACI 원자료"));
-    source.href = api.catalog.archive_url;
-    section(
-      i18nText("출처와 재현 정보"),
-      node("p", "", api.source()),
-      node("p", "", api.catalog.unit + " · " + api.catalog.license),
-      node(
-        "p",
-        "",
-        i18nText("원자료 SHA-256: {0}", [api.catalog.archive_sha256]),
-      ),
-      node(
-        "p",
-        "",
-        i18nText("지도: {0} · {1}", [api.map.source, api.map.projection]),
-      ),
-      source,
-    );
-    report.body.appendChild(main);
-    const blob = new Blob(
-      ["<!doctype html>\n", report.documentElement.outerHTML],
-      {
-        type: "text/html;charset=utf-8",
-      },
-    );
-    const link = node("a");
-    link.href = URL.createObjectURL(blob);
-    link.download =
-      "tradeweave_" +
-      state.iso +
-      "_" +
-      state.year +
-      "_" +
-      state.product +
-      "_report.html";
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-    setTimeout(() => URL.revokeObjectURL(link.href), 1500);
-    $("report-dialog").close();
-    api.say(i18nText("분석 보고서를 저장했습니다."));
+      );
+      const matrix = comparisonMatrix();
+      section(
+        i18nText("동일 상대국 비교"),
+        table(
+          [i18nText("상대국"), ...matrix.countries.map(api.name)],
+          matrix.rows.map((row) => matrixCells(matrix, row, false)),
+          i18nText(
+            "{0}년 · 비중 · 교역액 · 순위. 분모는 각 보고국의 해당 품목·방향 합계입니다.",
+            [state.year],
+          ),
+        ),
+      );
+      const source = node("a", "", i18nText("CEPII BACI 원자료"));
+      source.href = api.catalog.archive_url;
+      section(
+        i18nText("출처와 재현 정보"),
+        node("p", "", api.source()),
+        node("p", "", api.catalog.unit + " · " + api.catalog.license),
+        node(
+          "p",
+          "",
+          i18nText("원자료 SHA-256: {0}", [api.catalog.archive_sha256]),
+        ),
+        node(
+          "p",
+          "",
+          i18nText("지도: {0} · {1}", [api.map.source, api.map.projection]),
+        ),
+        source,
+      );
+      window.TradeweaveIndustry.appendReport(main, state, industryPayload);
+      report.body.appendChild(main);
+      const blob = new Blob(
+        ["<!doctype html>\n", report.documentElement.outerHTML],
+        {
+          type: "text/html;charset=utf-8",
+        },
+      );
+      const link = node("a");
+      link.href = URL.createObjectURL(blob);
+      link.download =
+        "tradeweave_" +
+        state.iso +
+        "_" +
+        state.year +
+        "_" +
+        state.product +
+        "_report.html";
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setTimeout(() => URL.revokeObjectURL(link.href), 1500);
+      $("report-dialog").close();
+      api.say(i18nText("분석 보고서를 저장했습니다."));
+      $("report-status").textContent = "";
+    } catch (error) {
+      $("report-status").textContent = i18nText(
+        "보고서 자료를 준비하지 못했습니다. 다시 시도해 주세요.",
+      );
+    } finally {
+      reportBuilding = false;
+      $("download-report").disabled =
+        !resultVisible() ||
+        document.body.classList.contains("is-loading") ||
+        api.catalog.years.some((year) => !api.series[year]);
+    }
   });
   $("export-image").addEventListener("click", exportImage);
   $("print-analysis").addEventListener("click", function () {
